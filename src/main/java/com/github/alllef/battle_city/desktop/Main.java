@@ -1,16 +1,16 @@
-package com.github.alllef.space_invaders.desktop;
+package com.github.alllef.battle_city.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.github.alllef.space_invaders.core.SpaceInvaders;
+import com.github.alllef.battle_city.core.BattleCity;
 
 public class Main {
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-        config.title = "Space Invaders";
+        config.title = "Battle city";
         config.width = 800;
         config.height = 480;
-        new LwjglApplication(new SpaceInvaders(), config);
+        new LwjglApplication(new BattleCity(), config);
     }
 }

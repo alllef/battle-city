@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.alllef</groupId>
-    <artifactId>space-invaders</artifactId>
+    <artifactId>battle-city</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
         <java.version>15</java.version>
