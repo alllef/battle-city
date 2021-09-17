@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.alllef.battle_city.core.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.tank.EnemyTank;
 import com.github.alllef.battle_city.core.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.tank.PlayerTank;
@@ -19,6 +20,7 @@ public class MainScreen implements Screen {
     OrthographicCamera camera = new OrthographicCamera();
     SpriteBatch batch = new SpriteBatch();
     EnemyTankManager enemyTankManager;
+    ObstacleGeneration obstacleGeneration = new ObstacleGeneration();
 
     public MainScreen() {
         enemyTankManager = new EnemyTankManager();
@@ -38,14 +40,16 @@ public class MainScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         enemyTankManager.ride();
+        obstacleGeneration.generateObstacles(7);
         batch.begin();
-
+obstacleGeneration.generateObstacles(10);
+obstacleGeneration.getObstacleArray().forEach(obstacle -> obstacle.getObstacleSprite().draw(batch));
         enemyTankManager.getEnemyTanks()
                 .forEach(
                         enemyTank -> {
                             Sprite sprite = enemyTank.getTankSprite();
-                            sprite.setPosition(0,0);
-                                    sprite.draw(batch);
+                            sprite.setPosition(0, 0);
+                            sprite.draw(batch);
                         }
                 );
 
