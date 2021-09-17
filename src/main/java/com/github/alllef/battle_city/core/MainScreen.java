@@ -34,15 +34,21 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float v) {
-        ScreenUtils.clear(0, 0, 0.2f, 1);
+        ScreenUtils.clear(0, 0, 0, 1);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         enemyTankManager.ride();
         batch.begin();
-        enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
-        Sprite sprite =enemyTank.getTankSprite();
-          batch.draw(sprite.getTexture(),sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
-        });
+
+        enemyTankManager.getEnemyTanks()
+                .forEach(
+                        enemyTank -> {
+                            Sprite sprite = enemyTank.getTankSprite();
+                            sprite.setPosition(0,0);
+                                    sprite.draw(batch);
+                        }
+                );
+
         batch.end();
     }
 

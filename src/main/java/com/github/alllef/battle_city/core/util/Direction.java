@@ -8,7 +8,8 @@ import java.util.Optional;
 import static com.badlogic.gdx.Input.Keys;
 
 public enum Direction {
-    LEFT, RIGHT, UP, DOWN;
+    LEFT(90), RIGHT(270), UP(0), DOWN(180);
+    private final int degree;
 
     public static Optional<Direction> of(int key) {
         Direction dir = null;
@@ -16,10 +17,18 @@ public enum Direction {
         switch (key) {
             case Keys.UP -> dir = UP;
             case Keys.DOWN -> dir = DOWN;
-            case  Keys.LEFT -> dir = LEFT;
+            case Keys.LEFT -> dir = LEFT;
             case Keys.RIGHT -> dir = RIGHT;
         }
 
         return Optional.ofNullable(dir);
+    }
+
+    Direction(int degree) {
+        this.degree = degree;
+    }
+
+    public int getDegree() {
+        return degree;
     }
 }

@@ -9,7 +9,6 @@ public class EnemyTankManager {
     private Array<Long> millis;
 
     public EnemyTankManager() {
-        System.out.println("wtf");
         enemyTanks = new Array<>();
         enemyTanks.add(new EnemyTank());
         millis = new Array<>();
@@ -21,7 +20,9 @@ public class EnemyTankManager {
     public void ride() {
         for (int i = 0; i < enemyTanks.size; i++) {
             if (TimeUtils.millis() - millis.get(i) > 1000) {
-                enemyTanks.get(i).ride(Direction.UP);
+                Direction direction = Direction.values()[(int) (Math.random() * Direction.values().length)];
+                enemyTanks.get(i).ride(direction);
+                millis.set(i, TimeUtils.millis());
             }
         }
     }

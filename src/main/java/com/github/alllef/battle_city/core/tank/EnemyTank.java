@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class EnemyTank extends SingleTank {
 
-    protected EnemyTank() {
+    public EnemyTank() {
         super("sprites/enemy.png");
     }
 
