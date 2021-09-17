@@ -1,12 +1,15 @@
 package com.github.alllef.battle_city.core;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.tank.EnemyTank;
+import com.github.alllef.battle_city.core.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.tank.PlayerTank;
-import com.github.alllef.battle_city.core.tank.Tank;
 
 import java.awt.*;
 
@@ -14,8 +17,8 @@ public class MainScreen implements Screen {
     PlayerTank playerTank;
     OrthographicCamera camera = new OrthographicCamera();
     SpriteBatch batch = new SpriteBatch();
-    Array<EnemyTank> enemyTankArray;
-Array<Bu>
+    EnemyTankManager enemyTankManager;
+
     public MainScreen() {
         playerTank = new PlayerTank();
         camera.setToOrtho(false, 100, 100);
@@ -31,8 +34,10 @@ Array<Bu>
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        Rectangle rectangle = playerTank.getRectangle();
-        batch.draw(playerTank.getBullet(), rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+
+        float time = Gdx.graphics.getDeltaTime();
+        Sprite rectangle = playerTank.getTankSprite();
+        rectangle.draw(batch);
         batch.end();
     }
 
@@ -58,6 +63,6 @@ Array<Bu>
 
     @Override
     public void dispose() {
-        playerTank.getBullet().dispose();
+
     }
 }

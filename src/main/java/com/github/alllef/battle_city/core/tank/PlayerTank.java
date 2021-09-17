@@ -2,32 +2,19 @@ package com.github.alllef.battle_city.core.tank;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.github.alllef.battle_city.core.util.Direction;
 
 import java.awt.*;
 
 public class PlayerTank implements Tank {
-   private Texture bullet;
-   private Rectangle rectangle;
+
+    Sprite tankSprite = new Sprite(new Texture(Gdx.files.internal("sprites/enemy.png")));
 
     public PlayerTank() {
-        this.bullet = new Texture(Gdx.files.internal("sprites/bullet.png"));
-        this.rectangle = new Rectangle(50,50,10,10);
-    }
+        tankSprite.setSize(10, 10);
+        tankSprite.setPosition(0, 0);
 
-    public Texture getBullet() {
-        return bullet;
-    }
-
-    public void setBullet(Texture bullet) {
-        this.bullet = bullet;
-    }
-
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
-
-    public void setRectangle(Rectangle rectangle) {
-        this.rectangle = rectangle;
     }
 
     @Override
@@ -35,12 +22,23 @@ public class PlayerTank implements Tank {
         Rectangle bullet = new Rectangle();
         bullet.setSize(2, 2);
         bullet.setLocation(1, 1);
-
     }
 
     @Override
     public void ride(Direction dir) {
-
+        switch (dir) {
+            case UP -> tankSprite.setY(tankSprite.getY()+1);
+            case DOWN -> tankSprite.setY(tankSprite.getY()-1);
+            case RIGHT -> tankSprite.setX(tankSprite.getX()+1);
+            case LEFT -> tankSprite.setX(tankSprite.getX()-1);
+        }
     }
 
+    public Sprite getTankSprite() {
+        return tankSprite;
+    }`
+
+    public void setTankSprite(Sprite tankSprite) {
+        this.tankSprite = tankSprite;
+    }
 }
