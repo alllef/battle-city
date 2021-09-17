@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.alllef.battle_city.core.tank.EnemyTank;
 import com.github.alllef.battle_city.core.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.tank.PlayerTank;
@@ -20,9 +21,11 @@ public class MainScreen implements Screen {
     EnemyTankManager enemyTankManager;
 
     public MainScreen() {
+        enemyTankManager = new EnemyTankManager();
         playerTank = new PlayerTank();
         camera.setToOrtho(false, 100, 100);
     }
+
 
     @Override
     public void show() {
@@ -31,13 +34,15 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float v) {
+        ScreenUtils.clear(0, 0, 0.2f, 1);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+        enemyTankManager.ride();
         batch.begin();
-
-        float time = Gdx.graphics.getDeltaTime();
-        Sprite rectangle = playerTank.getTankSprite();
-        rectangle.draw(batch);
+        enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
+        Sprite sprite =enemyTank.getTankSprite();
+          batch.draw(sprite.getTexture(),sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
+        });
         batch.end();
     }
 
@@ -63,6 +68,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
     }
 }
