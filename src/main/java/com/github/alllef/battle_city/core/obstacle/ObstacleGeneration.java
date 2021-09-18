@@ -1,9 +1,11 @@
 package com.github.alllef.battle_city.core.obstacle;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.github.alllef.battle_city.core.util.Drawable;
 
-public class ObstacleGeneration {
-    Array<Obstacle> obstacleArray = new Array<>();
+public class ObstacleGeneration implements Drawable {
+   private Array<Obstacle> obstacleArray = new Array<>();
 
     public void generateObstacles(int obstacleNumber) {
         for (int i = 0; i < obstacleNumber; i++) {
@@ -15,5 +17,12 @@ public class ObstacleGeneration {
 
     public Array<Obstacle> getObstacleArray() {
         return obstacleArray;
+    }
+
+    @Override
+    public void draw(SpriteBatch spriteBatch) {
+        this.getObstacleArray()
+                .forEach(obstacle -> obstacle.getObstacleSprite().draw(spriteBatch));
+
     }
 }

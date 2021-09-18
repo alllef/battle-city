@@ -12,8 +12,10 @@ import com.github.alllef.battle_city.core.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.tank.EnemyTank;
 import com.github.alllef.battle_city.core.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.tank.PlayerTank;
+import com.github.alllef.battle_city.core.util.Drawable;
 
 import java.awt.*;
+import java.util.List;
 
 public class MainScreen implements Screen {
     PlayerTank playerTank;
@@ -26,6 +28,7 @@ public class MainScreen implements Screen {
         enemyTankManager = new EnemyTankManager();
         playerTank = new PlayerTank();
         camera.setToOrtho(false, 100, 100);
+        obstacleGeneration.generateObstacles(10);
     }
 
 
@@ -39,19 +42,10 @@ public class MainScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 1);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-        enemyTankManager.ride();
-        obstacleGeneration.generateObstacles(7);
         batch.begin();
-obstacleGeneration.generateObstacles(10);
-obstacleGeneration.getObstacleArray().forEach(obstacle -> obstacle.getObstacleSprite().draw(batch));
-        enemyTankManager.getEnemyTanks()
-                .forEach(
-                        enemyTank -> {
-                            Sprite sprite = enemyTank.getTankSprite();
-                            sprite.setPosition(0, 0);
-                            sprite.draw(batch);
-                        }
-                );
+
+        List.of(obstacleGeneration,enemyTankManager)
+                .forEach(drawable -> drawable.draw(batch));
 
         batch.end();
     }

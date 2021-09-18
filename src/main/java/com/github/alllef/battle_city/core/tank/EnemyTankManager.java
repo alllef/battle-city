@@ -1,10 +1,13 @@
 package com.github.alllef.battle_city.core.tank;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.util.Drawable;
 
-public class EnemyTankManager {
+public class EnemyTankManager implements Drawable {
     private Array<EnemyTank> enemyTanks;
     private Array<Long> millis;
 
@@ -29,6 +32,18 @@ public class EnemyTankManager {
 
     public Array<EnemyTank> getEnemyTanks() {
         return enemyTanks;
+    }
+
+    @Override
+    public void draw(SpriteBatch spriteBatch) {
+        this.getEnemyTanks()
+                .forEach(
+                        enemyTank -> {
+                            Sprite sprite = enemyTank.getTankSprite();
+                            sprite.setPosition(0, 0);
+                            sprite.draw(spriteBatch);
+                        }
+                );
     }
 
 }
