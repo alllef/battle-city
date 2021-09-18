@@ -28,14 +28,14 @@ public abstract class SingleTank implements Tank {
         switch (dir) {
             case UP -> y += tankSprite.getHeight();
             case DOWN -> {
-                y = y - tankSprite.getHeight() - 3;
+                y = y - tankSprite.getHeight() - 3-2;
                 x = x - tankSprite.getHeight() - 2;
             }
             case RIGHT -> {
                 x += tankSprite.getHeight();
                 y = y - 2 - 2;
             }
-            case LEFT -> x = x - 1 - 3 - 1;
+            case LEFT -> x = x - 1 - 3 - 1-2;
         }
 
         Bullet bullet = new Bullet(x, y, dir);

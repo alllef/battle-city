@@ -13,4 +13,9 @@ public class EnemyTank extends SingleTank {
         super("sprites/enemy.png");
     }
 
+    public EnemyTank(float x, float y){
+        super("sprites/enemy.png");
+        this.getTankSprite().setPosition(x,y);
+    }
+
 }

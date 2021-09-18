@@ -20,7 +20,7 @@ public class MainScreen implements Screen {
     ObstacleGeneration obstacleGeneration = new ObstacleGeneration();
 
     public MainScreen() {
-        enemyTankManager = new EnemyTankManager();
+        enemyTankManager = new EnemyTankManager(5);
         playerTank = new PlayerTank();
         camera.setToOrtho(false, 100, 100);
         obstacleGeneration.generateObstacles(5);
@@ -63,7 +63,7 @@ public class MainScreen implements Screen {
         for (Bullet bullet : Bullet.bulletArray) {
             for (SingleTank tank : allTanks) {
                 if (bullet.getBulletSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
-                    allTanks.removeValue(tank, true);
+                    enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank,true);
                     Bullet.bulletArray.removeValue(bullet, true);
                 }
             }

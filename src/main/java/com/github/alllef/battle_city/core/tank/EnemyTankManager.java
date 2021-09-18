@@ -17,10 +17,19 @@ public class EnemyTankManager implements Drawable {
     private Array<EnemyTank> enemyTanks;
     private Map<EnemyTank, Integer> stepsNum;
 
-    public EnemyTankManager() {
+    public EnemyTankManager(int tankNumber) {
         enemyTanks = new Array<>();
         stepsNum = new HashMap<>();
-        enemyTanks.add(new EnemyTank());
+        generateTanks(tankNumber);
+    }
+
+    private void generateTanks(int tankNumber) {
+
+        for (int i = 0; i < tankNumber; i++) {
+            int x = (int) (Math.random() * 80);
+            int y = (int) (Math.random() * 80);
+            enemyTanks.add(new EnemyTank(x, y));
+        }
     }
 
     public void ride() {
@@ -28,14 +37,15 @@ public class EnemyTankManager implements Drawable {
             EnemyTank tmpTank = enemyTanks.get(i);
             Direction dir = tmpTank.getDir();
 
-            if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank) == 0) {
+            if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank) <= 0) {
                 dir = Direction.values()[new Random().nextInt(Direction.values().length)];
                 tmpTank.ride(dir);
-                stepsNum.put(tmpTank,new Random().nextInt(40));
+                stepsNum.put(tmpTank, new Random().nextInt(40));
             }
 
-                tmpTank.ride(dir);
-                stepsNum.put(tmpTank,stepsNum.get(tmpTank)-1);
+            tmpTank.ride(dir);
+            System.out.println(stepsNum.get(tmpTank));
+            stepsNum.put(tmpTank, stepsNum.get(tmpTank) - 1);
         }
     }
 
