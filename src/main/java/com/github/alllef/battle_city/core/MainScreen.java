@@ -2,6 +2,7 @@ package com.github.alllef.battle_city.core;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -14,17 +15,23 @@ import java.util.List;
 
 public class MainScreen implements Screen {
     PlayerTank playerTank;
-    OrthographicCamera camera = new OrthographicCamera();
-    SpriteBatch batch = new SpriteBatch();
+    OrthographicCamera camera;
+    SpriteBatch batch;
     EnemyTankManager enemyTankManager;
-    ObstacleGeneration obstacleGeneration = new ObstacleGeneration();
+    ObstacleGeneration obstacleGeneration;
+    BitmapFont font;
+    int score = 0;
 
     public MainScreen() {
         enemyTankManager = new EnemyTankManager(5);
-        playerTank = new PlayerTank();
+        camera = new OrthographicCamera();
+        obstacleGeneration = new ObstacleGeneration();
         camera.setToOrtho(false, 100, 100);
         obstacleGeneration.generateObstacles(5);
-
+        font = new BitmapFont();
+        font.getData().setScale(0.15f, 0.25f);
+        batch = new SpriteBatch();
+        playerTank = new PlayerTank();
     }
 
 
@@ -38,14 +45,18 @@ public class MainScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 1);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
-        enemyTankManager.ride();
-        playerTank.ride();
-        Bullet.updateBullets();
+        font.draw(batch, "Score: "+score, 80, 80);
         List.of(obstacleGeneration, playerTank, enemyTankManager)
                 .forEach(drawable -> drawable.draw(batch));
+
         Bullet.bulletArray.forEach(bullet -> bullet.getBulletSprite().draw(batch));
         batch.end();
+
+        Bullet.updateBullets();
+        enemyTankManager.ride();
+        playerTank.ride();
         checkBulletShootTank();
         checkBulletShootObstacle();
         checkTankOverlapsObstacle();
@@ -63,21 +74,21 @@ public class MainScreen implements Screen {
         for (Bullet bullet : Bullet.bulletArray) {
             for (SingleTank tank : allTanks) {
                 if (bullet.getBulletSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
-                    enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank,true);
+                    enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank, true);
                     Bullet.bulletArray.removeValue(bullet, true);
+                score+=100;
                 }
             }
         }
     }
 
 
-
     public void checkTankOverlapsObstacle() {
         Array<SingleTank> allTanks = getAllTanks();
-        for (SingleTank tank :allTanks) {
-            for (Obstacle obstacle: obstacleGeneration.getObstacles()) {
+        for (SingleTank tank : allTanks) {
+            for (Obstacle obstacle : obstacleGeneration.getObstacles()) {
                 if (obstacle.getObstacleSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
-                   tank.setBlockedDirection(tank.getDir());
+                    tank.setBlockedDirection(tank.getDir());
                     System.out.println("should be blocked");
                 }
             }
