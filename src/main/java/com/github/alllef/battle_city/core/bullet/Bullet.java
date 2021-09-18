@@ -30,11 +30,11 @@ public class Bullet {
             bulletArray.removeValue(this, true);
     }
 
-    public Bullet(int x, int y, Direction dir) {
+    public Bullet(float x, float y, Direction dir) {
         this.dir = dir;
 
         bulletSprite = new Sprite(new Texture(Gdx.files.internal("sprites/bullet.png")));
-        bulletSprite.setSize(2,2);
+        bulletSprite.setSize(2, 2);
         bulletSprite.setPosition(x, y);
         bulletSprite.setRotation(dir.getDegree());
 

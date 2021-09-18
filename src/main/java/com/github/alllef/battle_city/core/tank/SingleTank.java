@@ -21,12 +21,26 @@ public abstract class SingleTank implements Tank {
 
     @Override
     public void shoot() {
-        Bullet bullet = new Bullet((int)tankSprite.getX(),(int)tankSprite.getY(),dir);
+        float x = tankSprite.getX();
+        float y = tankSprite.getY();
+        switch (dir) {
+            case UP -> y += tankSprite.getHeight();
+            case DOWN -> {
+                y = y - tankSprite.getHeight() - 3;
+                x = x - tankSprite.getHeight() - 2;
+            }
+            case RIGHT -> {
+                x += tankSprite.getHeight();
+                y = y-2-2;
+            }
+            case LEFT -> x = x - 1 - 3 - 1;
+        }
+        Bullet bullet = new Bullet(x, y, dir);
     }
 
     @Override
     public void ride(Direction dir) {
-        float minDistance = 1.0f/10f;
+        float minDistance = 1.0f / 10f;
         this.dir = dir;
 
         switch (dir) {
@@ -38,8 +52,8 @@ public abstract class SingleTank implements Tank {
 
         if (tankSprite.getY() < 0) tankSprite.setY(0);
         if (tankSprite.getX() < 0) tankSprite.setX(0);
-        if (tankSprite.getY() > 100-tankSprite.getWidth()) tankSprite.setY(100-tankSprite.getWidth());
-        if (tankSprite.getX() > 100-tankSprite.getHeight()) tankSprite.setX(100-tankSprite.getHeight());
+        if (tankSprite.getY() > 100 - tankSprite.getWidth()) tankSprite.setY(100 - tankSprite.getWidth());
+        if (tankSprite.getX() > 100 - tankSprite.getHeight()) tankSprite.setX(100 - tankSprite.getHeight());
 
         tankSprite.setOriginCenter();
         tankSprite.setRotation(dir.getDegree());
