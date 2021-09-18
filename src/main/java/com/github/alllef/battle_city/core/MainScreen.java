@@ -27,7 +27,7 @@ public class MainScreen implements Screen {
         camera = new OrthographicCamera();
         obstacleGeneration = new ObstacleGeneration();
         camera.setToOrtho(false, 100, 100);
-        obstacleGeneration.generateObstacles(5);
+        obstacleGeneration.generateObstacles(4);
         font = new BitmapFont();
         font.getData().setScale(0.15f, 0.25f);
         batch = new SpriteBatch();
@@ -75,6 +75,7 @@ public class MainScreen implements Screen {
         for (Bullet bullet : Bullet.bulletArray) {
             for (SingleTank tank : allTanks) {
                 if (bullet.getBulletSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
+                    if(tank instanceof  EnemyTank)
                     enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank, true);
                     Bullet.bulletArray.removeValue(bullet, true);
                 score+=100;

@@ -21,7 +21,7 @@ public class EnemyTank extends SingleTank {
 
     @Override
     public void shoot() {
-        setDurationBetweenBullets((new Random().nextInt(5)+1)*500);
+        setDurationBetweenBullets(3*500);
         super.shoot();
     }
 }
