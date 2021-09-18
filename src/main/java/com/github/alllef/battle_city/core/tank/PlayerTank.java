@@ -29,15 +29,20 @@ public class PlayerTank extends SingleTank implements Drawable {
         this.getTankSprite().draw(spriteBatch);
     }
 
-    public void ride(){
-    if (rideLooping==true)
-        ride(this.getDir());
+    public void ride() {
+        if (rideLooping)
+            ride(this.getDir());
     }
 
     public void addPlayerTankInputAdapter() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
+                if (keycode == Keys.SPACE){
+                    PlayerTank.this.shoot();
+                    System.out.println("Generated");
+                }
+
                 Optional<Direction> optionalDir = Direction.of(keycode);
 
                 if (optionalDir.isPresent()) {

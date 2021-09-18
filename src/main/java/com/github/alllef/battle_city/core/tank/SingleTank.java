@@ -3,6 +3,7 @@ package com.github.alllef.battle_city.core.tank;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.github.alllef.battle_city.core.bullet.Bullet;
 import com.github.alllef.battle_city.core.util.Direction;
 
 import java.awt.*;
@@ -20,14 +21,11 @@ public abstract class SingleTank implements Tank {
 
     @Override
     public void shoot() {
-        Rectangle bullet = new Rectangle();
-        bullet.setSize(2, 2);
-        bullet.setLocation(0, 0);
+        Bullet bullet = new Bullet((int)tankSprite.getX(),(int)tankSprite.getY(),dir);
     }
 
     @Override
     public void ride(Direction dir) {
-        System.out.println(tankSprite.getX() + " " + tankSprite.getY());
         float minDistance = 1.0f/10f;
         this.dir = dir;
 

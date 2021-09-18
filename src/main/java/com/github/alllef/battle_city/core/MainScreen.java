@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.alllef.battle_city.core.bullet.Bullet;
 import com.github.alllef.battle_city.core.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.tank.EnemyTank;
 import com.github.alllef.battle_city.core.tank.EnemyTankManager;
@@ -45,9 +46,10 @@ public class MainScreen implements Screen {
         batch.begin();
         enemyTankManager.ride();
         playerTank.ride();
-        List.of(obstacleGeneration, playerTank,enemyTankManager)
+        Bullet.updateBullets();
+        List.of(obstacleGeneration, playerTank, enemyTankManager)
                 .forEach(drawable -> drawable.draw(batch));
-
+        Bullet.bulletArray.forEach(bullet -> bullet.getBulletSprite().draw(batch));
         batch.end();
     }
 

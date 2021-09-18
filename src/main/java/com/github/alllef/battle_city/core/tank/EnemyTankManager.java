@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class EnemyTankManager implements Drawable {
     private Array<EnemyTank> enemyTanks;
-    private Map<EnemyTank, Step> stepsNum;
+    private Map<EnemyTank, Integer> stepsNum;
 
     public EnemyTankManager() {
         enemyTanks = new Array<>();
@@ -28,25 +28,14 @@ public class EnemyTankManager implements Drawable {
             EnemyTank tmpTank = enemyTanks.get(i);
             Direction dir = tmpTank.getDir();
 
-            if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank).steps() == 0) {
-                dir = Direction.values()[new Random().nextInt(4)];
+            if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank) == 0) {
+                dir = Direction.values()[new Random().nextInt(Direction.values().length)];
                 tmpTank.ride(dir);
-                stepsNum.put(tmpTank, new Step(0.0f, 20));
+                stepsNum.put(tmpTank,new Random().nextInt(40));
             }
 
-            Step tmpStep = stepsNum.get(tmpTank);
-            float timePassed = tmpStep.timePassed() + Gdx.graphics.getDeltaTime();
-
-            stepsNum.put(tmpTank, new Step(timePassed, tmpStep.steps()));
-
-            System.out.println(tmpStep);
-
-            if (timePassed >= 0.1f) {
                 tmpTank.ride(dir);
-                stepsNum.put(tmpTank,new Step(0.0f,tmpStep.steps()-1));
-            }
-
-
+                stepsNum.put(tmpTank,stepsNum.get(tmpTank)-1);
         }
     }
 
@@ -61,6 +50,4 @@ public class EnemyTankManager implements Drawable {
                         enemyTank.getTankSprite().draw(spriteBatch));
     }
 
-    private static record Step(float timePassed, int steps) {
-    }
 }
