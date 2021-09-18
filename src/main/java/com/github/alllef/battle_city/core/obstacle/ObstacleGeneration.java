@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.util.Drawable;
 
+import java.util.Map;
+
 public class ObstacleGeneration implements Drawable {
-   private Array<Obstacle> obstacleArray = new Array<>();
+    private Array<Obstacle> obstacleArray = new Array<>();
 
     public void generateObstacles(int obstacleNumber) {
         for (int i = 0; i < obstacleNumber; i++) {
@@ -22,7 +24,8 @@ public class ObstacleGeneration implements Drawable {
     @Override
     public void draw(SpriteBatch spriteBatch) {
         this.getObstacleArray()
-                .forEach(obstacle -> obstacle.getObstacleSprite().draw(spriteBatch));
-
+                .forEach(obstacle ->
+                        obstacle.getObstacleSprite().draw(spriteBatch)
+                );
     }
 }

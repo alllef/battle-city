@@ -43,8 +43,8 @@ public class MainScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
-        List.of(obstacleGeneration,enemyTankManager)
+        enemyTankManager.ride();
+        List.of(obstacleGeneration, enemyTankManager)
                 .forEach(drawable -> drawable.draw(batch));
 
         batch.end();

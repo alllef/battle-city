@@ -10,6 +10,7 @@ import java.awt.*;
 public abstract class SingleTank implements Tank {
 
     private Sprite tankSprite;
+    private Direction dir = Direction.UP;
 
     protected SingleTank(String textureName) {
         this.tankSprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
@@ -26,19 +27,24 @@ public abstract class SingleTank implements Tank {
 
     @Override
     public void ride(Direction dir) {
-        System.out.println(tankSprite.getX()+" "+tankSprite.getY());
+        System.out.println(tankSprite.getX() + " " + tankSprite.getY());
+        float minDistance = 1.0f/10f;
+        this.dir = dir;
+
         switch (dir) {
-            case UP -> tankSprite.setY(tankSprite.getY() + 1);
-            case DOWN -> tankSprite.setY(tankSprite.getY() - 1);
-            case RIGHT -> tankSprite.setX(tankSprite.getX() + 1);
-            case LEFT -> tankSprite.setX(tankSprite.getX() - 1);
+            case UP -> tankSprite.setY(tankSprite.getY() + minDistance);
+            case DOWN -> tankSprite.setY(tankSprite.getY() - minDistance);
+            case RIGHT -> tankSprite.setX(tankSprite.getX() + minDistance);
+            case LEFT -> tankSprite.setX(tankSprite.getX() - minDistance);
         }
-        if (tankSprite.getY()<0) tankSprite.setY(0);
-        if (tankSprite.getX()<0) tankSprite.setX(0);
 
-        tankSprite.setOrigin(tankSprite.getX(),tankSprite.getY());
+        if (tankSprite.getY() < 0) tankSprite.setY(0);
+        if (tankSprite.getX() < 0) tankSprite.setX(0);
+        if (tankSprite.getY() > 100) tankSprite.setY(100);
+        if (tankSprite.getX() > 100) tankSprite.setX(100);
+
+        tankSprite.setOrigin(tankSprite.getX(), tankSprite.getY());
         tankSprite.setRotation(dir.getDegree());
-
     }
 
     public Sprite getTankSprite() {
@@ -49,4 +55,11 @@ public abstract class SingleTank implements Tank {
         this.tankSprite = tankSprite;
     }
 
+    public Direction getDir() {
+        return dir;
+    }
+
+    public void setDir(Direction dir) {
+        this.dir = dir;
+    }
 }
