@@ -13,41 +13,57 @@ import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 
 import java.awt.*;
+import java.util.Optional;
 
 public class PlayerTank extends SingleTank implements Drawable {
+    private boolean rideLooping = false;
 
     public PlayerTank() {
         super("sprites/player.png");
         addPlayerTankInputAdapter();
     }
 
+
     @Override
     public void draw(SpriteBatch spriteBatch) {
         this.getTankSprite().draw(spriteBatch);
+    }
+
+    public void ride(){
+    if (rideLooping==true)
+        ride(this.getDir());
     }
 
     public void addPlayerTankInputAdapter() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                switch (keycode) {
-                    case Keys.UP -> PlayerTank.this.ride(Direction.UP);
-                    case Keys.DOWN -> PlayerTank.this.ride(Direction.DOWN);
-                    case Keys.RIGHT -> PlayerTank.this.ride(Direction.RIGHT);
-                    case Keys.LEFT -> PlayerTank.this.ride(Direction.LEFT);
-                    default -> {
-                        return false;
-                    }
+                Optional<Direction> optionalDir = Direction.of(keycode);
+
+                if (optionalDir.isPresent()) {
+                    PlayerTank.this.setRideLooping(true);
+                    PlayerTank.this.ride(optionalDir.get());
                 }
+
                 return true;
             }
 
             @Override
             public boolean keyUp(int keycode) {
-                return super.keyUp(keycode);
+                Optional<Direction> dir = Direction.of(keycode);
+                if (dir.isPresent() && dir.get() == PlayerTank.this.getDir()) {
+                    PlayerTank.this.setRideLooping(false);
+                }
+                return false;
             }
         });
     }
 
+    public boolean isRideLooping() {
+        return rideLooping;
+    }
 
+    public void setRideLooping(boolean rideLooping) {
+        this.rideLooping = rideLooping;
+    }
 }

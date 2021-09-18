@@ -10,7 +10,7 @@ public class Main {
 
         config.title = "Battle city";
         config.width = 800;
-        config.height = 480;
+        config.height = 800;
         new LwjglApplication(new BattleCity(), config);
     }
 }
