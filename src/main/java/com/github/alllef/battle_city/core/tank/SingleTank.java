@@ -43,7 +43,7 @@ public abstract class SingleTank implements Tank {
         if (tankSprite.getY() > 100) tankSprite.setY(100);
         if (tankSprite.getX() > 100) tankSprite.setX(100);
 
-        tankSprite.setOrigin(tankSprite.getX(), tankSprite.getY());
+        tankSprite.setOriginCenter();
         tankSprite.setRotation(dir.getDegree());
     }
 
