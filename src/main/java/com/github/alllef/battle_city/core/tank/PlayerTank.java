@@ -21,6 +21,7 @@ public class PlayerTank extends SingleTank implements Drawable {
     public PlayerTank() {
         super("sprites/player.png");
         addPlayerTankInputAdapter();
+        setDurationBetweenBullets(500);
     }
 
 

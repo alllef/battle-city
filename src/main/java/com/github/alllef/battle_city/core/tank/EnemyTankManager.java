@@ -53,6 +53,10 @@ public class EnemyTankManager implements Drawable {
         return enemyTanks;
     }
 
+    public void shoot(){
+        enemyTanks.forEach(EnemyTank::shoot);
+    }
+
     @Override
     public void draw(SpriteBatch spriteBatch) {
         this.getEnemyTanks()

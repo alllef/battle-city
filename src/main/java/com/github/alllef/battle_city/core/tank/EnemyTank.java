@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.github.alllef.battle_city.core.util.Direction;
 
 import java.awt.*;
+import java.util.Random;
 
 public class EnemyTank extends SingleTank {
 
@@ -18,4 +19,9 @@ public class EnemyTank extends SingleTank {
         this.getTankSprite().setPosition(x,y);
     }
 
+    @Override
+    public void shoot() {
+        setDurationBetweenBullets((new Random().nextInt(5)+1)*500);
+        super.shoot();
+    }
 }

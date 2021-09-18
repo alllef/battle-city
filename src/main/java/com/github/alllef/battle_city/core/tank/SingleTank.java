@@ -3,6 +3,7 @@ package com.github.alllef.battle_city.core.tank;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.bullet.Bullet;
 import com.github.alllef.battle_city.core.util.Direction;
 
@@ -13,6 +14,8 @@ public abstract class SingleTank implements Tank {
     private Sprite tankSprite;
     private Direction dir = Direction.UP;
     private Direction blockedDirection = null;
+    private double lastTimeShoot = TimeUtils.millis();
+    private double durationBetweenBullets;
 
     protected SingleTank(String textureName) {
         this.tankSprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
@@ -22,20 +25,27 @@ public abstract class SingleTank implements Tank {
 
     @Override
     public void shoot() {
+        double newTime = TimeUtils.millis();
+
+        if (newTime - lastTimeShoot < durationBetweenBullets)
+            return;
+
+        lastTimeShoot = newTime;
+
         float x = tankSprite.getX();
         float y = tankSprite.getY();
 
         switch (dir) {
             case UP -> y += tankSprite.getHeight();
             case DOWN -> {
-                y = y - tankSprite.getHeight() - 3-2;
+                y = y - tankSprite.getHeight() - 3 - 2;
                 x = x - tankSprite.getHeight() - 2;
             }
             case RIGHT -> {
                 x += tankSprite.getHeight();
                 y = y - 2 - 2;
             }
-            case LEFT -> x = x - 1 - 3 - 1-2;
+            case LEFT -> x = x - 1 - 3 - 1 - 2;
         }
 
         Bullet bullet = new Bullet(x, y, dir);
@@ -88,4 +98,9 @@ public abstract class SingleTank implements Tank {
     public void setBlockedDirection(Direction blockedDirection) {
         this.blockedDirection = blockedDirection;
     }
+
+    public void setDurationBetweenBullets(double durationBetweenBullets) {
+        this.durationBetweenBullets = durationBetweenBullets;
+    }
+
 }

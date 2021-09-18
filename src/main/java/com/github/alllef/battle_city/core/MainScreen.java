@@ -56,6 +56,7 @@ public class MainScreen implements Screen {
 
         Bullet.updateBullets();
         enemyTankManager.ride();
+        enemyTankManager.shoot();
         playerTank.ride();
         checkBulletShootTank();
         checkBulletShootObstacle();
