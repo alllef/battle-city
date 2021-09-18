@@ -29,7 +29,7 @@ public class MainScreen implements Screen {
         enemyTankManager = new EnemyTankManager();
         playerTank = new PlayerTank();
         camera.setToOrtho(false, 100, 100);
-        obstacleGeneration.generateObstacles(10);
+        obstacleGeneration.generateObstacles(15);
     }
 
 

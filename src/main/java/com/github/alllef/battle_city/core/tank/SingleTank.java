@@ -23,6 +23,7 @@ public abstract class SingleTank implements Tank {
     public void shoot() {
         float x = tankSprite.getX();
         float y = tankSprite.getY();
+
         switch (dir) {
             case UP -> y += tankSprite.getHeight();
             case DOWN -> {
@@ -31,10 +32,11 @@ public abstract class SingleTank implements Tank {
             }
             case RIGHT -> {
                 x += tankSprite.getHeight();
-                y = y-2-2;
+                y = y - 2 - 2;
             }
             case LEFT -> x = x - 1 - 3 - 1;
         }
+
         Bullet bullet = new Bullet(x, y, dir);
     }
 
