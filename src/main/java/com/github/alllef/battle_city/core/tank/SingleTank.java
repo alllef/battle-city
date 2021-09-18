@@ -12,6 +12,7 @@ public abstract class SingleTank implements Tank {
 
     private Sprite tankSprite;
     private Direction dir = Direction.UP;
+    private Direction blockedDirection = null;
 
     protected SingleTank(String textureName) {
         this.tankSprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
@@ -42,23 +43,26 @@ public abstract class SingleTank implements Tank {
 
     @Override
     public void ride(Direction dir) {
-        float minDistance = 1.0f / 10f;
-        this.dir = dir;
+        if (dir != blockedDirection) {
+            float minDistance = 1.0f / 10f;
+            this.dir = dir;
 
-        switch (dir) {
-            case UP -> tankSprite.setY(tankSprite.getY() + minDistance);
-            case DOWN -> tankSprite.setY(tankSprite.getY() - minDistance);
-            case RIGHT -> tankSprite.setX(tankSprite.getX() + minDistance);
-            case LEFT -> tankSprite.setX(tankSprite.getX() - minDistance);
+            switch (dir) {
+                case UP -> tankSprite.setY(tankSprite.getY() + minDistance);
+                case DOWN -> tankSprite.setY(tankSprite.getY() - minDistance);
+                case RIGHT -> tankSprite.setX(tankSprite.getX() + minDistance);
+                case LEFT -> tankSprite.setX(tankSprite.getX() - minDistance);
+            }
+
+            if (tankSprite.getY() < 0) tankSprite.setY(0);
+            if (tankSprite.getX() < 0) tankSprite.setX(0);
+            if (tankSprite.getY() > 100 - tankSprite.getWidth()) tankSprite.setY(100 - tankSprite.getWidth());
+            if (tankSprite.getX() > 100 - tankSprite.getHeight()) tankSprite.setX(100 - tankSprite.getHeight());
+
+            tankSprite.setOriginCenter();
+            tankSprite.setRotation(dir.getDegree());
+            blockedDirection = null;
         }
-
-        if (tankSprite.getY() < 0) tankSprite.setY(0);
-        if (tankSprite.getX() < 0) tankSprite.setX(0);
-        if (tankSprite.getY() > 100 - tankSprite.getWidth()) tankSprite.setY(100 - tankSprite.getWidth());
-        if (tankSprite.getX() > 100 - tankSprite.getHeight()) tankSprite.setX(100 - tankSprite.getHeight());
-
-        tankSprite.setOriginCenter();
-        tankSprite.setRotation(dir.getDegree());
     }
 
     public Sprite getTankSprite() {
@@ -75,5 +79,13 @@ public abstract class SingleTank implements Tank {
 
     public void setDir(Direction dir) {
         this.dir = dir;
+    }
+
+    public Direction getBlockedDirection() {
+        return blockedDirection;
+    }
+
+    public void setBlockedDirection(Direction blockedDirection) {
+        this.blockedDirection = blockedDirection;
     }
 }
