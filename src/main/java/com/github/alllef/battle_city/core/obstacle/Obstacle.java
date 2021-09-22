@@ -1,14 +1,14 @@
 package com.github.alllef.battle_city.core.obstacle;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.github.alllef.battle_city.core.util.SpriteParam;
 
 public class Obstacle {
-    Sprite obstacleSprite = new Sprite(new Texture(Gdx.files.internal("sprites/block.png")));
+    Sprite obstacleSprite = new Sprite(new Texture(SpriteParam.BULLET.getTexturePath()));
 
     public Obstacle(int x, int y) {
-        obstacleSprite.setSize(2,1);
+        obstacleSprite.setSize(SpriteParam.BULLET.getWidth(),SpriteParam.BULLET.getHeight());
         obstacleSprite.setPosition(x,y);
     }
 

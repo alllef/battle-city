@@ -1,10 +1,12 @@
 package com.github.alllef.battle_city.core.bullet;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.util.SpriteParam;
 
 public class Bullet {
     private Sprite bulletSprite;
@@ -16,7 +18,10 @@ public class Bullet {
     }
 
     public void move() {
-        float minDistance = 1.0f / 5f;
+        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+        int worldSize = prefs.getInteger("world_size");
+
+        float minDistance = prefs.getFloat("min_change_distance")*2;
 
         switch (dir) {
             case UP -> bulletSprite.setY(bulletSprite.getY() + minDistance);
@@ -25,16 +30,16 @@ public class Bullet {
             case LEFT -> bulletSprite.setX(bulletSprite.getX() - minDistance);
         }
 
-        if (bulletSprite.getY() < 0 && bulletSprite.getX() < 0 && bulletSprite.getY() > 100 - bulletSprite.getWidth()
-                && bulletSprite.getX() > 100 - bulletSprite.getHeight())
+        if (bulletSprite.getY() < 0 && bulletSprite.getX() < 0 && bulletSprite.getY() > worldSize - bulletSprite.getWidth()
+                && bulletSprite.getX() > worldSize - bulletSprite.getHeight())
             bulletArray.removeValue(this, true);
     }
 
     public Bullet(float x, float y, Direction dir) {
         this.dir = dir;
-
-        bulletSprite = new Sprite(new Texture(Gdx.files.internal("sprites/bullet.png")));
-        bulletSprite.setSize(2, 2);
+        SpriteParam param = SpriteParam.BULLET;
+        bulletSprite = new Sprite(new Texture(param.getTexturePath()));
+        bulletSprite.setSize(param.getWidth(), param.getHeight());
         bulletSprite.setPosition(x, y);
         bulletSprite.setRotation(dir.getDegree());
 

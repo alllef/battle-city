@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -26,7 +27,8 @@ public class MainScreen implements Screen {
         enemyTankManager = new EnemyTankManager(5);
         camera = new OrthographicCamera();
         obstacleGeneration = new ObstacleGeneration();
-        camera.setToOrtho(false, 100, 100);
+        int worldSize = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs").getInteger("world_size");
+        camera.setToOrtho(false, worldSize, worldSize);
         obstacleGeneration.generateObstacles(4);
         font = new BitmapFont();
         font.getData().setScale(0.15f, 0.25f);
@@ -37,7 +39,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -47,7 +48,7 @@ public class MainScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        font.draw(batch, "Score: "+score, 80, 80);
+        font.draw(batch, "Score: " + score, 80, 80);
         List.of(obstacleGeneration, playerTank, enemyTankManager)
                 .forEach(drawable -> drawable.draw(batch));
 
@@ -75,10 +76,10 @@ public class MainScreen implements Screen {
         for (Bullet bullet : Bullet.bulletArray) {
             for (SingleTank tank : allTanks) {
                 if (bullet.getBulletSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
-                    if(tank instanceof  EnemyTank)
-                    enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank, true);
+                    if (tank instanceof EnemyTank)
+                        enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank, true);
                     Bullet.bulletArray.removeValue(bullet, true);
-                score+=100;
+                    score += 100;
                 }
             }
         }
@@ -91,7 +92,7 @@ public class MainScreen implements Screen {
             for (Obstacle obstacle : obstacleGeneration.getObstacles()) {
                 if (obstacle.getObstacleSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
                     tank.setBlockedDirection(tank.getDir());
-                    System.out.println("should be blocked");
+                    System.out.println(tank.getTankSprite().getX() + " " + tank.getTankSprite().getY());
                 }
             }
         }
@@ -110,22 +111,18 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int i, int i1) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override

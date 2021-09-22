@@ -44,7 +44,6 @@ public class EnemyTankManager implements Drawable {
             }
 
             tmpTank.ride(dir);
-            System.out.println(stepsNum.get(tmpTank));
             stepsNum.put(tmpTank, stepsNum.get(tmpTank) - 1);
         }
     }
