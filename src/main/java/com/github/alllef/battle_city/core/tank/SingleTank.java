@@ -26,6 +26,7 @@ public abstract class SingleTank implements Tank {
         this.tankSprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
         tankSprite.setSize(SpriteParam.SINGLE_TANK.getWidth(), SpriteParam.SINGLE_TANK.getHeight());
         tankSprite.setPosition(0, 0);
+        tankSprite.setOriginCenter();
     }
 
     @Override
@@ -50,30 +51,35 @@ public abstract class SingleTank implements Tank {
 
     @Override
     public void ride(Direction dir) {
-        if (dir != blockedDirection) {
-            float minDistance = prefs.getFloat("min_change_distance");
+        if (dir == blockedDirection)
+            return;
+
+        if (dir!=this.dir){
             this.dir = dir;
-
-            switch (dir) {
-                case UP -> tankSprite.setY(tankSprite.getY() + minDistance);
-                case DOWN -> tankSprite.setY(tankSprite.getY() - minDistance);
-                case RIGHT -> tankSprite.setX(tankSprite.getX() + minDistance);
-                case LEFT -> tankSprite.setX(tankSprite.getX() - minDistance);
-            }
-
-            int worldSize = prefs.getInteger("world_size");
-            if (tankSprite.getY() < 0) tankSprite.setY(0);
-            if (tankSprite.getX() < 0) tankSprite.setX(0);
-            if (tankSprite.getY() > worldSize - tankSprite.getWidth())
-                tankSprite.setY(worldSize - tankSprite.getWidth());
-            if (tankSprite.getX() > worldSize - tankSprite.getHeight())
-                tankSprite.setX(worldSize - tankSprite.getHeight());
-
-            tankSprite.setOriginCenter();
             tankSprite.setRotation(dir.getDegree());
-            blockedDirection = null;
+            return;
         }
+
+        float minDistance = prefs.getFloat("min_change_distance");
+
+        switch (dir) {
+            case UP -> tankSprite.setY(tankSprite.getY() + minDistance);
+            case DOWN -> tankSprite.setY(tankSprite.getY() - minDistance);
+            case RIGHT -> tankSprite.setX(tankSprite.getX() + minDistance);
+            case LEFT -> tankSprite.setX(tankSprite.getX() - minDistance);
+        }
+
+        int worldSize = prefs.getInteger("world_size");
+        if (tankSprite.getY() < 0) tankSprite.setY(0);
+        if (tankSprite.getX() < 0) tankSprite.setX(0);
+        if (tankSprite.getY() > worldSize - tankSprite.getWidth())
+            tankSprite.setY(worldSize - tankSprite.getWidth());
+        if (tankSprite.getX() > worldSize - tankSprite.getHeight())
+            tankSprite.setX(worldSize - tankSprite.getHeight());
+
+        blockedDirection = null;
     }
+
 
     public Sprite getTankSprite() {
         return tankSprite;

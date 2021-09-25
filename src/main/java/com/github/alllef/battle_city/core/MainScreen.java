@@ -102,6 +102,12 @@ public class MainScreen implements Screen {
             for (Obstacle obstacle : obstacleGeneration.getObstacles()) {
                 if (obstacle.getObstacleSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
                     tank.setBlockedDirection(tank.getDir());
+                    switch (tank.getDir()){
+                        case UP -> tank.getTankSprite().setY(tank.getTankSprite().getY()-0.1f);
+                        case DOWN -> tank.getTankSprite().setY(tank.getTankSprite().getY()+0.1f);
+                        case LEFT -> tank.getTankSprite().setX(tank.getTankSprite().getX()+0.1f);
+                        case RIGHT ->tank.getTankSprite().setX(tank.getTankSprite().getX()-0.1f);
+                    }
                     System.out.println(tank.getTankSprite().getX() + " " + tank.getTankSprite().getY());
                 }
             }
