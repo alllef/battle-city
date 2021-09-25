@@ -98,4 +98,33 @@ public abstract class SingleTank extends GameEntity implements Tank {
         this.durationBetweenBullets = durationBetweenBullets;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SingleTank)) return false;
+        if (!super.equals(o)) return false;
+
+        SingleTank that = (SingleTank) o;
+
+        return getDir() == that.getDir();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getDir() != null ? getDir().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SingleTank{" +
+                "dir=" + dir +
+                ", blockedDirection=" + blockedDirection +
+                ", lastTimeShoot=" + lastTimeShoot +
+                ", durationBetweenBullets=" + durationBetweenBullets +
+                ", bulletFactory=" + bulletFactory +
+                ", prefs=" + prefs +
+                '}';
+    }
 }

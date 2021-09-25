@@ -24,6 +24,7 @@ public class MainScreen implements Screen {
     ObstacleGeneration obstacleGeneration;
     BitmapFont font;
     BulletFactory bulletFactory;
+
     int score = 0;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 

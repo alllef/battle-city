@@ -13,4 +13,6 @@ public class Obstacle extends GameEntity {
         sprite.setSize(SpriteParam.OBSTACLE.getWidth(), SpriteParam.OBSTACLE.getHeight());
         sprite.setPosition(x, y);
     }
+
+
 }

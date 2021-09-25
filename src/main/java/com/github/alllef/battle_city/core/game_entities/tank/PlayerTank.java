@@ -66,4 +66,6 @@ public class PlayerTank extends SingleTank implements Drawable {
     public void setRideLooping(boolean rideLooping) {
         this.isRideLooping = rideLooping;
     }
+
+
 }

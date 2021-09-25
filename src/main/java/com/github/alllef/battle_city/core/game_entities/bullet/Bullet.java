@@ -44,4 +44,5 @@ public class Bullet extends GameEntity {
     public void setDir(Direction dir) {
         this.dir = dir;
     }
+
 }

@@ -45,8 +45,8 @@ public class ObstacleGeneration implements Drawable {
                 int tmpY = y;
 
                 switch (dir) {
-                    case UP -> tmpY += i * spriteParam.getHeight();
-                    case DOWN -> tmpY -= (i + spriteParam.getHeight());
+                    case UP -> tmpY += (i * spriteParam.getHeight() + spriteParam.getHeight());
+                    case DOWN -> tmpY -= (i * spriteParam.getHeight() + spriteParam.getHeight());
                     case RIGHT -> tmpX += (i * spriteParam.getWidth() + spriteParam.getWidth());
                     case LEFT -> tmpX -= (i * spriteParam.getWidth() + spriteParam.getWidth());
                 }
