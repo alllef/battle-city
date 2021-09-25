@@ -1,21 +1,17 @@
-package com.github.alllef.battle_city.core.tank;
+package com.github.alllef.battle_city.core.game_entities.tank;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.github.alllef.battle_city.core.bullet.Bullet;
-import com.github.alllef.battle_city.core.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entities.GameEntity;
+import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
-import java.awt.*;
+public abstract class SingleTank extends GameEntity implements Tank {
 
-public abstract class SingleTank implements Tank {
-
-    private Sprite tankSprite;
     private Direction dir = Direction.UP;
     private Direction blockedDirection = null;
     private double lastTimeShoot = TimeUtils.millis();
@@ -26,10 +22,10 @@ public abstract class SingleTank implements Tank {
 
     protected SingleTank(String textureName, BulletFactory bulletFactory) {
         this.bulletFactory = bulletFactory;
-        this.tankSprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
-        tankSprite.setSize(SpriteParam.SINGLE_TANK.getWidth(), SpriteParam.SINGLE_TANK.getHeight());
-        tankSprite.setPosition(0, 0);
-        tankSprite.setOriginCenter();
+        this.sprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
+        sprite.setSize(SpriteParam.SINGLE_TANK.getWidth(), SpriteParam.SINGLE_TANK.getHeight());
+        sprite.setPosition(0, 0);
+        sprite.setOriginCenter();
     }
 
     @Override
@@ -39,14 +35,14 @@ public abstract class SingleTank implements Tank {
             return;
         lastTimeShoot = newTime;
 
-        float x = tankSprite.getX();
-        float y = tankSprite.getY();
+        float x = sprite.getX();
+        float y = sprite.getY();
 
         switch (dir) {
-            case UP -> y += tankSprite.getHeight();
-            case DOWN -> y -= tankSprite.getHeight();
-            case RIGHT -> x += tankSprite.getWidth();
-            case LEFT -> x -= tankSprite.getWidth();
+            case UP -> y += sprite.getHeight();
+            case DOWN -> y -= sprite.getHeight();
+            case RIGHT -> x += sprite.getWidth();
+            case LEFT -> x -= sprite.getWidth();
         }
         bulletFactory.createBullet(x, y, dir);
     }
@@ -58,37 +54,28 @@ public abstract class SingleTank implements Tank {
 
         if (dir != this.dir) {
             this.dir = dir;
-            tankSprite.setRotation(dir.getDegree());
+            sprite.setRotation(dir.getDegree());
             return;
         }
 
         float minDistance = prefs.getFloat("min_change_distance");
 
         switch (dir) {
-            case UP -> tankSprite.setY(tankSprite.getY() + minDistance);
-            case DOWN -> tankSprite.setY(tankSprite.getY() - minDistance);
-            case RIGHT -> tankSprite.setX(tankSprite.getX() + minDistance);
-            case LEFT -> tankSprite.setX(tankSprite.getX() - minDistance);
+            case UP -> sprite.setY(sprite.getY() + minDistance);
+            case DOWN -> sprite.setY(sprite.getY() - minDistance);
+            case RIGHT -> sprite.setX(sprite.getX() + minDistance);
+            case LEFT -> sprite.setX(sprite.getX() - minDistance);
         }
 
         int worldSize = prefs.getInteger("world_size");
-        if (tankSprite.getY() < 0) tankSprite.setY(0);
-        if (tankSprite.getX() < 0) tankSprite.setX(0);
-        if (tankSprite.getY() > worldSize - tankSprite.getWidth())
-            tankSprite.setY(worldSize - tankSprite.getWidth());
-        if (tankSprite.getX() > worldSize - tankSprite.getHeight())
-            tankSprite.setX(worldSize - tankSprite.getHeight());
+        if (sprite.getY() < 0) sprite.setY(0);
+        if (sprite.getX() < 0) sprite.setX(0);
+        if (sprite.getY() > worldSize - sprite.getWidth())
+            sprite.setY(worldSize - sprite.getWidth());
+        if (sprite.getX() > worldSize - sprite.getHeight())
+            sprite.setX(worldSize - sprite.getHeight());
 
         blockedDirection = null;
-    }
-
-
-    public Sprite getTankSprite() {
-        return tankSprite;
-    }
-
-    public void setTankSprite(Sprite tankSprite) {
-        this.tankSprite = tankSprite;
     }
 
     public Direction getDir() {

@@ -1,7 +1,6 @@
-package com.github.alllef.battle_city.core.bullet;
+package com.github.alllef.battle_city.core.game_entities.bullet;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.util.Direction;
@@ -22,7 +21,7 @@ public enum BulletFactory {
 
     public void updateBullets() {
         bulletArray.forEach(bullet -> {
-            Sprite bulletSprite = bullet.getBulletSprite();
+            Sprite bulletSprite = bullet.getSprite();
             bullet.move();
 
             int worldSize = Gdx.app

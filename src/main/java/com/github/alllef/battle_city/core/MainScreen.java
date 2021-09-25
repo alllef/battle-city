@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.github.alllef.battle_city.core.bullet.Bullet;
-import com.github.alllef.battle_city.core.bullet.BulletFactory;
-import com.github.alllef.battle_city.core.obstacle.Obstacle;
-import com.github.alllef.battle_city.core.obstacle.ObstacleGeneration;
-import com.github.alllef.battle_city.core.tank.*;
+import com.github.alllef.battle_city.core.game_entities.bullet.Bullet;
+import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entities.obstacle.Obstacle;
+import com.github.alllef.battle_city.core.game_entities.obstacle.ObstacleGeneration;
+import com.github.alllef.battle_city.core.game_entities.tank.*;
 
 import java.util.List;
 
@@ -62,10 +62,10 @@ public class MainScreen implements Screen {
         List.of(obstacleGeneration, playerTank, enemyTankManager)
                 .forEach(drawable -> drawable.draw(batch));
 
-        bulletFactory.getBullets().forEach(bullet -> bullet.getBulletSprite().draw(batch));
+        bulletFactory.getBullets().forEach(bullet -> bullet.getSprite().draw(batch));
         batch.end();
 
-        System.out.println(playerTank.getTankSprite().getX() + " " + playerTank.getTankSprite().getY());
+        System.out.println(playerTank.getSprite().getX() + " " + playerTank.getSprite().getY());
         bulletFactory.updateBullets();
         enemyTankManager.ride();
         enemyTankManager.shoot();
@@ -87,7 +87,7 @@ public class MainScreen implements Screen {
         Array<SingleTank> allTanks = getAllTanks();
         for (Bullet bullet : bulletFactory.getBullets()) {
             for (SingleTank tank : allTanks) {
-                if (bullet.getBulletSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
+                if (bullet.getSprite().getBoundingRectangle().overlaps(tank.getSprite().getBoundingRectangle())) {
                     if (tank instanceof EnemyTank)
                         enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank, true);
                     bulletFactory.getBullets().removeValue(bullet, true);
@@ -102,15 +102,15 @@ public class MainScreen implements Screen {
         Array<SingleTank> allTanks = getAllTanks();
         for (SingleTank tank : allTanks) {
             for (Obstacle obstacle : obstacleGeneration.getObstacles()) {
-                if (obstacle.getObstacleSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
+                if (obstacle.getSprite().getBoundingRectangle().overlaps(tank.getSprite().getBoundingRectangle())) {
                     tank.setBlockedDirection(tank.getDir());
                     switch (tank.getDir()) {
-                        case UP -> tank.getTankSprite().setY(tank.getTankSprite().getY() - 0.1f);
-                        case DOWN -> tank.getTankSprite().setY(tank.getTankSprite().getY() + 0.1f);
-                        case LEFT -> tank.getTankSprite().setX(tank.getTankSprite().getX() + 0.1f);
-                        case RIGHT -> tank.getTankSprite().setX(tank.getTankSprite().getX() - 0.1f);
+                        case UP -> tank.getSprite().setY(tank.getSprite().getY() - 0.1f);
+                        case DOWN -> tank.getSprite().setY(tank.getSprite().getY() + 0.1f);
+                        case LEFT -> tank.getSprite().setX(tank.getSprite().getX() + 0.1f);
+                        case RIGHT -> tank.getSprite().setX(tank.getSprite().getX() - 0.1f);
                     }
-                    System.out.println(tank.getTankSprite().getX() + " " + tank.getTankSprite().getY());
+                    System.out.println(tank.getSprite().getX() + " " + tank.getSprite().getY());
                 }
             }
         }
@@ -120,7 +120,7 @@ public class MainScreen implements Screen {
         Array<Bullet> bullets = bulletFactory.getBullets();
         for (Bullet bullet : bullets) {
             for (Obstacle obstacle : obstacleGeneration.getObstacles()) {
-                if (bullet.getBulletSprite().getBoundingRectangle().overlaps(obstacle.getObstacleSprite().getBoundingRectangle())) {
+                if (bullet.getSprite().getBoundingRectangle().overlaps(obstacle.getSprite().getBoundingRectangle())) {
                     obstacleGeneration.getObstacles().removeValue(obstacle, true);
                     bullets.removeValue(bullet, true);
                 }

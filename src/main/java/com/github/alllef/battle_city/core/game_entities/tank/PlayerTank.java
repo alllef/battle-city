@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.tank;
+package com.github.alllef.battle_city.core.game_entities.tank;
 
 import com.badlogic.gdx.Gdx;
 
@@ -6,7 +6,7 @@ import static com.badlogic.gdx.Input.Keys;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.alllef.battle_city.core.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -25,7 +25,7 @@ public class PlayerTank extends SingleTank implements Drawable {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        this.getTankSprite().draw(spriteBatch);
+        this.getSprite().draw(spriteBatch);
     }
 
     public void ride() {

@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.obstacle;
+package com.github.alllef.battle_city.core.game_entities.obstacle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -9,13 +9,12 @@ import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class ObstacleGeneration implements Drawable {
-    private Array<Obstacle> obstacles = new Array<>();
+    private final Array<Obstacle> obstacles = new Array<>();
 
 
     public void generateObstacles(int obstacleSetsNumber) {
@@ -27,7 +26,7 @@ public class ObstacleGeneration implements Drawable {
         for (int i = 0; i < obstacleSetsNumber; i++)
             generateObstacleSet(obstacleMap, sizeOfSet);
 
-        obstacleMap.values().forEach(value -> obstacles.add(value));
+        obstacleMap.values().forEach(obstacles::add);
     }
 
     private void generateObstacleSet(Map<Rectangle, Obstacle> obstacleMap, int setSize) {
@@ -53,7 +52,7 @@ public class ObstacleGeneration implements Drawable {
                 }
 
                 Obstacle obstacle = new Obstacle(tmpX, tmpY);
-                if (obstacleMap.containsKey(obstacle.getObstacleSprite().getBoundingRectangle()))
+                if (obstacleMap.containsKey(obstacle.getSprite().getBoundingRectangle()))
                     break;
 
                 resultSet.add(obstacle);
@@ -62,13 +61,13 @@ public class ObstacleGeneration implements Drawable {
         }
 
         resultSet.forEach(result ->
-                obstacleMap.put(result.getObstacleSprite().getBoundingRectangle(), result));
+                obstacleMap.put(result.getSprite().getBoundingRectangle(), result));
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
         obstacles.forEach(value ->
-                value.getObstacleSprite().draw(spriteBatch));
+                value.getSprite().draw(spriteBatch));
     }
 
     public Array<Obstacle> getObstacles() {

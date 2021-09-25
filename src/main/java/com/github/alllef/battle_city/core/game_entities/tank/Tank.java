@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.tank;
+package com.github.alllef.battle_city.core.game_entities.tank;
 
 import com.github.alllef.battle_city.core.util.Direction;
 

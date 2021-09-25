@@ -1,16 +1,13 @@
-package com.github.alllef.battle_city.core.tank;
+package com.github.alllef.battle_city.core.game_entities.tank;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.github.alllef.battle_city.core.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -67,7 +64,7 @@ public class EnemyTankManager implements Drawable {
     public void draw(SpriteBatch spriteBatch) {
         this.getEnemyTanks()
                 .forEach(enemyTank ->
-                        enemyTank.getTankSprite().draw(spriteBatch));
+                        enemyTank.getSprite().draw(spriteBatch));
     }
 
 }
