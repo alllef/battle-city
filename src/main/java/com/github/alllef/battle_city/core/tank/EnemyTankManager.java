@@ -1,6 +1,7 @@
 package com.github.alllef.battle_city.core.tank;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -24,10 +25,11 @@ public class EnemyTankManager implements Drawable {
     }
 
     private void generateTanks(int tankNumber) {
-
+        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+        int worldSize = prefs.getInteger("world_size");
         for (int i = 0; i < tankNumber; i++) {
-            int x = (int) (Math.random() * 80);
-            int y = (int) (Math.random() * 80);
+            int x = (int) (Math.random() * worldSize*0.95);
+            int y = (int) (Math.random() * worldSize*0.95);
             enemyTanks.add(new EnemyTank(x, y));
         }
     }
@@ -40,7 +42,9 @@ public class EnemyTankManager implements Drawable {
             if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank) <= 0) {
                 dir = Direction.values()[new Random().nextInt(Direction.values().length)];
                 tmpTank.ride(dir);
-                stepsNum.put(tmpTank, new Random().nextInt(40));
+
+                Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+                stepsNum.put(tmpTank, new Random().nextInt(prefs.getInteger("max_ride_distance")));
             }
 
             tmpTank.ride(dir);

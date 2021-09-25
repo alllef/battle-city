@@ -12,6 +12,14 @@ public class BattleCity extends Game {
         prefs.putInteger("world_size",100);
         prefs.putFloat("min_change_distance",1.0f / 10f);
         prefs.putInteger("bullets_cooldown",500);
+        prefs.putFloat("bullet_speed_scaled",2.0f);
+        prefs.putInteger("killed_tank_score",100);
+        prefs.putFloat("score_scale_X",0.15f);
+        prefs.putFloat("score_scale_Y",0.25f);
+        prefs.putFloat("score_pos",0.8f);
+        prefs.putInteger("min_obstacle_set_size",10);
+        prefs.putInteger("obstacle_size_dispersion",15);
+        prefs.putInteger("max_ride_distance",40);
         this.setScreen(new MainScreen());
     }
 

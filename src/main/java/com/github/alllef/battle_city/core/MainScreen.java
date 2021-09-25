@@ -1,6 +1,7 @@
 package com.github.alllef.battle_city.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,6 +23,7 @@ public class MainScreen implements Screen {
     ObstacleGeneration obstacleGeneration;
     BitmapFont font;
     int score = 0;
+    Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     public MainScreen() {
         camera = new OrthographicCamera();
@@ -31,15 +33,13 @@ public class MainScreen implements Screen {
         playerTank = new PlayerTank();
 
 
-        int worldSize = Gdx.app
-                .getPreferences("com.github.alllef.battle_city.prefs")
-                .getInteger("world_size");
+        int worldSize = prefs.getInteger("world_size");
 
         camera.setToOrtho(false, worldSize, worldSize);
 
         obstacleGeneration.generateObstacles(4);
         enemyTankManager = new EnemyTankManager(5);
-        font.getData().setScale(0.15f, 0.25f);
+        font.getData().setScale(prefs.getFloat("score_scale_X"),prefs.getFloat("score_scale_Y"));
     }
 
 
@@ -55,14 +55,15 @@ public class MainScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        font.draw(batch, "Score: " + score, 80, 80);
+        float scoreResultPos = prefs.getInteger("world_size")*prefs.getFloat("score_pos");
+        font.draw(batch, "Score: " + score, scoreResultPos, scoreResultPos);
         List.of(obstacleGeneration, playerTank, enemyTankManager)
                 .forEach(drawable -> drawable.draw(batch));
 
         Bullet.bulletArray.forEach(bullet -> bullet.getBulletSprite().draw(batch));
         batch.end();
-        
-        System.out.println(playerTank.getTankSprite().getX()+" "+playerTank.getTankSprite().getY());
+
+        System.out.println(playerTank.getTankSprite().getX() + " " + playerTank.getTankSprite().getY());
         Bullet.updateBullets();
         enemyTankManager.ride();
         enemyTankManager.shoot();
@@ -88,7 +89,7 @@ public class MainScreen implements Screen {
                     if (tank instanceof EnemyTank)
                         enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank, true);
                     Bullet.bulletArray.removeValue(bullet, true);
-                    score += 100;
+                    score += prefs.getInteger("killed_tank_score");
                 }
             }
         }

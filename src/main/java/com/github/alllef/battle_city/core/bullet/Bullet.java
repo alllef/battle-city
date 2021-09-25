@@ -33,7 +33,7 @@ public class Bullet {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         int worldSize = prefs.getInteger("world_size");
 
-        float minDistance = prefs.getFloat("min_change_distance")*2;
+        float minDistance = prefs.getFloat("min_change_distance")* prefs.getFloat("bullet_speed_scaled");
 
         switch (dir) {
             case UP -> bulletSprite.setY(bulletSprite.getY() + minDistance);
