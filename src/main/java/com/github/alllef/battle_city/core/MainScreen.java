@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.alllef.battle_city.core.bullet.Bullet;
+import com.github.alllef.battle_city.core.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.tank.*;
@@ -22,24 +23,25 @@ public class MainScreen implements Screen {
     EnemyTankManager enemyTankManager;
     ObstacleGeneration obstacleGeneration;
     BitmapFont font;
+    BulletFactory bulletFactory;
     int score = 0;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     public MainScreen() {
+        bulletFactory = BulletFactory.INSTANCE;
         camera = new OrthographicCamera();
         obstacleGeneration = new ObstacleGeneration();
         font = new BitmapFont();
         batch = new SpriteBatch();
-        playerTank = new PlayerTank();
-
+        playerTank = new PlayerTank(bulletFactory);
 
         int worldSize = prefs.getInteger("world_size");
 
         camera.setToOrtho(false, worldSize, worldSize);
 
         obstacleGeneration.generateObstacles(4);
-        enemyTankManager = new EnemyTankManager(5);
-        font.getData().setScale(prefs.getFloat("score_scale_X"),prefs.getFloat("score_scale_Y"));
+        enemyTankManager = new EnemyTankManager(5, bulletFactory);
+        font.getData().setScale(prefs.getFloat("score_scale_X"), prefs.getFloat("score_scale_Y"));
     }
 
 
@@ -55,16 +57,16 @@ public class MainScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        float scoreResultPos = prefs.getInteger("world_size")*prefs.getFloat("score_pos");
+        float scoreResultPos = prefs.getInteger("world_size") * prefs.getFloat("score_pos");
         font.draw(batch, "Score: " + score, scoreResultPos, scoreResultPos);
         List.of(obstacleGeneration, playerTank, enemyTankManager)
                 .forEach(drawable -> drawable.draw(batch));
 
-        Bullet.bulletArray.forEach(bullet -> bullet.getBulletSprite().draw(batch));
+        bulletFactory.getBullets().forEach(bullet -> bullet.getBulletSprite().draw(batch));
         batch.end();
 
         System.out.println(playerTank.getTankSprite().getX() + " " + playerTank.getTankSprite().getY());
-        Bullet.updateBullets();
+        bulletFactory.updateBullets();
         enemyTankManager.ride();
         enemyTankManager.shoot();
         playerTank.ride();
@@ -83,12 +85,12 @@ public class MainScreen implements Screen {
 
     public void checkBulletShootTank() {
         Array<SingleTank> allTanks = getAllTanks();
-        for (Bullet bullet : Bullet.bulletArray) {
+        for (Bullet bullet : bulletFactory.getBullets()) {
             for (SingleTank tank : allTanks) {
                 if (bullet.getBulletSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
                     if (tank instanceof EnemyTank)
                         enemyTankManager.getEnemyTanks().removeValue((EnemyTank) tank, true);
-                    Bullet.bulletArray.removeValue(bullet, true);
+                    bulletFactory.getBullets().removeValue(bullet, true);
                     score += prefs.getInteger("killed_tank_score");
                 }
             }
@@ -102,11 +104,11 @@ public class MainScreen implements Screen {
             for (Obstacle obstacle : obstacleGeneration.getObstacles()) {
                 if (obstacle.getObstacleSprite().getBoundingRectangle().overlaps(tank.getTankSprite().getBoundingRectangle())) {
                     tank.setBlockedDirection(tank.getDir());
-                    switch (tank.getDir()){
-                        case UP -> tank.getTankSprite().setY(tank.getTankSprite().getY()-0.1f);
-                        case DOWN -> tank.getTankSprite().setY(tank.getTankSprite().getY()+0.1f);
-                        case LEFT -> tank.getTankSprite().setX(tank.getTankSprite().getX()+0.1f);
-                        case RIGHT ->tank.getTankSprite().setX(tank.getTankSprite().getX()-0.1f);
+                    switch (tank.getDir()) {
+                        case UP -> tank.getTankSprite().setY(tank.getTankSprite().getY() - 0.1f);
+                        case DOWN -> tank.getTankSprite().setY(tank.getTankSprite().getY() + 0.1f);
+                        case LEFT -> tank.getTankSprite().setX(tank.getTankSprite().getX() + 0.1f);
+                        case RIGHT -> tank.getTankSprite().setX(tank.getTankSprite().getX() - 0.1f);
                     }
                     System.out.println(tank.getTankSprite().getX() + " " + tank.getTankSprite().getY());
                 }
@@ -115,11 +117,12 @@ public class MainScreen implements Screen {
     }
 
     public void checkBulletShootObstacle() {
-        for (Bullet bullet : Bullet.bulletArray) {
+        Array<Bullet> bullets = bulletFactory.getBullets();
+        for (Bullet bullet : bullets) {
             for (Obstacle obstacle : obstacleGeneration.getObstacles()) {
                 if (bullet.getBulletSprite().getBoundingRectangle().overlaps(obstacle.getObstacleSprite().getBoundingRectangle())) {
                     obstacleGeneration.getObstacles().removeValue(obstacle, true);
-                    Bullet.bulletArray.removeValue(bullet, true);
+                    bullets.removeValue(bullet, true);
                 }
             }
         }

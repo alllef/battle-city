@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.bullet.Bullet;
+import com.github.alllef.battle_city.core.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
@@ -19,10 +20,12 @@ public abstract class SingleTank implements Tank {
     private Direction blockedDirection = null;
     private double lastTimeShoot = TimeUtils.millis();
     private double durationBetweenBullets;
+    private final BulletFactory bulletFactory;
 
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
-    protected SingleTank(String textureName) {
+    protected SingleTank(String textureName, BulletFactory bulletFactory) {
+        this.bulletFactory = bulletFactory;
         this.tankSprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
         tankSprite.setSize(SpriteParam.SINGLE_TANK.getWidth(), SpriteParam.SINGLE_TANK.getHeight());
         tankSprite.setPosition(0, 0);
@@ -45,8 +48,7 @@ public abstract class SingleTank implements Tank {
             case RIGHT -> x += tankSprite.getWidth();
             case LEFT -> x -= tankSprite.getWidth();
         }
-
-        Bullet bullet = new Bullet(x, y, dir);
+        bulletFactory.createBullet(x, y, dir);
     }
 
     @Override
@@ -54,7 +56,7 @@ public abstract class SingleTank implements Tank {
         if (dir == blockedDirection)
             return;
 
-        if (dir!=this.dir){
+        if (dir != this.dir) {
             this.dir = dir;
             tankSprite.setRotation(dir.getDegree());
             return;

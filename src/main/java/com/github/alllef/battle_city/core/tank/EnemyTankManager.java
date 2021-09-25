@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.github.alllef.battle_city.core.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 
@@ -17,8 +18,10 @@ import java.util.Random;
 public class EnemyTankManager implements Drawable {
     private Array<EnemyTank> enemyTanks;
     private Map<EnemyTank, Integer> stepsNum;
+    private final BulletFactory bulletFactory;
 
-    public EnemyTankManager(int tankNumber) {
+    public EnemyTankManager(int tankNumber, BulletFactory bulletFactory) {
+        this.bulletFactory = bulletFactory;
         enemyTanks = new Array<>();
         stepsNum = new HashMap<>();
         generateTanks(tankNumber);
@@ -28,9 +31,9 @@ public class EnemyTankManager implements Drawable {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         int worldSize = prefs.getInteger("world_size");
         for (int i = 0; i < tankNumber; i++) {
-            int x = (int) (Math.random() * worldSize*0.95);
-            int y = (int) (Math.random() * worldSize*0.95);
-            enemyTanks.add(new EnemyTank(x, y));
+            int x = (int) (Math.random() * worldSize * 0.95);
+            int y = (int) (Math.random() * worldSize * 0.95);
+            enemyTanks.add(new EnemyTank(bulletFactory,x, y));
         }
     }
 
@@ -56,7 +59,7 @@ public class EnemyTankManager implements Drawable {
         return enemyTanks;
     }
 
-    public void shoot(){
+    public void shoot() {
         enemyTanks.forEach(EnemyTank::shoot);
     }
 

@@ -6,6 +6,7 @@ import static com.badlogic.gdx.Input.Keys;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.github.alllef.battle_city.core.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -15,8 +16,8 @@ import java.util.Optional;
 public class PlayerTank extends SingleTank implements Drawable {
     private boolean isRideLooping = false;
 
-    public PlayerTank() {
-        super(SpriteParam.PLAYER_TANK.getTexturePath());
+    public PlayerTank(BulletFactory bulletFactory) {
+        super(SpriteParam.PLAYER_TANK.getTexturePath(),bulletFactory);
         addPlayerTankInputAdapter();
         setDurationBetweenBullets(prefs.getInteger("bullets_cooldown"));
     }

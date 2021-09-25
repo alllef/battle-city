@@ -11,9 +11,8 @@ import com.github.alllef.battle_city.core.util.SpriteParam;
 public class Bullet {
     private Sprite bulletSprite;
     private Direction dir;
-    public static Array<Bullet> bulletArray = new Array<>();
 
-    public Bullet(float x, float y, Direction dir) {
+    protected Bullet(float x, float y, Direction dir) {
         this.dir = dir;
         SpriteParam param = SpriteParam.BULLET;
         bulletSprite = new Sprite(new Texture(param.getTexturePath()));
@@ -22,11 +21,6 @@ public class Bullet {
         bulletSprite.setRotation(dir.getDegree());
         bulletSprite.setPosition(x, y);
 
-        bulletArray.add(this);
-    }
-
-    public static void updateBullets() {
-        bulletArray.forEach(Bullet::move);
     }
 
     public void move() {
@@ -41,10 +35,6 @@ public class Bullet {
             case RIGHT -> bulletSprite.setX(bulletSprite.getX() + minDistance);
             case LEFT -> bulletSprite.setX(bulletSprite.getX() - minDistance);
         }
-
-        if (bulletSprite.getY() < 0 && bulletSprite.getX() < 0 && bulletSprite.getY() > worldSize - bulletSprite.getWidth()
-                && bulletSprite.getX() > worldSize - bulletSprite.getHeight())
-            bulletArray.removeValue(this, true);
     }
 
 
