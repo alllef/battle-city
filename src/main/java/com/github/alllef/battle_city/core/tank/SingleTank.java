@@ -1,11 +1,14 @@
 package com.github.alllef.battle_city.core.tank;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.bullet.Bullet;
 import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.util.SpriteParam;
 
 import java.awt.*;
 
@@ -17,9 +20,11 @@ public abstract class SingleTank implements Tank {
     private double lastTimeShoot = TimeUtils.millis();
     private double durationBetweenBullets;
 
+    protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+
     protected SingleTank(String textureName) {
         this.tankSprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
-        tankSprite.setSize(2, 2);
+        tankSprite.setSize(SpriteParam.SINGLE_TANK.getWidth(), SpriteParam.SINGLE_TANK.getHeight());
         tankSprite.setPosition(0, 0);
     }
 
@@ -54,7 +59,7 @@ public abstract class SingleTank implements Tank {
     @Override
     public void ride(Direction dir) {
         if (dir != blockedDirection) {
-            float minDistance = 1.0f / 10f;
+            float minDistance = prefs.getFloat("min_change_distance");
             this.dir = dir;
 
             switch (dir) {
@@ -64,10 +69,11 @@ public abstract class SingleTank implements Tank {
                 case LEFT -> tankSprite.setX(tankSprite.getX() - minDistance);
             }
 
+            int worldSize = prefs.getInteger("world_size");
             if (tankSprite.getY() < 0) tankSprite.setY(0);
             if (tankSprite.getX() < 0) tankSprite.setX(0);
-            if (tankSprite.getY() > 100 - tankSprite.getWidth()) tankSprite.setY(100 - tankSprite.getWidth());
-            if (tankSprite.getX() > 100 - tankSprite.getHeight()) tankSprite.setX(100 - tankSprite.getHeight());
+            if (tankSprite.getY() > worldSize - tankSprite.getWidth()) tankSprite.setY(worldSize - tankSprite.getWidth());
+            if (tankSprite.getX() > worldSize - tankSprite.getHeight()) tankSprite.setX(worldSize - tankSprite.getHeight());
 
             tankSprite.setOriginCenter();
             tankSprite.setRotation(dir.getDegree());

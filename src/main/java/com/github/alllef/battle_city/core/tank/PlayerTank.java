@@ -4,24 +4,21 @@ import com.badlogic.gdx.Gdx;
 
 import static com.badlogic.gdx.Input.Keys;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.util.SpriteParam;
 
-import java.awt.*;
 import java.util.Optional;
 
 public class PlayerTank extends SingleTank implements Drawable {
-    private boolean rideLooping = false;
+    private boolean isRideLooping = false;
 
     public PlayerTank() {
-        super("sprites/player.png");
+        super(SpriteParam.PLAYER_TANK.getTexturePath());
         addPlayerTankInputAdapter();
-        setDurationBetweenBullets(500);
+        setDurationBetweenBullets(prefs.getInteger("bullets_cooldown"));
     }
 
 
@@ -31,7 +28,7 @@ public class PlayerTank extends SingleTank implements Drawable {
     }
 
     public void ride() {
-        if (rideLooping)
+        if (isRideLooping)
             ride(this.getDir());
     }
 
@@ -39,10 +36,8 @@ public class PlayerTank extends SingleTank implements Drawable {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                if (keycode == Keys.SPACE){
+                if (keycode == Keys.SPACE)
                     PlayerTank.this.shoot();
-                    System.out.println("Generated");
-                }
 
                 Optional<Direction> optionalDir = Direction.of(keycode);
 
@@ -50,26 +45,24 @@ public class PlayerTank extends SingleTank implements Drawable {
                     PlayerTank.this.setRideLooping(true);
                     PlayerTank.this.ride(optionalDir.get());
                 }
-
                 return true;
             }
 
             @Override
             public boolean keyUp(int keycode) {
                 Optional<Direction> dir = Direction.of(keycode);
-                if (dir.isPresent() && dir.get() == PlayerTank.this.getDir()) {
+                if (dir.isPresent() && dir.get() == PlayerTank.this.getDir())
                     PlayerTank.this.setRideLooping(false);
-                }
                 return false;
             }
         });
     }
 
     public boolean isRideLooping() {
-        return rideLooping;
+        return isRideLooping;
     }
 
     public void setRideLooping(boolean rideLooping) {
-        this.rideLooping = rideLooping;
+        this.isRideLooping = rideLooping;
     }
 }

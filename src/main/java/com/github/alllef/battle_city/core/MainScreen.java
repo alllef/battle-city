@@ -24,16 +24,21 @@ public class MainScreen implements Screen {
     int score = 0;
 
     public MainScreen() {
-        enemyTankManager = new EnemyTankManager(5);
         camera = new OrthographicCamera();
         obstacleGeneration = new ObstacleGeneration();
-        int worldSize = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs").getInteger("world_size");
-        camera.setToOrtho(false, worldSize, worldSize);
-        obstacleGeneration.generateObstacles(4);
         font = new BitmapFont();
-        font.getData().setScale(0.15f, 0.25f);
         batch = new SpriteBatch();
         playerTank = new PlayerTank();
+
+        int worldSize = Gdx.app
+                .getPreferences("com.github.alllef.battle_city.prefs")
+                .getInteger("world_size");
+
+        camera.setToOrtho(false, worldSize, worldSize);
+
+        obstacleGeneration.generateObstacles(4);
+        enemyTankManager = new EnemyTankManager(5);
+        font.getData().setScale(0.15f, 0.25f);
     }
 
 
@@ -43,6 +48,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float v) {
+
         ScreenUtils.clear(0, 0, 0, 1);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
@@ -59,6 +65,7 @@ public class MainScreen implements Screen {
         enemyTankManager.ride();
         enemyTankManager.shoot();
         playerTank.ride();
+
         checkBulletShootTank();
         checkBulletShootObstacle();
         checkTankOverlapsObstacle();

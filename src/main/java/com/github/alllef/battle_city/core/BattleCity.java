@@ -8,11 +8,11 @@ public class BattleCity extends Game {
 
     @Override
     public void create() {
-        this.setScreen(new MainScreen());
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         prefs.putInteger("world_size",100);
         prefs.putFloat("min_change_distance",1.0f / 10f);
-
+        prefs.putInteger("bullets_cooldown",500);
+        this.setScreen(new MainScreen());
     }
 
     @Override
