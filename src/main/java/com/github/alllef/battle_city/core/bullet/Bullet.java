@@ -13,6 +13,18 @@ public class Bullet {
     private Direction dir;
     public static Array<Bullet> bulletArray = new Array<>();
 
+    public Bullet(float x, float y, Direction dir) {
+        this.dir = dir;
+        SpriteParam param = SpriteParam.BULLET;
+        bulletSprite = new Sprite(new Texture(param.getTexturePath()));
+        bulletSprite.setSize(param.getWidth(), param.getHeight());
+        bulletSprite.setOriginCenter();
+        bulletSprite.setRotation(dir.getDegree());
+        bulletSprite.setPosition(x, y);
+
+        bulletArray.add(this);
+    }
+
     public static void updateBullets() {
         bulletArray.forEach(Bullet::move);
     }
@@ -35,16 +47,6 @@ public class Bullet {
             bulletArray.removeValue(this, true);
     }
 
-    public Bullet(float x, float y, Direction dir) {
-        this.dir = dir;
-        SpriteParam param = SpriteParam.BULLET;
-        bulletSprite = new Sprite(new Texture(param.getTexturePath()));
-        bulletSprite.setSize(param.getWidth(), param.getHeight());
-        bulletSprite.setPosition(x, y);
-        bulletSprite.setRotation(dir.getDegree());
-
-        bulletArray.add(this);
-    }
 
     public Sprite getBulletSprite() {
         return bulletSprite;

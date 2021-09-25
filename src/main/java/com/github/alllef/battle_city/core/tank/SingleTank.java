@@ -31,10 +31,8 @@ public abstract class SingleTank implements Tank {
     @Override
     public void shoot() {
         double newTime = TimeUtils.millis();
-
         if (newTime - lastTimeShoot < durationBetweenBullets)
             return;
-
         lastTimeShoot = newTime;
 
         float x = tankSprite.getX();
@@ -42,15 +40,9 @@ public abstract class SingleTank implements Tank {
 
         switch (dir) {
             case UP -> y += tankSprite.getHeight();
-            case DOWN -> {
-                y = y - tankSprite.getHeight() - 3 - 2;
-                x = x - tankSprite.getHeight() - 2;
-            }
-            case RIGHT -> {
-                x += tankSprite.getHeight();
-                y = y - 2 - 2;
-            }
-            case LEFT -> x = x - 1 - 3 - 1 - 2;
+            case DOWN -> y -= tankSprite.getHeight();
+            case RIGHT -> x += tankSprite.getWidth();
+            case LEFT -> x -= tankSprite.getWidth();
         }
 
         Bullet bullet = new Bullet(x, y, dir);
@@ -72,8 +64,10 @@ public abstract class SingleTank implements Tank {
             int worldSize = prefs.getInteger("world_size");
             if (tankSprite.getY() < 0) tankSprite.setY(0);
             if (tankSprite.getX() < 0) tankSprite.setX(0);
-            if (tankSprite.getY() > worldSize - tankSprite.getWidth()) tankSprite.setY(worldSize - tankSprite.getWidth());
-            if (tankSprite.getX() > worldSize - tankSprite.getHeight()) tankSprite.setX(worldSize - tankSprite.getHeight());
+            if (tankSprite.getY() > worldSize - tankSprite.getWidth())
+                tankSprite.setY(worldSize - tankSprite.getWidth());
+            if (tankSprite.getX() > worldSize - tankSprite.getHeight())
+                tankSprite.setX(worldSize - tankSprite.getHeight());
 
             tankSprite.setOriginCenter();
             tankSprite.setRotation(dir.getDegree());

@@ -30,6 +30,7 @@ public class MainScreen implements Screen {
         batch = new SpriteBatch();
         playerTank = new PlayerTank();
 
+
         int worldSize = Gdx.app
                 .getPreferences("com.github.alllef.battle_city.prefs")
                 .getInteger("world_size");
@@ -60,7 +61,8 @@ public class MainScreen implements Screen {
 
         Bullet.bulletArray.forEach(bullet -> bullet.getBulletSprite().draw(batch));
         batch.end();
-
+        
+        System.out.println(playerTank.getTankSprite().getX()+" "+playerTank.getTankSprite().getY());
         Bullet.updateBullets();
         enemyTankManager.ride();
         enemyTankManager.shoot();

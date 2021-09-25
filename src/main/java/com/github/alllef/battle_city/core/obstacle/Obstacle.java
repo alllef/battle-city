@@ -5,10 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
 public class Obstacle {
-    Sprite obstacleSprite = new Sprite(new Texture(SpriteParam.BULLET.getTexturePath()));
+    Sprite obstacleSprite = new Sprite(new Texture(SpriteParam.OBSTACLE.getTexturePath()));
 
     public Obstacle(int x, int y) {
-        obstacleSprite.setSize(SpriteParam.BULLET.getWidth(),SpriteParam.BULLET.getHeight());
+        obstacleSprite.setSize(SpriteParam.OBSTACLE.getWidth(),SpriteParam.OBSTACLE.getHeight());
         obstacleSprite.setPosition(x,y);
     }
 
