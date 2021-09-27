@@ -9,6 +9,9 @@ import com.github.alllef.battle_city.core.game_entities.GameEntity;
 import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.util.world.WorldCheck;
+
+import java.util.Optional;
 
 public abstract class SingleTank extends GameEntity implements Tank {
 
@@ -68,6 +71,12 @@ public abstract class SingleTank extends GameEntity implements Tank {
         }
 
         int worldSize = prefs.getInteger("world_size");
+       /* Optional<Direction> outOfBoundsDir = WorldCheck.isOutOfWorld(sprite);
+      if (outOfBoundsDir.isPresent()) {
+          switch (outOfBoundsDir.get()) {
+              case UP ->
+          }
+      }*/
         if (sprite.getY() < 0) sprite.setY(0);
         if (sprite.getX() < 0) sprite.setX(0);
         if (sprite.getY() > worldSize - sprite.getWidth())

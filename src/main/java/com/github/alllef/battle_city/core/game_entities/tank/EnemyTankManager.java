@@ -13,11 +13,21 @@ import java.util.Map;
 import java.util.Random;
 
 public class EnemyTankManager implements Drawable {
+    private static EnemyTankManager enemyTankManager;
+
+    public static EnemyTankManager getInstance() {
+        if (enemyTankManager == null) {
+            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+            enemyTankManager = new EnemyTankManager(prefs.getInteger("enemy_tanks_number"), BulletFactory.INSTANCE);
+        }
+        return enemyTankManager;
+    }
+
     private Array<EnemyTank> enemyTanks;
     private Map<EnemyTank, Integer> stepsNum;
     private final BulletFactory bulletFactory;
 
-    public EnemyTankManager(int tankNumber, BulletFactory bulletFactory) {
+    private EnemyTankManager(int tankNumber, BulletFactory bulletFactory) {
         this.bulletFactory = bulletFactory;
         enemyTanks = new Array<>();
         stepsNum = new HashMap<>();
@@ -30,7 +40,7 @@ public class EnemyTankManager implements Drawable {
         for (int i = 0; i < tankNumber; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
             int y = (int) (Math.random() * worldSize * 0.95);
-            enemyTanks.add(new EnemyTank(bulletFactory,x, y));
+            enemyTanks.add(new EnemyTank(bulletFactory, x, y));
         }
     }
 

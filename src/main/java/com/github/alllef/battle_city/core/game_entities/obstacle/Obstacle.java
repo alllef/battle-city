@@ -9,10 +9,9 @@ import com.github.alllef.battle_city.core.util.SpriteParam;
 public class Obstacle extends GameEntity {
 
     public Obstacle(int x, int y) {
-        sprite.setTexture(new Texture(Gdx.files.internal(SpriteParam.OBSTACLE.getTexturePath())));
+        sprite = new Sprite(new Texture(Gdx.files.internal(SpriteParam.OBSTACLE.getTexturePath())));
         sprite.setSize(SpriteParam.OBSTACLE.getWidth(), SpriteParam.OBSTACLE.getHeight());
         sprite.setPosition(x, y);
     }
-
 
 }

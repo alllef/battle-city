@@ -14,14 +14,19 @@ import com.github.alllef.battle_city.core.util.SpriteParam;
 import java.util.Optional;
 
 public class PlayerTank extends SingleTank implements Drawable {
+    private static final PlayerTank tank = new PlayerTank(BulletFactory.INSTANCE);
+
+    public static PlayerTank getInstance() {
+        return tank;
+    }
+
     private boolean isRideLooping = false;
 
-    public PlayerTank(BulletFactory bulletFactory) {
-        super(SpriteParam.PLAYER_TANK.getTexturePath(),bulletFactory);
+    private PlayerTank(BulletFactory bulletFactory) {
+        super(SpriteParam.PLAYER_TANK.getTexturePath(), bulletFactory);
         addPlayerTankInputAdapter();
         setDurationBetweenBullets(prefs.getInteger("bullets_cooldown"));
     }
-
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
