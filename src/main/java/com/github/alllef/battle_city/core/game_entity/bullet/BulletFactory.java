@@ -21,7 +21,8 @@ public enum BulletFactory implements Drawable {
         return bulletArray;
     }
 
-    public void updateBullets() {
+    public Array<Bullet> updateBullets() {
+        Array<Bullet> bulletsToDelete = new Array<>();
         bulletArray.forEach(bullet -> {
             Sprite bulletSprite = bullet.getSprite();
             bullet.move();
@@ -30,10 +31,13 @@ public enum BulletFactory implements Drawable {
                     .getPreferences("com.github.alllef.battle_city.prefs")
                     .getInteger("world_size");
 
-            if (bulletSprite.getY() < 0 && bulletSprite.getX() < 0 && bulletSprite.getY() > worldSize - bulletSprite.getWidth()
-                    && bulletSprite.getX() > worldSize - bulletSprite.getHeight())
+            if (bulletSprite.getY() < 0 || bulletSprite.getX() < 0 || bulletSprite.getY() > worldSize - bulletSprite.getWidth()
+                    || bulletSprite.getX() > worldSize - bulletSprite.getHeight()) {
                 bulletArray.removeValue(bullet, true);
+                bulletsToDelete.add(bullet);
+            }
         });
+        return bulletsToDelete;
     }
 
     @Override

@@ -87,17 +87,18 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
     public void checkOverlapsObstacle(Obstacle obstacle) {
 
-        if (obstacle.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle())) {
+        //if (obstacle.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle())) {
             this.setBlockedDirection(this.getDir());
+            float minChangeDistance = prefs.getFloat("min_change_distance");
             switch (this.getDir()) {
-                case UP -> this.getSprite().setY(this.getSprite().getY() - 0.1f);
-                case DOWN -> this.getSprite().setY(this.getSprite().getY() + 0.1f);
-                case LEFT -> this.getSprite().setX(this.getSprite().getX() + 0.1f);
-                case RIGHT -> this.getSprite().setX(this.getSprite().getX() - 0.1f);
+                case UP -> this.getSprite().setY(this.getSprite().getY() - minChangeDistance);
+                case DOWN -> this.getSprite().setY(this.getSprite().getY() + minChangeDistance);
+                case LEFT -> this.getSprite().setX(this.getSprite().getX() + minChangeDistance);
+                case RIGHT -> this.getSprite().setX(this.getSprite().getX() - minChangeDistance);
             }
             //System.out.println(tank.getSprite().getX() + " " + tank.getSprite().getY());
         }
-    }
+    //}
 
     public Direction getDir() {
         return dir;

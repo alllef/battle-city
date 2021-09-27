@@ -16,6 +16,7 @@ public class Bullet extends GameEntity {
         this.dir = dir;
         SpriteParam param = SpriteParam.BULLET;
         sprite = new Sprite(new Texture(param.getTexturePath()));
+
         sprite.setSize(param.getWidth(), param.getHeight());
         sprite.setOriginCenter();
         sprite.setRotation(dir.getDegree());
@@ -27,7 +28,7 @@ public class Bullet extends GameEntity {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         int worldSize = prefs.getInteger("world_size");
 
-        float minDistance = prefs.getFloat("min_change_distance")* prefs.getFloat("bullet_speed_scaled");
+        float minDistance = prefs.getFloat("min_change_distance") * prefs.getFloat("bullet_speed_scaled");
 
         switch (dir) {
             case UP -> sprite.setY(sprite.getY() + minDistance);
@@ -45,4 +46,11 @@ public class Bullet extends GameEntity {
         this.dir = dir;
     }
 
+    @Override
+    public String toString() {
+        return "Bullet{" +
+                "dir=" + dir +
+                ", sprite=" + sprite +
+                '}';
+    }
 }

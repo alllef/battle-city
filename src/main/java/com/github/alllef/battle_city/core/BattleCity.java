@@ -10,8 +10,8 @@ public class BattleCity extends Game {
     @Override
     public void create() {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-        prefs.putInteger("world_size",100);
-        prefs.putFloat("min_change_distance",1.0f / 10f);
+        prefs.putInteger("world_size",1000);
+        prefs.putFloat("min_change_distance",prefs.getInteger("world_size")/1000f);
         prefs.putInteger("bullets_cooldown",500);
         prefs.putFloat("bullet_speed_scaled",2.0f);
         prefs.putInteger("killed_tank_score",100);
@@ -22,7 +22,7 @@ public class BattleCity extends Game {
         prefs.putInteger("obstacle_size_dispersion",15);
         prefs.putInteger("max_ride_distance",40);
         prefs.putInteger("enemy_tanks_number",5);
-        prefs.putInteger("obstacle_sets",0);
+        prefs.putInteger("obstacle_sets",2);
         this.setScreen(new MainScreen());
     }
 

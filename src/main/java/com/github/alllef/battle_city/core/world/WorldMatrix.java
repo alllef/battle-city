@@ -31,7 +31,6 @@ public class WorldMatrix implements Drawable {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         int worldSize = prefs.getInteger("world_size");
         entityMatrix = new GameEntity[worldSize][worldSize];
-
     }
 
     private Array<GameEntity> getEntitiesArray() {
@@ -59,13 +58,14 @@ public class WorldMatrix implements Drawable {
         for (; x < boundX; x++) {
             for (; y < boundY; y++) {
                 try {
-                    if (setEntity!=null&&entityMatrix[x][y] != null)
+                    if (setEntity != null && entityMatrix[x][y] != null)
                         checkOverlaps(entityCoords, entityMatrix[x][y]);
                     else
                         entityMatrix[x][y] = setEntity;
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println(x+" "+y);
-                    System.out.println(sprite.getWidth()+" "+sprite.getHeight());
+                    System.out.println(x + " " + y);
+                    System.out.println(sprite.getWidth() + " " + sprite.getHeight());
+                    System.out.println(entityCoords.toString());
                 }
 
             }
@@ -82,7 +82,7 @@ public class WorldMatrix implements Drawable {
 
     public void updateWorld() {
         updateEntityMatrix();
-        bulletFactory.updateBullets();
+        bulletFactory.updateBullets().forEach(this::removeEntityFromMatrix);
         enemyTankManager.ride();
         enemyTankManager.shoot();
         playerTank.ride();
@@ -122,18 +122,18 @@ public class WorldMatrix implements Drawable {
     }
 
     public void checkBulletShootTank(Bullet bullet, EnemyTank enemyTank) {
-        if (bullet.getSprite().getBoundingRectangle().overlaps(enemyTank.getSprite().getBoundingRectangle())) {
+       // if (bullet.getSprite().getBoundingRectangle().overlaps(enemyTank.getSprite().getBoundingRectangle())) {
             enemyTankManager.getEnemyTanks().removeValue(enemyTank, true);
             bulletFactory.getBullets().removeValue(bullet, true);
             removeEntityFromMatrix(bullet);
             removeEntityFromMatrix(enemyTank);
             //                score += prefs.getInteger("killed_tank_score");
         }
-    }
+    //}
 
     public void checkBulletShootObstacle(Bullet bullet, Obstacle obstacle) {
         Array<Bullet> bullets = bulletFactory.getBullets();
-        if (bullet.getSprite().getBoundingRectangle().overlaps(obstacle.getSprite().getBoundingRectangle())) {
+      //  if (bullet.getSprite().getBoundingRectangle().overlaps(obstacle.getSprite().getBoundingRectangle())) {
             obstacleGeneration.getObstacles().removeValue(obstacle, true);
             bullets.removeValue(bullet, true);
             removeEntityFromMatrix(bullet);
@@ -141,5 +141,5 @@ public class WorldMatrix implements Drawable {
         }
     }
 
-}
+//}
 
