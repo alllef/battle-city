@@ -1,17 +1,15 @@
-package com.github.alllef.battle_city.core.game_entities.tank;
+package com.github.alllef.battle_city.core.game_entity.tank;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.github.alllef.battle_city.core.game_entities.GameEntity;
-import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
-import com.github.alllef.battle_city.core.util.world.WorldCheck;
-
-import java.util.Optional;
 
 public abstract class SingleTank extends GameEntity implements Tank {
 
@@ -85,6 +83,20 @@ public abstract class SingleTank extends GameEntity implements Tank {
             sprite.setX(worldSize - sprite.getHeight());
 
         blockedDirection = null;
+    }
+
+    public void checkOverlapsObstacle(Obstacle obstacle) {
+
+        if (obstacle.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle())) {
+            this.setBlockedDirection(this.getDir());
+            switch (this.getDir()) {
+                case UP -> this.getSprite().setY(this.getSprite().getY() - 0.1f);
+                case DOWN -> this.getSprite().setY(this.getSprite().getY() + 0.1f);
+                case LEFT -> this.getSprite().setX(this.getSprite().getX() + 0.1f);
+                case RIGHT -> this.getSprite().setX(this.getSprite().getX() - 0.1f);
+            }
+            //System.out.println(tank.getSprite().getX() + " " + tank.getSprite().getY());
+        }
     }
 
     public Direction getDir() {

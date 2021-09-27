@@ -3,6 +3,7 @@ package com.github.alllef.battle_city.core;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.github.alllef.battle_city.core.screen.MainScreen;
 
 public class BattleCity extends Game {
 
@@ -21,7 +22,7 @@ public class BattleCity extends Game {
         prefs.putInteger("obstacle_size_dispersion",15);
         prefs.putInteger("max_ride_distance",40);
         prefs.putInteger("enemy_tanks_number",5);
-        prefs.putInteger("obstacle_sets",5);
+        prefs.putInteger("obstacle_sets",0);
         this.setScreen(new MainScreen());
     }
 

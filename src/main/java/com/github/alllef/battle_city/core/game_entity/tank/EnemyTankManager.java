@@ -1,10 +1,11 @@
-package com.github.alllef.battle_city.core.game_entities.tank;
+package com.github.alllef.battle_city.core.game_entity.tank;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 

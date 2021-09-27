@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.game_entities.bullet;
+package com.github.alllef.battle_city.core.game_entity.bullet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,7 +9,7 @@ import com.github.alllef.battle_city.core.util.Drawable;
 
 public enum BulletFactory implements Drawable {
     INSTANCE;
-    public Array<Bullet> bulletArray = new Array<>();
+    private final Array<Bullet> bulletArray = new Array<>();
 
     public Bullet createBullet(float x, float y, Direction dir) {
         Bullet bullet = new Bullet(x, y, dir);

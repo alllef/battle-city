@@ -1,12 +1,11 @@
-package com.github.alllef.battle_city.core.game_entities.obstacle;
+package com.github.alllef.battle_city.core.game_entity.obstacle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
-import com.github.alllef.battle_city.core.game_entities.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -60,6 +59,11 @@ public class ObstacleGeneration implements Drawable {
 
             for (int i = 0; i < setSize; i++) {
                 Obstacle obstacle = getObstacleByCoords(i, coords, dir);
+                Sprite sprite = obstacle.getSprite();
+                int worldSize = prefs.getInteger("world_size");
+                if (sprite.getY() < 0 || sprite.getX() < 0 ||
+                        sprite.getY() > worldSize - sprite.getWidth() || sprite.getX() > worldSize - sprite.getHeight())
+                    break;
 
                 if (obstacleMap.containsKey(obstacle.getSprite().getBoundingRectangle()))
                     break;

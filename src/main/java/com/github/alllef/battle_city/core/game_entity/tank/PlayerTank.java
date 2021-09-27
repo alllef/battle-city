@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.game_entities.tank;
+package com.github.alllef.battle_city.core.game_entity.tank;
 
 import com.badlogic.gdx.Gdx;
 
@@ -6,7 +6,7 @@ import static com.badlogic.gdx.Input.Keys;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.alllef.battle_city.core.game_entities.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;

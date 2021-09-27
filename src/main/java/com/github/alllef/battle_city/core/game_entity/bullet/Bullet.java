@@ -1,10 +1,10 @@
-package com.github.alllef.battle_city.core.game_entities.bullet;
+package com.github.alllef.battle_city.core.game_entity.bullet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.github.alllef.battle_city.core.game_entities.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
