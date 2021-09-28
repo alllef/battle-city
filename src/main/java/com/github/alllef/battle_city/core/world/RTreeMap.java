@@ -3,19 +3,13 @@ package com.github.alllef.battle_city.core.world;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
-import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
-import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.game_entity.tank.EnemyTank;
-import com.github.alllef.battle_city.core.game_entity.tank.EnemyTankManager;
-import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
-import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
@@ -25,14 +19,19 @@ import rx.Observable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RtreeMap extends WorldMap {
+public class RTreeMap extends WorldMap {
+    private static final RTreeMap rTreeMap = new RTreeMap();
+
+    public static RTreeMap getInstance() {
+        return rTreeMap;
+    }
+
     RTree<GameEntity, RectangleFloat> rTree;
     GdxToRTreeRectangleMapper rectangleMapper = new GdxToRTreeRectangleMapper();
 
-    public RtreeMap() {
+    private RTreeMap() {
         createRtree();
     }
-
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
         Rectangle gdxRectangle = gameEntity.getSprite().getBoundingRectangle();
@@ -55,15 +54,6 @@ public class RtreeMap extends WorldMap {
         List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
         getEntitiesArray().forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
         rTree = RTree.create(entryList);
-    }
-
-    public void updateRtree() {
-        bulletFactory.updateBullets();
-        enemyTankManager.ride();
-        enemyTankManager.shoot();
-        playerTank.ride();
-        getEntitiesArray().forEach(this::checkOverlapping);
-        createRtree();
     }
 
     private void checkOverlapping(GameEntity gameEntity) {
@@ -137,4 +127,9 @@ public class RtreeMap extends WorldMap {
         }
     }
 
+    @Override
+    public void update() {
+        getEntitiesArray().forEach(this::checkOverlapping);
+        createRtree();
+    }
 }

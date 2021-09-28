@@ -1,5 +1,7 @@
 package com.github.alllef.battle_city.core.world;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
@@ -12,11 +14,12 @@ import com.github.alllef.battle_city.core.util.Drawable;
 import java.util.List;
 
 public abstract class WorldMap implements Drawable {
+    protected BulletFactory bulletFactory = BulletFactory.INSTANCE;
+    protected EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+    protected ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
+    protected PlayerTank playerTank = PlayerTank.getInstance();
 
-    BulletFactory bulletFactory = BulletFactory.INSTANCE;
-    EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
-    ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    PlayerTank playerTank = PlayerTank.getInstance();
+    protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
@@ -32,4 +35,6 @@ public abstract class WorldMap implements Drawable {
         entitiesArray.addAll(obstacleGeneration.getObstacles());
         return entitiesArray;
     }
+
+    public abstract void update();
 }

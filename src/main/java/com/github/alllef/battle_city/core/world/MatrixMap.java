@@ -5,21 +5,25 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
 
 public class MatrixMap extends WorldMap {
-    private final boolean[][] entityMatrix;
+    private static final MatrixMap matrixMap = new MatrixMap();
+    public static MatrixMap getInstance() {
+        return matrixMap;
+    }
 
-    public MatrixMap() {
-        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-        int worldSize = prefs.getInteger("world_size");
-        entityMatrix = new boolean[worldSize][worldSize];
+    private boolean[][] entityMatrix;
+
+    private MatrixMap() {
         createEntityMatrix();
     }
 
     private void createEntityMatrix() {
-        Array<GameEntity> entities = getEntitiesArray();
-        entities.addAll(obstacleGeneration.getObstacles());
-        entities.forEach(this::setEntityOnMatrix);
+        int worldSize = prefs.getInteger("world_size");
+        entityMatrix = new boolean[worldSize][worldSize];
+        getEntitiesArray().forEach(this::setEntityOnMatrix);
     }
 
     private void setEntityOnMatrix(GameEntity entity) {
@@ -33,7 +37,7 @@ public class MatrixMap extends WorldMap {
         for (; x <= boundX; x++) {
             for (; y <= boundY; y++) {
                 try {
-                        entityMatrix[x][y] = true;
+                    entityMatrix[x][y] = true;
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println(x + " " + y);
                     System.out.println(sprite.getWidth() + " " + sprite.getHeight());
@@ -42,6 +46,11 @@ public class MatrixMap extends WorldMap {
 
             }
         }
+    }
+
+    @Override
+    public void update() {
+        createEntityMatrix();
     }
    /* public Array<SingleTank> getAllTanks() {
         Array<SingleTank> allTanks = new Array<>();

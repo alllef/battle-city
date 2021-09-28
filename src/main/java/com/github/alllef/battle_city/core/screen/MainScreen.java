@@ -7,15 +7,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.github.alllef.battle_city.core.world.RtreeMap;
+import com.github.alllef.battle_city.core.world.RTreeMap;
+import com.github.alllef.battle_city.core.world.WorldMapManager;
 
 public class MainScreen implements Screen {
     OrthographicCamera camera;
     SpriteBatch batch;
     BitmapFont font;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-
-    RtreeMap rtreeMatrix = new RtreeMap();
+    WorldMapManager worldMapManager = WorldMapManager.getInstance();
     int score = 0;
 
     public MainScreen() {
@@ -42,10 +42,10 @@ public class MainScreen implements Screen {
         batch.begin();
         float scoreResultPos = prefs.getInteger("world_size") * prefs.getFloat("score_pos");
         font.draw(batch, "Score: " + score, scoreResultPos, scoreResultPos);
-        rtreeMatrix.draw(batch);
+        worldMapManager.draw(batch);
         batch.end();
-        rtreeMatrix.updateRtree();
 
+        worldMapManager.update();
     }
 
 
