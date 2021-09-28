@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.alllef.battle_city.core.world.RtreeMatrix;
 import com.github.alllef.battle_city.core.world.WorldMatrix;
 
 public class MainScreen implements Screen {
@@ -15,7 +16,7 @@ public class MainScreen implements Screen {
     BitmapFont font;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
-    WorldMatrix worldMatrix = new WorldMatrix();
+    RtreeMatrix rtreeMatrix = new RtreeMatrix();
     int score = 0;
 
     public MainScreen() {
@@ -42,9 +43,9 @@ public class MainScreen implements Screen {
         batch.begin();
         float scoreResultPos = prefs.getInteger("world_size") * prefs.getFloat("score_pos");
         font.draw(batch, "Score: " + score, scoreResultPos, scoreResultPos);
-        worldMatrix.draw(batch);
+        rtreeMatrix.draw(batch);
         batch.end();
-        worldMatrix.updateWorld();
+        rtreeMatrix.updateRtree();
 
     }
 

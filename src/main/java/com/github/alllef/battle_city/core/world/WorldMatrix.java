@@ -172,16 +172,14 @@ public class WorldMatrix implements Drawable {
         }
     }
 
-    public boolean checkBulletShootObstacle(Bullet bullet, Obstacle obstacle) {
+    public void checkBulletShootObstacle(Bullet bullet, Obstacle obstacle) {
         Array<Bullet> bullets = bulletFactory.getBullets();
         if (bullet.getSprite().getBoundingRectangle().overlaps(obstacle.getSprite().getBoundingRectangle())) {
             obstacleGeneration.getObstacles().removeValue(obstacle, true);
             bullets.removeValue(bullet, true);
             removeEntityFromMatrix(bullet);
             removeEntityFromMatrix(obstacle);
-            return true;
         }
-        return false;
     }
 }
 
