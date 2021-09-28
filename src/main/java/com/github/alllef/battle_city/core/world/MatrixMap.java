@@ -10,6 +10,7 @@ import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
 
 public class MatrixMap extends WorldMap {
     private static final MatrixMap matrixMap = new MatrixMap();
+
     public static MatrixMap getInstance() {
         return matrixMap;
     }
@@ -36,14 +37,8 @@ public class MatrixMap extends WorldMap {
 
         for (; x <= boundX; x++) {
             for (; y <= boundY; y++) {
-                try {
-                    entityMatrix[x][y] = true;
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println(x + " " + y);
-                    System.out.println(sprite.getWidth() + " " + sprite.getHeight());
-                    System.out.println(entity.toString());
-                }
-
+                    if (x < entityMatrix.length && y < entityMatrix.length && x >= 0 && y >= 0)
+                        entityMatrix[x][y] = true;
             }
         }
     }
@@ -52,12 +47,9 @@ public class MatrixMap extends WorldMap {
     public void update() {
         createEntityMatrix();
     }
-   /* public Array<SingleTank> getAllTanks() {
-        Array<SingleTank> allTanks = new Array<>();
-        enemyTankManager.getEnemyTanks().forEach(allTanks::add);
-        allTanks.add(playerTank);
-        return allTanks;
-    }*/
 
+    public boolean[][] getEntityMatrix() {
+        return entityMatrix;
+    }
 }
 

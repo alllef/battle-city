@@ -31,6 +31,10 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
     @Override
     public void shoot() {
+
+        if (!prefs.getBoolean("enable_shooting"))
+            return;
+
         double newTime = TimeUtils.millis();
         if (newTime - lastTimeShoot < durationBetweenBullets)
             return;
@@ -69,12 +73,7 @@ public abstract class SingleTank extends GameEntity implements Tank {
         }
 
         int worldSize = prefs.getInteger("world_size");
-       /* Optional<Direction> outOfBoundsDir = WorldCheck.isOutOfWorld(sprite);
-      if (outOfBoundsDir.isPresent()) {
-          switch (outOfBoundsDir.get()) {
-              case UP ->
-          }
-      }*/
+
         if (sprite.getY() < 0) sprite.setY(0);
         if (sprite.getX() < 0) sprite.setX(0);
         if (sprite.getY() > worldSize - sprite.getWidth())
@@ -96,7 +95,7 @@ public abstract class SingleTank extends GameEntity implements Tank {
                 case LEFT -> this.getSprite().setX(this.getSprite().getX() + minChangeDistance);
                 case RIGHT -> this.getSprite().setX(this.getSprite().getX() - minChangeDistance);
             }
-            //System.out.println(tank.getSprite().getX() + " " + tank.getSprite().getY());
+
         }
      }
 

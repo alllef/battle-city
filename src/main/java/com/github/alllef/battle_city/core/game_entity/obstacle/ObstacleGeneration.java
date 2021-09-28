@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -29,8 +30,7 @@ public class ObstacleGeneration implements Drawable {
     private final Array<Obstacle> obstacles = new Array<>();
     private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
-    private record Coords(int x, int y) {
-    }
+
 
     public ObstacleGeneration(int obstacleSetsNumber) {
         generateObstacles(obstacleSetsNumber);
