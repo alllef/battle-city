@@ -2,6 +2,7 @@ package com.github.alllef.battle_city.core.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -24,31 +25,19 @@ import rx.Observable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RtreeMatrix implements Drawable {
+public class RtreeMap extends WorldMap {
     RTree<GameEntity, RectangleFloat> rTree;
     GdxToRTreeRectangleMapper rectangleMapper = new GdxToRTreeRectangleMapper();
 
-    BulletFactory bulletFactory = BulletFactory.INSTANCE;
-    EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
-    ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    PlayerTank playerTank = PlayerTank.getInstance();
-
-    public RtreeMatrix() {
+    public RtreeMap() {
         createRtree();
     }
 
-    private Array<GameEntity> getEntitiesArray() {
-        Array<GameEntity> entitiesArray = new Array<>();
-        entitiesArray.addAll(bulletFactory.getBullets());
-        entitiesArray.addAll(enemyTankManager.getEnemyTanks());
-        entitiesArray.add(playerTank);
-        entitiesArray.addAll(obstacleGeneration.getObstacles());
-        return entitiesArray;
-    }
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
         Rectangle gdxRectangle = gameEntity.getSprite().getBoundingRectangle();
         RectangleFloat rTreeRectangle = rectangleMapper.convertToRTreeRectangle(gdxRectangle);
+
         return new Entry<>() {
             @Override
             public GameEntity value() {
@@ -64,7 +53,6 @@ public class RtreeMatrix implements Drawable {
 
     public void createRtree() {
         List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
-
         getEntitiesArray().forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
         rTree = RTree.create(entryList);
     }
@@ -101,9 +89,7 @@ public class RtreeMatrix implements Drawable {
             checkOverlapsTank(singleTank, singleTank1);
         } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof Bullet bullet1 && bullet != bullet1) {
             checkBulletOverlapping(bullet, bullet1);
-        } /*else if (firstEntity instanceof Obstacle obstacle && secondEntity instanceof Obstacle obstacle1 && obstacle != obstacle1) {
-            throw new IndexOutOfBoundsException();
-        }*/
+        }
 
     }
 
@@ -115,15 +101,16 @@ public class RtreeMatrix implements Drawable {
     }
 
     public void tankOverlapTank(SingleTank singleTank) {
-        System.out.println("wtf");
         singleTank.setBlockedDirection(singleTank.getDir());
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         float minChangeDistance = prefs.getFloat("min_change_distance");
+        Sprite tankSprite = singleTank.getSprite();
+
         switch (singleTank.getDir()) {
-            case UP -> singleTank.getSprite().setY(singleTank.getSprite().getY() - minChangeDistance);
-            case DOWN -> singleTank.getSprite().setY(singleTank.getSprite().getY() + minChangeDistance);
-            case LEFT -> singleTank.getSprite().setX(singleTank.getSprite().getX() + minChangeDistance);
-            case RIGHT -> singleTank.getSprite().setX(singleTank.getSprite().getX() - minChangeDistance);
+            case UP -> singleTank.getSprite().setY(tankSprite.getY() - minChangeDistance);
+            case DOWN -> singleTank.getSprite().setY(tankSprite.getY() + minChangeDistance);
+            case LEFT -> singleTank.getSprite().setX(tankSprite.getX() + minChangeDistance);
+            case RIGHT -> singleTank.getSprite().setX(tankSprite.getX() - minChangeDistance);
         }
 
     }
@@ -132,20 +119,14 @@ public class RtreeMatrix implements Drawable {
         if (bullet.getSprite().getBoundingRectangle().overlaps(enemyTank.getSprite().getBoundingRectangle())) {
             enemyTankManager.getEnemyTanks().removeValue(enemyTank, true);
             bulletFactory.getBullets().removeValue(bullet, true);
-            rTree = rTree.delete(bullet, rectangleMapper.convertToRTreeRectangle(bullet.getSprite().getBoundingRectangle()));
-            rTree = rTree.delete(enemyTank, rectangleMapper.convertToRTreeRectangle(bullet.getSprite().getBoundingRectangle()));
-
             //                score += prefs.getInteger("killed_tank_score");
         }
     }
 
     public void checkBulletOverlapping(Bullet firstBullet, Bullet secondBullet) {
-        if (firstBullet.getSprite().getBoundingRectangle().overlaps(secondBullet.getSprite().getBoundingRectangle())) {
-            bulletFactory.getBullets().removeValue(firstBullet, true);
-            bulletFactory.getBullets().removeValue(secondBullet, true);
-            rTree = rTree.delete(firstBullet, rectangleMapper.convertToRTreeRectangle(firstBullet.getSprite().getBoundingRectangle()));
-            rTree = rTree.delete(secondBullet, rectangleMapper.convertToRTreeRectangle(secondBullet.getSprite().getBoundingRectangle()));
-        }
+        if (firstBullet.getSprite().getBoundingRectangle().overlaps(secondBullet.getSprite().getBoundingRectangle()))
+            List.of(firstBullet, secondBullet).forEach(bullet ->
+                    bulletFactory.getBullets().removeValue(firstBullet, true));
     }
 
     public void checkBulletShootObstacle(Bullet bullet, Obstacle obstacle) {
@@ -153,16 +134,7 @@ public class RtreeMatrix implements Drawable {
         if (bullet.getSprite().getBoundingRectangle().overlaps(obstacle.getSprite().getBoundingRectangle())) {
             obstacleGeneration.getObstacles().removeValue(obstacle, true);
             bullets.removeValue(bullet, true);
-
-            rTree = rTree.delete(bullet, rectangleMapper.convertToRTreeRectangle(bullet.getSprite().getBoundingRectangle()));
-            rTree = rTree.delete(obstacle, rectangleMapper.convertToRTreeRectangle(obstacle.getSprite().getBoundingRectangle()));
         }
-    }
-
-    @Override
-    public void draw(SpriteBatch spriteBatch) {
-        List.of(obstacleGeneration, playerTank, enemyTankManager, bulletFactory)
-                .forEach(drawable -> drawable.draw(spriteBatch));
     }
 
 }

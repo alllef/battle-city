@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.github.alllef.battle_city.core.world.RtreeMatrix;
-import com.github.alllef.battle_city.core.world.WorldMatrix;
+import com.github.alllef.battle_city.core.world.RtreeMap;
 
 public class MainScreen implements Screen {
     OrthographicCamera camera;
@@ -16,7 +15,7 @@ public class MainScreen implements Screen {
     BitmapFont font;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
-    RtreeMatrix rtreeMatrix = new RtreeMatrix();
+    RtreeMap rtreeMatrix = new RtreeMap();
     int score = 0;
 
     public MainScreen() {
