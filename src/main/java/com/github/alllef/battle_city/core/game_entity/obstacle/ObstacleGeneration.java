@@ -47,11 +47,12 @@ public class ObstacleGeneration implements Drawable {
     }
 
     private Array<Obstacle> generateObstacleSet(Map<Rectangle, Obstacle> obstacleMap) {
-        Array<Obstacle> resultSet = new Array<>();
+        Array<Obstacle> resultSet;
         Random rand = new Random();
         int setSize;
 
         do {
+            resultSet = new Array<>();
             Direction dir = Direction.values()[rand.nextInt(Direction.values().length)];
             Coords coords = getObstacleSetStartCoords(obstacleMap.values());
             setSize = rand.nextInt(prefs.getInteger("obstacle_size_dispersion"))
@@ -61,17 +62,29 @@ public class ObstacleGeneration implements Drawable {
                 Obstacle obstacle = getObstacleByCoords(i, coords, dir);
                 Sprite sprite = obstacle.getSprite();
                 int worldSize = prefs.getInteger("world_size");
-                if (sprite.getY() < 0 || sprite.getX() < 0 ||
-                        sprite.getY() > worldSize - sprite.getWidth() || sprite.getX() > worldSize - sprite.getHeight())
-                    break;
+                float maxHeight = worldSize - sprite.getHeight();
+                float maxWidth = worldSize - sprite.getWidth();
+                System.out.println("Before exception" + sprite.getX() + " " + sprite.getY());
 
-                if (obstacleMap.containsKey(obstacle.getSprite().getBoundingRectangle()))
+                if (sprite.getY() < 0 || sprite.getX() < 0 ||
+                        sprite.getY() > maxHeight || sprite.getX() > maxWidth) {
+                    System.out.println("Because out of bounds");
+                    System.out.println("After exception" + sprite.getX() + " " + sprite.getY());
+                    System.out.println();
                     break;
+                }
+
+                if (obstacleMap.containsKey(obstacle.getSprite().getBoundingRectangle())) {
+                    System.out.println("Because contains");
+                    break;
+                }
+
 
                 resultSet.add(obstacle);
             }
+
         }
-        while (resultSet.size != setSize);
+        while (resultSet.size < setSize );
 
         return resultSet;
     }
@@ -99,12 +112,14 @@ public class ObstacleGeneration implements Drawable {
         int tmpX = startCoords.x();
         int tmpY = startCoords.y();
         SpriteParam spriteParam = SpriteParam.OBSTACLE;
+        int height = (int) spriteParam.getHeight();
+        int width = (int) spriteParam.getWidth();
 
         switch (dir) {
-            case UP -> tmpY += (number * spriteParam.getHeight() + spriteParam.getHeight());
-            case DOWN -> tmpY -= (number * spriteParam.getHeight() + spriteParam.getHeight());
-            case RIGHT -> tmpX += (number * spriteParam.getWidth() + spriteParam.getWidth());
-            case LEFT -> tmpX -= (number * spriteParam.getWidth() + spriteParam.getWidth());
+            case UP -> tmpY += (number * height + height);
+            case DOWN -> tmpY -= (number * height + height);
+            case RIGHT -> tmpX += (number * width + width);
+            case LEFT -> tmpX -= (number * width + width);
         }
 
         return new Obstacle(tmpX, tmpY);
