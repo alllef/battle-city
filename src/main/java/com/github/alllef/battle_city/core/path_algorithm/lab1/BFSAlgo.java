@@ -10,7 +10,7 @@ public class BFSAlgo extends PathAlgo {
     private record Node(Node parent, Coords child) {
     }
 
-    Queue<Node> coordsQueue = new LinkedList<>();
+    Queue<Coords> coordsQueue = new LinkedList<>();
     boolean[][] climbedPeaksMatrix = new boolean[entityMatr.length][entityMatr.length];
     Coords[][] parentMatrix = new Coords[entityMatr.length][entityMatr.length];
 
@@ -22,14 +22,16 @@ public class BFSAlgo extends PathAlgo {
 
 
     public List<Coords> createAlgo() {
-        coordsQueue.add(new Node(null, getFirstVertix()));
-        if (coordsQueue.peek().child == null) return new ArrayList<>();
+        coordsQueue.add(getFirstVertix());
+        if (coordsQueue.peek() == null) return new ArrayList<>();
 
-        Node last = coordsQueue.peek();
+        Coords last = coordsQueue.peek();
+        parentMatrix[last.x()][last.y()] = new Coords(-1, -1);
+        climbedPeaksMatrix[last.x()][last.y()] = true;
 
         while (last != null) {
             nextVertex(last);
-            if (isMatrixPart(last.child())) {
+            if (isMatrixPart(last)) {
 
                 return getPath(last);
             }
@@ -43,25 +45,28 @@ public class BFSAlgo extends PathAlgo {
     }
 
 
-    public void nextVertex(Node vertex) {
-        List<Coords> adjacentVertices = getAdjacentVertices(vertex.child);
-        for (Coords adjacentVertix : adjacentVertices) {
-            if (!climbedPeaksMatrix[adjacentVertix.x()][adjacentVertix.y()]) {
+    public void nextVertex(Coords vertex) {
+        List<Coords> adjacentVertices = getAdjacentVertices(vertex);
+        for (Coords adjacentVertex : adjacentVertices) {
+            if (!climbedPeaksMatrix[adjacentVertex.x()][adjacentVertex.y()]) {
                 num++;
-                climbedPeaksMatrix[adjacentVertix.x()][adjacentVertix.y()] = true;
-                coordsQueue.add(new Node(vertex, adjacentVertix));
+                climbedPeaksMatrix[adjacentVertex.x()][adjacentVertex.y()] = true;
+                parentMatrix[adjacentVertex.x()][adjacentVertex.y()] = vertex;
+                coordsQueue.add(adjacentVertex);
+
             }
         }
     }
 
-    private List<Coords> getPath(Node lastVertex) {
+    private List<Coords> getPath(Coords lastVertex) {
         List<Coords> coords = new LinkedList<>();
-        if (lastVertex.child == null) return coords;
+        if (lastVertex == null) return coords;
 
-        while (lastVertex.parent != null) {
-            coords.add(lastVertex.child());
-            lastVertex = lastVertex.parent();
+        while (!parentMatrix[lastVertex.x()][lastVertex.y()].equals(new Coords(-1,-1))) {
+            coords.add(lastVertex);
+            lastVertex = parentMatrix[lastVertex.x()][lastVertex.y()];
         }
+
         return coords;
     }
 
