@@ -1,19 +1,28 @@
-package com.github.alllef.battle_city.core.path_algorithm;
+package com.github.alllef.battle_city.core.path_algorithm.lab1;
 
+import com.badlogic.gdx.math.Rectangle;
+import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;
 
-public class DFSAlgorithm extends PathAlgo {
+public class DFSAlgo extends PathAlgo {
 
     Stack<Coords> coordsStack = new Stack<Coords>();
     Map<Coords, Boolean> coordsBooleanMap = new HashMap<>();
 
+    public DFSAlgo(Rectangle startRect, Rectangle endRect) {
+        super(startRect, endRect);
+    }
+
     @Override
     public List<Coords> createAlgo() {
-        coordsStack.add(firstNode);
+        coordsStack.add(getFirstVertix());
+        if (getFirstVertix() == null)
+            return new ArrayList<>();
+
         return nextVertex(coordsStack.peek());
-        coordsStack.
+
     }
 
     public List<Coords> nextVertex(Coords coords) {
@@ -28,15 +37,17 @@ public class DFSAlgorithm extends PathAlgo {
                 break;
             }
         }
-if (isMatrixPart(coordsStack.peek()))
-    return coordsStack;
+
+        if (isMatrixPart(coordsStack.peek()))
+            return coordsStack;
+
         if (isEnd) {
             coordsStack.pop();
             if (!coordsStack.isEmpty()) nextVertex(coordsStack.peek());
-            else return null;
+            else return new ArrayList<>();
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
 }
