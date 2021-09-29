@@ -1,6 +1,7 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab1;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
@@ -22,7 +23,7 @@ public class BFSAlgo extends PathAlgo {
 
 
     public List<Coords> createAlgo() {
-        coordsQueue.add(getFirstVertix());
+        coordsQueue.add(getFirstVertex());
         if (coordsQueue.peek() == null) return new ArrayList<>();
 
         Coords last = coordsQueue.peek();
@@ -31,11 +32,9 @@ public class BFSAlgo extends PathAlgo {
 
         while (last != null) {
             nextVertex(last);
-            if (isMatrixPart(last)) {
 
+            if (isMatrixPart(last))
                 return getPath(last);
-            }
-
 
             coordsQueue.poll();
             last = coordsQueue.peek();
@@ -56,14 +55,17 @@ public class BFSAlgo extends PathAlgo {
 
             }
         }
+
     }
 
     private List<Coords> getPath(Coords lastVertex) {
         List<Coords> coords = new LinkedList<>();
         if (lastVertex == null) return coords;
 
-        while (!parentMatrix[lastVertex.x()][lastVertex.y()].equals(new Coords(-1,-1))) {
+        while (!parentMatrix[lastVertex.x()][lastVertex.y()].equals(new Coords(-1, -1))) {
             coords.add(lastVertex);
+            if (entityMatr[lastVertex.x() ][lastVertex.y()])
+                System.out.println("Problem with path generating");
             lastVertex = parentMatrix[lastVertex.x()][lastVertex.y()];
         }
 
@@ -73,4 +75,18 @@ public class BFSAlgo extends PathAlgo {
     public int getNum() {
         return num;
     }
+
+    public static void main(String[] args) {
+        long seconds = TimeUtils.millis();
+
+        Coords[][]matrix = new Coords[1000][1000];
+        for (int i=0; i<matrix.length;i++){
+            for(int j=0; j<matrix.length;j++){
+                matrix[i][j] = new Coords(1,1);
+            }
+        }
+
+        System.out.println(TimeUtils.millis()-seconds);
+    }
+
 }

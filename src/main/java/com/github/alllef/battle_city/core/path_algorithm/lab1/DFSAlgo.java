@@ -17,8 +17,8 @@ public class DFSAlgo extends PathAlgo {
 
     @Override
     public List<Coords> createAlgo() {
-        coordsStack.add(getFirstVertix());
-        if (getFirstVertix() == null)
+        coordsStack.add(getFirstVertex());
+        if (getFirstVertex() == null)
             return new ArrayList<>();
 
         return nextVertex(coordsStack.peek());

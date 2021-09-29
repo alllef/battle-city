@@ -6,14 +6,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.alllef.battle_city.core.path_algorithm.TankManipulation;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 import com.github.alllef.battle_city.core.world.WorldMapManager;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class MainScreen implements Screen {
     OrthographicCamera camera;
     SpriteBatch batch;
+
     BitmapFont font;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     WorldMapManager worldMapManager = WorldMapManager.getInstance();
@@ -40,7 +43,6 @@ public class MainScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 1);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-
         worldMapManager.update();
         tankManipulation.update();
 
@@ -48,6 +50,7 @@ public class MainScreen implements Screen {
         float scoreResultPos = prefs.getInteger("world_size") * prefs.getFloat("score_pos");
         font.draw(batch, "Score: " + score, scoreResultPos, scoreResultPos);
         worldMapManager.draw(batch);
+        tankManipulation.draw(batch);
         batch.end();
 
 

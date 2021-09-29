@@ -20,7 +20,7 @@ public class UniformCostSearchAlgo extends PathAlgo {
 
     @Override
     public List<Coords> createAlgo() {
-        queue.add(new Node(null, getFirstVertix(), 0));
+        queue.add(new Node(null, getFirstVertex(), 0));
         if (queue.peek().child==null) return new ArrayList<>();
         return nextVertex(queue.peek());
     }

@@ -10,7 +10,7 @@ public class BattleCity extends Game {
     @Override
     public void create() {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-        prefs.putInteger("world_size",1000);
+        prefs.putInteger("world_size",100);
         prefs.putFloat("min_change_distance",prefs.getInteger("world_size")/1000f);
         prefs.putInteger("bullets_cooldown",500);
         prefs.putFloat("bullet_speed_scaled",2.0f);
