@@ -4,7 +4,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
-public class GdxToRTreeRectangleMapper {
+public enum GdxToRTreeRectangleMapper {
+    ENTITY;
 
     public Rectangle convertToGdxRectangle(RectangleFloat rTreeRectangle) {
         float x = rTreeRectangle.x1;
@@ -27,7 +28,7 @@ public class GdxToRTreeRectangleMapper {
         float x1 = gdxRectangle.getX();
         float y1 = gdxRectangle.getY();
         float x2 = x1 + gdxRectangle.getWidth();
-        float y2 = y1 +gdxRectangle.getHeight();
-        return (RectangleFloat) Geometries.rectangle(x1,y1,x2,y2);
+        float y2 = y1 + gdxRectangle.getHeight();
+        return (RectangleFloat) Geometries.rectangle(x1, y1, x2, y2);
     }
 }

@@ -12,8 +12,8 @@ public class BFSAlgo extends PathAlgo {
     }
 
     Queue<Coords> coordsQueue = new LinkedList<>();
-    boolean[][] climbedPeaksMatrix = new boolean[entityMatr.length][entityMatr.length];
-    Coords[][] parentMatrix = new Coords[entityMatr.length][entityMatr.length];
+    boolean[][] climbedPeaksMatrix = new boolean[worldSize][worldSize];
+    Coords[][] parentMatrix = new Coords[worldSize][worldSize];
 
     int num = 0;
 
@@ -64,8 +64,6 @@ public class BFSAlgo extends PathAlgo {
 
         while (!parentMatrix[lastVertex.x()][lastVertex.y()].equals(new Coords(-1, -1))) {
             coords.add(lastVertex);
-            if (entityMatr[lastVertex.x() ][lastVertex.y()])
-                System.out.println("Problem with path generating");
             lastVertex = parentMatrix[lastVertex.x()][lastVertex.y()];
         }
 

@@ -2,36 +2,28 @@ package com.github.alllef.battle_city.core.path_algorithm;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.game_entity.tank.EnemyTankManager;
-import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
+import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.util.Coords;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.world.MatrixMap;
+import com.github.alllef.battle_city.core.world.RTreeMap;
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class PathAlgo {
-    protected boolean[][] entityMatr = MatrixMap.getInstance().getEntityMatrix();
-    protected static Coords[][] coordsMatr;
-
-    static {
-        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-        coordsMatr = new Coords[prefs.getInteger("world_size")][prefs.getInteger("world_size")];
-        for (int i = 0; i < coordsMatr.length; i++) {
-            for (int j = 0; j < coordsMatr.length; j++) {
-                coordsMatr[i][j] = new Coords(i, j);
-            }
-        }
-    }
+    protected RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
+    protected final int worldSize;
 
     private Rectangle startRect;
     private Rectangle endRect;
 
     public PathAlgo(Rectangle startRect, Rectangle endRect) {
+        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+        worldSize = prefs.getInteger("world_size");
         this.startRect = startRect;
         this.endRect = endRect;
     }
@@ -40,24 +32,33 @@ public abstract class PathAlgo {
     protected List<Coords> getAdjacentVertices(Coords coords) {
         List<Coords> adjacent = new LinkedList<>();
 
-        if (coords.x() > 0 && !entityMatr[coords.x() - 1][coords.y()])
-            adjacent.add(coordsMatr[coords.x() - 1][coords.y()]);
+        Optional<Coords> upAdjacent = getAdjacentCoord(coords.y() < worldSize - 1, new Coords(coords.x(), coords.y() + 1));
+        Optional<Coords> downAdjacent = getAdjacentCoord(coords.y() > 0, new Coords(coords.x(), coords.y() - 1));
+        Optional<Coords> rightAdjacent = getAdjacentCoord(coords.x() < worldSize - 1, new Coords(coords.x() + 1, coords.y()));
+        Optional<Coords> leftAdjacent = getAdjacentCoord(coords.x() > 0, new Coords(coords.x() - 1, coords.y()));
 
-        if (coords.y() > 0 && !entityMatr[coords.x()][coords.y() - 1])
-            adjacent.add(coordsMatr[coords.x()][coords.y() - 1]);
-
-        if (coords.x() < entityMatr.length - 1 && !entityMatr[coords.x() + 1][coords.y()])
-            adjacent.add(coordsMatr[coords.x() + 1][coords.y()]);
-
-        if (coords.y() < entityMatr.length - 1 && !entityMatr[coords.x()][coords.y() + 1])
-            adjacent.add(coordsMatr[coords.x()][coords.y() + 1]);
+        List.of(upAdjacent, downAdjacent, rightAdjacent, leftAdjacent)
+                .forEach(adjacentCoord -> adjacentCoord.ifPresent(adjacent::add));
 
         return adjacent;
     }
 
+    private Optional<Coords> getAdjacentCoord(boolean condition, Coords coords) {
+        boolean emptyResult = rTree.search(getSmallestRect(coords))
+                .isEmpty()
+                .toBlocking()
+                .first();
+
+        if (condition && emptyResult)
+            return Optional.of(coords);
+        return Optional.empty();
+    }
+
+
+
     public abstract List<Coords> createAlgo();
 
-   protected Coords getFirstVertex(){
+    protected Coords getFirstVertex() {
         return getVertexNearest(startRect);
     }
 
@@ -74,21 +75,22 @@ public abstract class PathAlgo {
         int xLeft = x - 1;
 
 
+
         for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
             int tmpY = yUp;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
             int tmpY = yDown;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpY = y; tmpY <= tmpY + height; tmpY++) {
             int tmpX = xRight;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
                 return new Coords(tmpX, tmpY);
         }
 
@@ -102,42 +104,21 @@ public abstract class PathAlgo {
     }
 
     protected boolean isMatrixPart(Coords coords) {
+        boolean result = false;
+        return rTree.search(getSmallestRect(coords), 1.0).forEach(entry -> {
+            if (entry.value() == endRect) return true;
+        });
+        return result;
+    }
 
-        int width = (int) endRect.getWidth();
-        int height = (int) endRect.getHeight();
-        int x = (int) endRect.getX();
-        int y = (int) endRect.getY();
+    private RectangleFloat getSmallestRect(Coords coords){
+        return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
+    }
 
-        int yUp = y + height + 1;
-        int yDown = y - 1;
-        int xRight = x + width + 1;
-        int xLeft = x - 1;
-
-
-        for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
-            int tmpY = yUp;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
-                if (coords.equals(new Coords(tmpX,tmpY))) return true;
-        }
-
-        for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
-            int tmpY = yDown;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
-                if (coords.equals(new Coords(tmpX,tmpY))) return true;
-        }
-
-        for (int tmpY = y; tmpY <= tmpY + height; tmpY++) {
-            int tmpX = xRight;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
-                if (coords.equals(new Coords(tmpX,tmpY))) return true;
-        }
-
-        for (int tmpY = y; tmpY <= tmpY + height; tmpY++) {
-            int tmpX = xLeft;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
-                if (coords.equals(new Coords(tmpX,tmpY))) return true;
-        }
-
-        return false;
+    private boolean isEmpty(Coords coords){
+       return rTree.search(getSmallestRect(coords))
+                .isEmpty()
+                .toBlocking()
+                .first();
     }
 }

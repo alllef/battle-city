@@ -27,7 +27,7 @@ public class RTreeMap extends WorldMap {
     }
 
     RTree<GameEntity, RectangleFloat> rTree;
-    GdxToRTreeRectangleMapper rectangleMapper = new GdxToRTreeRectangleMapper();
+    GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
 
     private RTreeMap() {
         createRtree();
@@ -131,5 +131,9 @@ public class RTreeMap extends WorldMap {
     public void update() {
         getEntitiesArray().forEach(this::checkOverlapping);
         createRtree();
+    }
+
+    public RTree<GameEntity, RectangleFloat> getrTree() {
+        return rTree;
     }
 }
