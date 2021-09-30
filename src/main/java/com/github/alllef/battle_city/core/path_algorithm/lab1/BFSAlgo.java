@@ -2,12 +2,15 @@ package com.github.alllef.battle_city.core.path_algorithm.lab1;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;
 
 public class BFSAlgo extends PathAlgo {
+
+
     private record Node(Node parent, Coords child) {
     }
 
@@ -17,10 +20,9 @@ public class BFSAlgo extends PathAlgo {
 
     int num = 0;
 
-    public BFSAlgo(Rectangle startRect, Rectangle endRect) {
-        super(startRect, endRect);
+    public BFSAlgo(GameEntity startEntity, GameEntity endEntity) {
+        super(startEntity, endEntity);
     }
-
 
     public List<Coords> createAlgo() {
         coordsQueue.add(getFirstVertex());

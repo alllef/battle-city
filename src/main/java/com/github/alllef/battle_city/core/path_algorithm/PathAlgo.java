@@ -18,14 +18,14 @@ public abstract class PathAlgo {
     protected RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
     protected final int worldSize;
 
-    private Rectangle startRect;
-    private Rectangle endRect;
+    private GameEntity startEntity;
+    private GameEntity endEntity;
 
-    public PathAlgo(Rectangle startRect, Rectangle endRect) {
+    public PathAlgo(GameEntity startEntity, GameEntity endEntity) {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         worldSize = prefs.getInteger("world_size");
-        this.startRect = startRect;
-        this.endRect = endRect;
+        this.startEntity = startEntity;
+        this.endEntity = endEntity;
     }
 
 
@@ -44,22 +44,17 @@ public abstract class PathAlgo {
     }
 
     private Optional<Coords> getAdjacentCoord(boolean condition, Coords coords) {
-        boolean emptyResult = rTree.search(getSmallestRect(coords))
-                .isEmpty()
-                .toBlocking()
-                .first();
 
-        if (condition && emptyResult)
+        if (condition && isEmpty(coords))
             return Optional.of(coords);
         return Optional.empty();
     }
 
 
-
     public abstract List<Coords> createAlgo();
 
     protected Coords getFirstVertex() {
-        return getVertexNearest(startRect);
+        return getVertexNearest(startEntity.getSprite().getBoundingRectangle());
     }
 
     private Coords getVertexNearest(Rectangle rectangle) {
@@ -75,28 +70,27 @@ public abstract class PathAlgo {
         int xLeft = x - 1;
 
 
-
         for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
             int tmpY = yUp;
-            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
             int tmpY = yDown;
-            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpY = y; tmpY <= tmpY + height; tmpY++) {
             int tmpX = xRight;
-            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpY = y; tmpY <= tmpY + height; tmpY++) {
             int tmpX = xLeft;
-            if (tmpY < entityMatr.length && tmpX < entityMatr.length && tmpY >= 0 && tmpX >= 0 && !entityMatr[tmpX][tmpY])
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
@@ -104,19 +98,20 @@ public abstract class PathAlgo {
     }
 
     protected boolean isMatrixPart(Coords coords) {
-        boolean result = false;
-        return rTree.search(getSmallestRect(coords), 1.0).forEach(entry -> {
-            if (entry.value() == endRect) return true;
-        });
-        return result;
+        return !rTree.search(getSmallestRect(coords), 1.0)
+                .filter(entry->entry.value()==endEntity)
+                .isEmpty()
+                .toBlocking()
+                .first();
+
     }
 
-    private RectangleFloat getSmallestRect(Coords coords){
+    private RectangleFloat getSmallestRect(Coords coords) {
         return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
     }
 
-    private boolean isEmpty(Coords coords){
-       return rTree.search(getSmallestRect(coords))
+    private boolean isEmpty(Coords coords) {
+        return rTree.search(getSmallestRect(coords))
                 .isEmpty()
                 .toBlocking()
                 .first();

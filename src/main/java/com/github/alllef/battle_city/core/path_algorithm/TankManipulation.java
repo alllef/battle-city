@@ -37,7 +37,7 @@ public class TankManipulation implements Drawable {
             long seconds = TimeUtils.millis();
             enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
 
-                        BFSAlgo bfsAlgo = new BFSAlgo(playerTank.getSprite().getBoundingRectangle(), enemyTank.getSprite().getBoundingRectangle());
+                        BFSAlgo bfsAlgo = new BFSAlgo(playerTank, enemyTank);
                         List<Coords> coords = bfsAlgo.createAlgo();
                         pathsToDraw.addAll(coords);
                     }

@@ -1,6 +1,7 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab1;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
@@ -9,13 +10,11 @@ import java.util.*;
 public class UniformCostSearchAlgo extends PathAlgo {
     Map<Coords, Boolean> coordsBooleanMap = new HashMap<>();
 
-    private record Node(Node parent, Coords child, int distance) {
-    }
-
+    private record Node(Node parent, Coords child, int distance) {}
     PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(Node::distance));
 
-    public UniformCostSearchAlgo(Rectangle startRect, Rectangle endRect) {
-        super(startRect, endRect);
+    public UniformCostSearchAlgo(GameEntity startEntity, GameEntity endEntity) {
+        super(startEntity, endEntity);
     }
 
     @Override
