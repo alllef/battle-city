@@ -1,6 +1,5 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab1;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
@@ -26,7 +25,7 @@ public class UniformCostSearchAlgo extends PathAlgo {
 
     public List<Coords> nextVertex(Node prevVertex) {
 
-        getAdjacentVertices(prevVertex.child)
+        getPossibleAdjacentVertices(prevVertex.child)
                 .forEach(vertex -> {
                     if (!coordsBooleanMap.get(vertex)) {
                         coordsBooleanMap.put(vertex, true);

@@ -1,6 +1,5 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab1;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
@@ -47,7 +46,7 @@ public class BFSAlgo extends PathAlgo {
 
 
     public void nextVertex(Coords vertex) {
-        List<Coords> adjacentVertices = getAdjacentVertices(vertex);
+        List<Coords> adjacentVertices = getPossibleAdjacentVertices(vertex);
         for (Coords adjacentVertex : adjacentVertices) {
                 num++;
                 parentMatrix[adjacentVertex.x()][adjacentVertex.y()] = vertex;

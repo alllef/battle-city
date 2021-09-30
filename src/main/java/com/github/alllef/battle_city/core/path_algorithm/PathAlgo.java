@@ -30,7 +30,7 @@ public abstract class PathAlgo {
     }
 
 
-    protected List<Coords> getAdjacentVertices(Coords coords) {
+    protected List<Coords> getPossibleAdjacentVertices(Coords coords) {
         List<Coords> adjacent = new LinkedList<>();
 
         Optional<Coords> upAdjacent = getAdjacentCoord(coords.y() < worldSize - 1, new Coords(coords.x(), coords.y() + 1));
@@ -45,7 +45,7 @@ public abstract class PathAlgo {
     }
 
 
-    private Optional<Coords> getAdjacentCoord(boolean condition, Coords coords) {
+    protected Optional<Coords> getAdjacentCoord(boolean condition, Coords coords) {
         Optional<Coords> tmpCoords = Optional.empty();
         if (condition && !climbedPeaksMatrix[coords.x()][coords.y()]) {
             if (isEmpty(coords))
@@ -112,7 +112,7 @@ public abstract class PathAlgo {
         return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
     }
 
-    private boolean isEmpty(Coords coords) {
+    protected boolean isEmpty(Coords coords) {
         return rTree.search(getSmallestRect(coords))
                 .isEmpty()
                 .toBlocking()

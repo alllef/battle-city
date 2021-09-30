@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.lab1.BFSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab1.DFSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -37,8 +38,8 @@ public class TankManipulation implements Drawable {
             long seconds = TimeUtils.millis();
             enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
 
-                        BFSAlgo bfsAlgo = new BFSAlgo(playerTank, enemyTank);
-                        List<Coords> coords = bfsAlgo.createAlgo();
+                       PathAlgo algo = new DFSAlgo(playerTank, enemyTank);
+                        List<Coords> coords = algo.createAlgo();
                         pathsToDraw.addAll(coords);
                     }
             );
@@ -51,8 +52,9 @@ public class TankManipulation implements Drawable {
     public void draw(SpriteBatch spriteBatch) {
         ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(new Texture(Gdx.files.internal("sprites/block.png"))));
         shapeDrawer.setColor(Color.YELLOW);
+
         pathsToDraw.forEach(coords ->
-                shapeDrawer.filledRectangle(coords.x(), coords.y(), 1, 1));
+                shapeDrawer.line(coords.x(), coords.y(), coords.x()+1, coords.y()+1));
 
     }
 }
