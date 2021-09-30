@@ -15,7 +15,7 @@ public class BFSAlgo extends PathAlgo {
     }
 
     Queue<Coords> coordsQueue = new LinkedList<>();
-    boolean[][] climbedPeaksMatrix = new boolean[worldSize][worldSize];
+
     Coords[][] parentMatrix = new Coords[worldSize][worldSize];
 
     int num = 0;
@@ -49,16 +49,12 @@ public class BFSAlgo extends PathAlgo {
     public void nextVertex(Coords vertex) {
         List<Coords> adjacentVertices = getAdjacentVertices(vertex);
         for (Coords adjacentVertex : adjacentVertices) {
-            if (!climbedPeaksMatrix[adjacentVertex.x()][adjacentVertex.y()]) {
                 num++;
-                climbedPeaksMatrix[adjacentVertex.x()][adjacentVertex.y()] = true;
                 parentMatrix[adjacentVertex.x()][adjacentVertex.y()] = vertex;
                 coordsQueue.add(adjacentVertex);
 
             }
         }
-
-    }
 
     private List<Coords> getPath(Coords lastVertex) {
         List<Coords> coords = new LinkedList<>();

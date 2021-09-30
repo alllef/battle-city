@@ -17,7 +17,7 @@ import java.util.Optional;
 public abstract class PathAlgo {
     protected RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
     protected final int worldSize;
-
+    protected boolean[][] climbedPeaksMatrix;
     private GameEntity startEntity;
     private GameEntity endEntity;
 
@@ -26,6 +26,7 @@ public abstract class PathAlgo {
         worldSize = prefs.getInteger("world_size");
         this.startEntity = startEntity;
         this.endEntity = endEntity;
+        climbedPeaksMatrix = new boolean[worldSize][worldSize];
     }
 
 
@@ -43,11 +44,16 @@ public abstract class PathAlgo {
         return adjacent;
     }
 
-    private Optional<Coords> getAdjacentCoord(boolean condition, Coords coords) {
 
-        if (condition && isEmpty(coords))
-            return Optional.of(coords);
-        return Optional.empty();
+    private Optional<Coords> getAdjacentCoord(boolean condition, Coords coords) {
+        Optional<Coords> tmpCoords = Optional.empty();
+        if (condition && !climbedPeaksMatrix[coords.x()][coords.y()]) {
+            if (isEmpty(coords))
+                tmpCoords = Optional.of(coords);
+
+            climbedPeaksMatrix[coords.x()][coords.y()] = true;
+        }
+        return tmpCoords;
     }
 
 
@@ -98,12 +104,8 @@ public abstract class PathAlgo {
     }
 
     protected boolean isMatrixPart(Coords coords) {
-        return !rTree.search(getSmallestRect(coords), 1.0)
-                .filter(entry->entry.value()==endEntity)
-                .isEmpty()
-                .toBlocking()
-                .first();
-
+        Rectangle nearRect = new Rectangle(coords.x() - 1, coords.y() - 1, 3, 3);
+        return nearRect.overlaps(endEntity.getSprite().getBoundingRectangle());
     }
 
     private RectangleFloat getSmallestRect(Coords coords) {
