@@ -2,24 +2,17 @@ package com.github.alllef.battle_city.core.path_algorithm.algos.lab2;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
-import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.BFSLikeAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class AStarAlgo extends UCSAlgo {
 
-    PriorityQueue<Coords> priorityQueue;
-
     public AStarAlgo(GameEntity startEntity, GameEntity endEntity) {
         super(startEntity, endEntity);
-        priorityQueue = new PriorityQueue<>(Comparator.comparing(this::calculateFunction));
+        collection = new PriorityQueue<>(Comparator.comparing(this::calculateFunction));
     }
 
 

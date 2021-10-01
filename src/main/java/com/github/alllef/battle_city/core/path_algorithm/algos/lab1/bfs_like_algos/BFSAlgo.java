@@ -1,24 +1,23 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos;
 
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;
 
-public class BFSAlgo extends BFSLikeAlgo {
-
-    Queue<Coords> coordsQueue = new LinkedList<>();
+public class BFSAlgo extends PathAlgo<Queue<Coords>> {
+    protected Coords[][] parentMatrix = new Coords[worldSize][worldSize];
 
     public BFSAlgo(GameEntity startEntity, GameEntity endEntity) {
         super(startEntity, endEntity);
+        collection = new LinkedList<>();
     }
 
+    @Override
     public List<Coords> createAlgo() {
         Coords last = getFirstVertex();
-
-        parentMatrix[last.x()][last.y()] = new Coords(-1, -1);
-        climbedPeaksMatrix[last.x()][last.y()] = true;
-        coordsQueue.add(last);
+        collection.add(last);
 
         while (last != null) {
             nextVertex(last);
@@ -26,20 +25,45 @@ public class BFSAlgo extends BFSLikeAlgo {
             if (isMatrixPart(last))
                 return getPath(last);
 
-            coordsQueue.poll();
-            last = coordsQueue.peek();
+            collection.poll();
+            last = collection.peek();
         }
 
         return new ArrayList<>();
     }
 
+    @Override
+    public List<Coords> getPath(Coords lastVertex) {
+        List<Coords> coords = new LinkedList<>();
+        if (lastVertex == null) return coords;
 
-    public void nextVertex(Coords vertex) {
-        List<Coords> adjacentVertices = getPossibleAdjacentVertices(vertex);
-        for (Coords adjacentVertex : adjacentVertices) {
-                parentMatrix[adjacentVertex.x()][adjacentVertex.y()] = vertex;
-                coordsQueue.add(adjacentVertex);
-            }
+        while (!parentMatrix[lastVertex.x()][lastVertex.y()].equals(new Coords(-1, -1))) {
+            coords.add(lastVertex);
+            lastVertex = parentMatrix[lastVertex.x()][lastVertex.y()];
         }
+
+        return coords;
+    }
+
+    @Override
+    protected Coords getFirstVertex() {
+        Coords coords = super.getFirstVertex();
+        if (coords != null) {
+            parentMatrix[coords.x()][coords.y()] = new Coords(-1, -1);
+            climbedPeaksMatrix[coords.x()][coords.y()] = true;
+        }
+
+        return coords;
+    }
+
+    protected void handleAddedVertex(Coords parent,Coords child){
+        parentMatrix[child.x()][child.y()] = parent;
+        collection.add(child);
+    }
+
+    protected void nextVertex(Coords vertex) {
+       getPossibleAdjacentVertices(vertex)
+               .forEach(adjacentVertex->handleAddedVertex(vertex,adjacentVertex));
+    }
 
 }

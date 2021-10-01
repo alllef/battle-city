@@ -10,16 +10,18 @@ import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class PathAlgo {
+public abstract class PathAlgo<T extends Collection<Coords>> {
     protected RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
     protected final int worldSize;
     protected boolean[][] climbedPeaksMatrix;
     protected GameEntity startEntity;
     protected GameEntity endEntity;
+    protected T collection;
 
     public PathAlgo(GameEntity startEntity, GameEntity endEntity) {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");

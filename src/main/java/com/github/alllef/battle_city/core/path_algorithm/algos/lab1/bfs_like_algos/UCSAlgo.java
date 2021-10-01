@@ -5,45 +5,24 @@ import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;
 
-public class UCSAlgo extends BFSLikeAlgo {
+public class UCSAlgo extends BFSAlgo {
     protected int[][] distanceMatrix = new int[worldSize][worldSize];
-    protected PriorityQueue<Coords> priorityQueue;
 
     public UCSAlgo(GameEntity startEntity, GameEntity endEntity) {
         super(startEntity, endEntity);
-        priorityQueue = new PriorityQueue<>(Comparator.comparingInt(coords -> distanceMatrix[coords.x()][coords.y()]));
+        collection = new PriorityQueue<>(Comparator.comparingInt(coords -> distanceMatrix[coords.x()][coords.y()]));
     }
 
     @Override
-    public List<Coords> createAlgo() {
-        Coords last = getFirstVertex();
-        distanceMatrix[last.x()][last.y()] = 0;
-        parentMatrix[last.x()][last.y()] = new Coords(-1, -1);
-        climbedPeaksMatrix[last.x()][last.y()] = true;
-
-        priorityQueue.add(last);
-
-        while (last != null) {
-            if (isMatrixPart(last))
-                return getPath(last);
-
-            nextVertex(last);
-            priorityQueue.poll();
-            last = priorityQueue.peek();
-        }
-
-        return new ArrayList<>();
+    protected Coords getFirstVertex() {
+        Coords coords = super.getFirstVertex();
+        if (coords != null) distanceMatrix[coords.x()][coords.y()] = 0;
+        return coords;
     }
 
-
-    public void nextVertex(Coords prevVertex) {
-
-        getPossibleAdjacentVertices(prevVertex)
-                .forEach(vertex -> {
-                    parentMatrix[vertex.x()][vertex.y()] = prevVertex;
-                    distanceMatrix[vertex.x()][vertex.y()] = distanceMatrix[prevVertex.x()][prevVertex.y()] + 1;
-                    priorityQueue.add(vertex);
-                });
+    @Override
+    protected void handleAddedVertex(Coords parent, Coords child) {
+        distanceMatrix[child.x()][child.y()] = distanceMatrix[parent.x()][parent.y()] + 1;
+        super.handleAddedVertex(parent, child);
     }
-
 }

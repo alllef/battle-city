@@ -18,6 +18,7 @@ import com.github.alllef.battle_city.core.util.Drawable;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public enum  TankManipulation implements Drawable {
@@ -43,7 +44,7 @@ public enum  TankManipulation implements Drawable {
             long seconds = TimeUtils.millis();
             enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
 
-                        PathAlgo algo = new AStarAlgo(playerTank,enemyTank);//getPathAlgo(enemyTank);
+                        PathAlgo<Collection<Coords>> algo = /*new AStarAlgo(playerTank,enemyTank);*/getPathAlgo(enemyTank);
                         List<Coords> coords = algo.createAlgo();
                         pathsToDraw.add(coords);
                     }
@@ -52,7 +53,7 @@ public enum  TankManipulation implements Drawable {
         }
     }
 
-    private PathAlgo getPathAlgo(GameEntity endEntity) {
+    private PathAlgo<Collection<Coords>> getPathAlgo(GameEntity endEntity) {
         PathAlgo pathAlgo = null;
 
         switch (algoType) {

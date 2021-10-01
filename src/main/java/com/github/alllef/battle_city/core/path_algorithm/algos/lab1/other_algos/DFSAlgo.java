@@ -6,28 +6,28 @@ import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;
 
-public class DFSAlgo extends PathAlgo {
+public class DFSAlgo extends PathAlgo<Stack<Coords>> {
 
-    Stack<Coords> coordsStack = new Stack<>();
 
     public DFSAlgo(GameEntity startEntity, GameEntity endEntity) {
         super(startEntity, endEntity);
+        collection = new Stack<>();
     }
 
     @Override
     public List<Coords> createAlgo() {
         Coords firstCoord = getFirstVertex();
-        coordsStack.add(firstCoord);
+        collection.add(firstCoord);
 
         if (firstCoord == null)
             return new ArrayList<>();
 
-        while (!coordsStack.empty()) {
+        while (!collection.empty()) {
 
-            if (nextVertex(coordsStack.peek()))
+            if (nextVertex(collection.peek()))
                 return getPath(firstCoord);
 
-            coordsStack.pop();
+            collection.pop();
         }
 
         return new ArrayList<>();
@@ -37,10 +37,10 @@ public class DFSAlgo extends PathAlgo {
         List<Coords> adjacentVertices = getPossibleAdjacentVertices(coords);
 
         while (!adjacentVertices.isEmpty()) {
-            if (isMatrixPart(coordsStack.peek()))
+            if (isMatrixPart(collection.peek()))
                 return true;
-            adjacentVertices.forEach(coordsStack::push);
-            adjacentVertices = getPossibleAdjacentVertices(coordsStack.peek());
+            adjacentVertices.forEach(collection::push);
+            adjacentVertices = getPossibleAdjacentVertices(collection.peek());
         }
 
         return false;
@@ -64,8 +64,8 @@ public class DFSAlgo extends PathAlgo {
 
     public List<Coords> getPath(Coords first) {
         List<Coords> path = new ArrayList<>();
-        while (!coordsStack.peek().equals(first))
-            path.add(coordsStack.pop());
+        while (!collection.peek().equals(first))
+            path.add(collection.pop());
         return path;
     }
 
