@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
-import com.github.alllef.battle_city.core.game_entity.tank.EnemyTank;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.davidmoten.rtree.Entry;

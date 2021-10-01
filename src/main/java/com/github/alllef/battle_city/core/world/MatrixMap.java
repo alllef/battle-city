@@ -1,12 +1,7 @@
 package com.github.alllef.battle_city.core.world;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
-import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
-import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
 
 public class MatrixMap extends WorldMap {
     private static final MatrixMap matrixMap = new MatrixMap();

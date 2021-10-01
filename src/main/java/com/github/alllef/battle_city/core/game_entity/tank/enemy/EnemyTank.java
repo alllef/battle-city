@@ -1,6 +1,7 @@
-package com.github.alllef.battle_city.core.game_entity.tank;
+package com.github.alllef.battle_city.core.game_entity.tank.enemy;
 
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
 public class EnemyTank extends SingleTank {

@@ -2,7 +2,7 @@ package com.github.alllef.battle_city.core.input_handling;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
+import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.util.Direction;
 
 import java.util.Optional;
