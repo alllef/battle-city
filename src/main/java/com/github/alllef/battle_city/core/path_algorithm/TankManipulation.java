@@ -10,7 +10,7 @@ import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.AlgoType;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.DFSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.other_algos.DFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.PathAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.bfs_like_algos.BFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.bfs_like_algos.UCSAlgo;
@@ -18,11 +18,12 @@ import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-import javax.swing.plaf.synth.ColorType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TankManipulation implements Drawable {
+public enum  TankManipulation implements Drawable {
+    INSTANCE;
+
     AlgoType algoType = AlgoType.BFS;
     PlayerTank playerTank = PlayerTank.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
@@ -77,6 +78,10 @@ public class TankManipulation implements Drawable {
             pathsToDraw.get(i).forEach(coords ->
                     shapeDrawer.line(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1));
         }
+    }
+
+    public AlgoType getAlgoType() {
+        return algoType;
     }
 
     public void setAlgoType(AlgoType algoType) {

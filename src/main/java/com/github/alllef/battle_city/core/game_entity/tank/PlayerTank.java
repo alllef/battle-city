@@ -7,6 +7,8 @@ import static com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.path_algorithm.TankManipulation;
+import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.AlgoType;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -24,7 +26,6 @@ public class PlayerTank extends SingleTank implements Drawable {
 
     private PlayerTank(BulletFactory bulletFactory) {
         super(SpriteParam.PLAYER_TANK.getTexturePath(), bulletFactory);
-        addPlayerTankInputAdapter();
         setDurationBetweenBullets(prefs.getInteger("bullets_cooldown"));
     }
 
@@ -36,32 +37,6 @@ public class PlayerTank extends SingleTank implements Drawable {
     public void ride() {
         if (isRideLooping)
             ride(this.getDir());
-    }
-
-    public void addPlayerTankInputAdapter() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-                if (keycode == Keys.SPACE)
-                    PlayerTank.this.shoot();
-
-                Optional<Direction> optionalDir = Direction.of(keycode);
-
-                if (optionalDir.isPresent()) {
-                    PlayerTank.this.setRideLooping(true);
-                    PlayerTank.this.ride(optionalDir.get());
-                }
-                return true;
-            }
-
-            @Override
-            public boolean keyUp(int keycode) {
-                Optional<Direction> dir = Direction.of(keycode);
-                if (dir.isPresent() && dir.get() == PlayerTank.this.getDir())
-                    PlayerTank.this.setRideLooping(false);
-                return false;
-            }
-        });
     }
 
     public boolean isRideLooping() {

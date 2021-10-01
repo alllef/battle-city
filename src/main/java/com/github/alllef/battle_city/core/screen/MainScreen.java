@@ -1,6 +1,7 @@
 package com.github.alllef.battle_city.core.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.alllef.battle_city.core.input_handling.MainScreenInputAdapter;
+import com.github.alllef.battle_city.core.input_handling.PlayerTankInputAdapter;
 import com.github.alllef.battle_city.core.path_algorithm.TankManipulation;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 import com.github.alllef.battle_city.core.world.WorldMapManager;
@@ -20,7 +23,7 @@ public class MainScreen implements Screen {
     BitmapFont font;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     WorldMapManager worldMapManager = WorldMapManager.getInstance();
-    TankManipulation tankManipulation = new TankManipulation();
+    TankManipulation tankManipulation = TankManipulation.INSTANCE;
     int score = 0;
 
     public MainScreen() {
@@ -31,6 +34,11 @@ public class MainScreen implements Screen {
         int worldSize = prefs.getInteger("world_size");
         camera.setToOrtho(false, worldSize, worldSize);
         font.getData().setScale(prefs.getFloat("score_scale_X"), prefs.getFloat("score_scale_Y"));
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(new MainScreenInputAdapter());
+        multiplexer.addProcessor(new PlayerTankInputAdapter());
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
