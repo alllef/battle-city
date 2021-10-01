@@ -1,14 +1,13 @@
-package com.github.alllef.battle_city.core.path_algorithm.lab1;
+package com.github.alllef.battle_city.core.path_algorithm.lab1.algos;
 
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
-import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;
 
 public class DFSAlgo extends PathAlgo {
 
-    Stack<Coords> coordsStack = new Stack<Coords>();
+    Stack<Coords> coordsStack = new Stack<>();
 
     public DFSAlgo(GameEntity startEntity, GameEntity endEntity) {
         super(startEntity, endEntity);

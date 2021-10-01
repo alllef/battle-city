@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.path_algorithm;
+package com.github.alllef.battle_city.core.path_algorithm.lab1.algos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -29,6 +29,10 @@ public abstract class PathAlgo {
         climbedPeaksMatrix = new boolean[worldSize][worldSize];
     }
 
+    public abstract List<Coords> createAlgo();
+
+    protected abstract List<Coords> getPath(Coords start);
+
 
     protected List<Coords> getPossibleAdjacentVertices(Coords coords) {
         List<Coords> adjacent = new LinkedList<>();
@@ -55,9 +59,6 @@ public abstract class PathAlgo {
         }
         return tmpCoords;
     }
-
-
-    public abstract List<Coords> createAlgo();
 
     protected Coords getFirstVertex() {
         return getVertexNearest(startEntity.getSprite().getBoundingRectangle());

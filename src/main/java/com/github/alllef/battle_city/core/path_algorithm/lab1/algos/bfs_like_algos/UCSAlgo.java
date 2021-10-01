@@ -1,18 +1,15 @@
-package com.github.alllef.battle_city.core.path_algorithm.lab1;
+package com.github.alllef.battle_city.core.path_algorithm.lab1.algos.bfs_like_algos;
 
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
-import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;
 
-public class UniformCostSearchAlgo extends PathAlgo {
+public class UCSAlgo extends BFSLikeAlgo {
     int[][] distanceMatrix = new int[worldSize][worldSize];
-    Coords[][] parentMatrix = new Coords[worldSize][worldSize];
-
     PriorityQueue<Coords> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(coords -> distanceMatrix[coords.x()][coords.y()]));
 
-    public UniformCostSearchAlgo(GameEntity startEntity, GameEntity endEntity) {
+    public UCSAlgo(GameEntity startEntity, GameEntity endEntity) {
         super(startEntity, endEntity);
     }
 
@@ -37,6 +34,8 @@ public class UniformCostSearchAlgo extends PathAlgo {
         return new ArrayList<>();
     }
 
+
+
     public void nextVertex(Coords prevVertex) {
 
         getPossibleAdjacentVertices(prevVertex)
@@ -45,18 +44,6 @@ public class UniformCostSearchAlgo extends PathAlgo {
                     distanceMatrix[vertex.x()][vertex.y()] = distanceMatrix[prevVertex.x()][prevVertex.y()] + 1;
                     priorityQueue.add(vertex);
                 });
-    }
-
-    private List<Coords> getPath(Coords lastVertex) {
-        List<Coords> coords = new LinkedList<>();
-        if (lastVertex == null) return coords;
-
-        while (!parentMatrix[lastVertex.x()][lastVertex.y()].equals(new Coords(-1, -1))) {
-            coords.add(lastVertex);
-            lastVertex = parentMatrix[lastVertex.x()][lastVertex.y()];
-        }
-
-        return coords;
     }
 
 }

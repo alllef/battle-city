@@ -5,13 +5,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.BFSAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.DFSAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.UniformCostSearchAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.PathAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -39,7 +37,7 @@ public class TankManipulation implements Drawable {
             long seconds = TimeUtils.millis();
             enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
 
-                        PathAlgo algo = new UniformCostSearchAlgo(playerTank, enemyTank);
+                        PathAlgo algo = new UCSAlgo(playerTank, enemyTank);
                         List<Coords> coords = algo.createAlgo();
                         pathsToDraw.addAll(coords);
                     }
