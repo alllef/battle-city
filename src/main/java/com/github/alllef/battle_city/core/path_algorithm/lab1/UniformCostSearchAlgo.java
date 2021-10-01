@@ -7,11 +7,10 @@ import com.github.alllef.battle_city.core.util.Coords;
 import java.util.*;
 
 public class UniformCostSearchAlgo extends PathAlgo {
+    int[][] distanceMatrix = new int[worldSize][worldSize];
+    Coords[][] parentMatrix = new Coords[worldSize][worldSize];
 
-    private record Node(Node parent, Coords child, int distance) {
-    }
-
-    PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(Node::distance));
+    PriorityQueue<Coords> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(coords -> distanceMatrix[coords.x()][coords.y()]));
 
     public UniformCostSearchAlgo(GameEntity startEntity, GameEntity endEntity) {
         super(startEntity, endEntity);
@@ -19,37 +18,44 @@ public class UniformCostSearchAlgo extends PathAlgo {
 
     @Override
     public List<Coords> createAlgo() {
-        Node lastVertex = new Node(null, getFirstVertex(), 0);
-        priorityQueue.add(lastVertex);
+        Coords last = getFirstVertex();
+        distanceMatrix[last.x()][last.y()] = 0;
+        parentMatrix[last.x()][last.y()] = new Coords(-1, -1);
+        climbedPeaksMatrix[last.x()][last.y()] = true;
 
-        while (lastVertex != null) {
+        priorityQueue.add(last);
 
-            if (isMatrixPart(lastVertex.child()))
-                return getPath(lastVertex);
+        while (last != null) {
+            if (isMatrixPart(last))
+                return getPath(last);
 
-            nextVertex(lastVertex);
+            nextVertex(last);
             priorityQueue.poll();
-            lastVertex = priorityQueue.peek();
-
+            last = priorityQueue.peek();
         }
+
         return new ArrayList<>();
     }
 
-    public void nextVertex(Node prevVertex) {
+    public void nextVertex(Coords prevVertex) {
 
-        getPossibleAdjacentVertices(prevVertex.child)
-                .forEach(vertex -> priorityQueue.add(new Node(prevVertex, vertex, prevVertex.distance() + 1)));
-
+        getPossibleAdjacentVertices(prevVertex)
+                .forEach(vertex -> {
+                    parentMatrix[vertex.x()][vertex.y()] = prevVertex;
+                    distanceMatrix[vertex.x()][vertex.y()] = distanceMatrix[prevVertex.x()][prevVertex.y()] + 1;
+                    priorityQueue.add(vertex);
+                });
     }
 
-    private List<Coords> getPath(Node lastVertex) {
+    private List<Coords> getPath(Coords lastVertex) {
         List<Coords> coords = new LinkedList<>();
-        if (lastVertex.child == null) return coords;
+        if (lastVertex == null) return coords;
 
-        while (lastVertex.parent != null) {
-            coords.add(lastVertex.child());
-            lastVertex = lastVertex.parent();
+        while (!parentMatrix[lastVertex.x()][lastVertex.y()].equals(new Coords(-1, -1))) {
+            coords.add(lastVertex);
+            lastVertex = parentMatrix[lastVertex.x()][lastVertex.y()];
         }
+
         return coords;
     }
 
