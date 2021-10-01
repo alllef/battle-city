@@ -42,6 +42,4 @@ public class BFSAlgo extends BFSLikeAlgo {
             }
         }
 
-
-
 }
