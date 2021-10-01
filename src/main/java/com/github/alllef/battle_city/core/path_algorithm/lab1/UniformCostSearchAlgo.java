@@ -7,7 +7,6 @@ import com.github.alllef.battle_city.core.util.Coords;
 import java.util.*;
 
 public class UniformCostSearchAlgo extends PathAlgo {
-    Map<Coords, Boolean> coordsBooleanMap = new HashMap<>();
 
     private record Node(Node parent, Coords child, int distance) {
     }
@@ -39,13 +38,7 @@ public class UniformCostSearchAlgo extends PathAlgo {
     public void nextVertex(Node prevVertex) {
 
         getPossibleAdjacentVertices(prevVertex.child)
-                .forEach(vertex -> {
-                    if (coordsBooleanMap.get(vertex)!=null&&!coordsBooleanMap.get(vertex)) {
-                        coordsBooleanMap.put(vertex, true);
-                        priorityQueue.add(new Node(prevVertex, vertex, prevVertex.distance() + 1));
-                    }
-
-                });
+                .forEach(vertex -> priorityQueue.add(new Node(prevVertex, vertex, prevVertex.distance() + 1)));
 
     }
 
