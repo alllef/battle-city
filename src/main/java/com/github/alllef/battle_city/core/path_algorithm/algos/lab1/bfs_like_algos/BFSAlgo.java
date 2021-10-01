@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.path_algorithm.lab1.algos.bfs_like_algos;
+package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos;
 
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.util.Coords;

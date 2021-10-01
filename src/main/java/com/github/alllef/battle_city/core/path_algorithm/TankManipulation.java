@@ -9,11 +9,10 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.AlgoType;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.other_algos.DFSAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.PathAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.bfs_like_algos.BFSAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.bfs_like_algos.UCSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.BFSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -44,7 +43,7 @@ public enum  TankManipulation implements Drawable {
             long seconds = TimeUtils.millis();
             enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
 
-                        PathAlgo algo = getPathAlgo(enemyTank);
+                        PathAlgo algo = new AStarAlgo(playerTank,enemyTank);//getPathAlgo(enemyTank);
                         List<Coords> coords = algo.createAlgo();
                         pathsToDraw.add(coords);
                     }

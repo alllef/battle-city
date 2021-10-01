@@ -3,7 +3,7 @@ package com.github.alllef.battle_city.core.input_handling;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.github.alllef.battle_city.core.path_algorithm.TankManipulation;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.AlgoType;
+import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
 
 public class MainScreenInputAdapter extends InputAdapter {
     private final TankManipulation tankManipulation = TankManipulation.INSTANCE;

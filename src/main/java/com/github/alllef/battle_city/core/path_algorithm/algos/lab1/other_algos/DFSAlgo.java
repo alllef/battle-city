@@ -1,7 +1,7 @@
-package com.github.alllef.battle_city.core.path_algorithm.lab1.algos.other_algos;
+package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos;
 
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
-import com.github.alllef.battle_city.core.path_algorithm.lab1.algos.PathAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.*;

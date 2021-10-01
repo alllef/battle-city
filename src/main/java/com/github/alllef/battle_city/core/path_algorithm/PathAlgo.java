@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.path_algorithm.lab1.algos;
+package com.github.alllef.battle_city.core.path_algorithm;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -18,8 +18,8 @@ public abstract class PathAlgo {
     protected RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
     protected final int worldSize;
     protected boolean[][] climbedPeaksMatrix;
-    private GameEntity startEntity;
-    private GameEntity endEntity;
+    protected GameEntity startEntity;
+    protected GameEntity endEntity;
 
     public PathAlgo(GameEntity startEntity, GameEntity endEntity) {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");

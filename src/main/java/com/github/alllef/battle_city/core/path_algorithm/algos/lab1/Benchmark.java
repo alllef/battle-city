@@ -1,10 +1,9 @@
-package com.github.alllef.battle_city.core.path_algorithm.lab1;
+package com.github.alllef.battle_city.core.path_algorithm.algos.lab1;
 
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Benchmark {
