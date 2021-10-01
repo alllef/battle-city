@@ -11,6 +11,7 @@ import com.github.alllef.battle_city.core.game_entity.tank.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.lab1.BFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab1.DFSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab1.UniformCostSearchAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -38,7 +39,7 @@ public class TankManipulation implements Drawable {
             long seconds = TimeUtils.millis();
             enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
 
-                       PathAlgo algo = new DFSAlgo(playerTank, enemyTank);
+                        PathAlgo algo = new UniformCostSearchAlgo(playerTank, enemyTank);
                         List<Coords> coords = algo.createAlgo();
                         pathsToDraw.addAll(coords);
                     }
@@ -51,10 +52,12 @@ public class TankManipulation implements Drawable {
     @Override
     public void draw(SpriteBatch spriteBatch) {
         ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(new Texture(Gdx.files.internal("sprites/block.png"))));
-        shapeDrawer.setColor(Color.YELLOW);
+        Color halfTransparentColor = Color.YELLOW;
+        halfTransparentColor.a = 0.5f;
+        shapeDrawer.setColor(halfTransparentColor);
 
         pathsToDraw.forEach(coords ->
-                shapeDrawer.line(coords.x(), coords.y(), coords.x()+1, coords.y()+1));
+                shapeDrawer.line(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1));
 
     }
 }
