@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -26,6 +27,7 @@ public class AIPlayerTank extends PlayerTank {
     private final int worldSize;
     GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
     Queue<Coords> coordsToTarget = new LinkedList<>();
+    private Coords turnCoord = null;
 
     protected AIPlayerTank(BulletFactory bulletFactory) {
         super(bulletFactory);
@@ -40,7 +42,9 @@ public class AIPlayerTank extends PlayerTank {
 
     @Override
     public void ride() {
-        Coords turnCoord = getTurnCoord();
+        if (turnCoord == null)
+            turnCoord = getTurnCoord();
+
         Coords tankCoord = new Coords((int) this.getSprite().getX(), (int) this.getSprite().getY());
 
         Optional<Map.Entry<BiPredicate<Coords, Coords>, Direction>> predicateEntry = getPredicateMap()
@@ -55,10 +59,11 @@ public class AIPlayerTank extends PlayerTank {
             predicate = predicateEntry.get().getKey();
 
 
-        if(predicate.test(tankCoord, turnCoord)) {
+        if (predicate.test(tankCoord, turnCoord)) {
             setRideLooping(true);
             super.ride();
-        }
+        } else
+            turnCoord = getTurnCoord();
 
     }
 
@@ -90,11 +95,18 @@ public class AIPlayerTank extends PlayerTank {
     }
 
     private void turnCoordCycle(BiPredicate<Coords, Coords> predicate, Coords first, Coords second) {
-        while (predicate.test(first, second)) {
+        while (predicate.test(first, second) && !coordsToTarget.isEmpty()) {
             first = second;
             second = coordsToTarget.poll();
         }
+
+        if (coordsToTarget.isEmpty()) {
+           Coords coords = getRandomNonObstacleCoord();
+           Rectangle coordsRect = new Rectangle(coords.x(),coords.y(),1,1);
+            coordsToTarget.addAll(new AStarAlgo(this.getSprite().getBoundingRectangle(),coordsRect).createAlgo());
+        }
     }
+
 
     private Coords getRandomNonObstacleCoord() {
         Random random = new Random();

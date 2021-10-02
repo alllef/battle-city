@@ -9,19 +9,16 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class AStarAlgo extends UCSAlgo {
-
-    public AStarAlgo(GameEntity startEntity, GameEntity endEntity) {
-        super(startEntity, endEntity);
+    public AStarAlgo(Rectangle startRect, Rectangle endRect) {
+        super(startRect, endRect);
         collection = new PriorityQueue<>(Comparator.comparing(this::calculateFunction));
     }
-
 
     private float calculateHeuristics(Coords first, Coords second) {
         return first.calculateDistance(second);
     }
 
     public float calculateFunction(Coords coords) {
-        Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
         Coords endCoords = new Coords((int) endRect.getX(), (int) endRect.getY());
         Coords parent = parentMatrix[coords.x()][coords.y()];
         float functionResult = calculateHeuristics(coords, endCoords);

@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
@@ -9,8 +10,8 @@ import java.util.*;
 public class BFSAlgo extends PathAlgo<Queue<Coords>> {
     protected Coords[][] parentMatrix = new Coords[worldSize][worldSize];
 
-    public BFSAlgo(GameEntity startEntity, GameEntity endEntity) {
-        super(startEntity, endEntity);
+    public BFSAlgo(Rectangle startRect, Rectangle endRect) {
+        super(startRect, endRect);
         collection = new LinkedList<>();
     }
 

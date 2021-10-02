@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
+import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.BFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
@@ -24,7 +25,7 @@ public enum  TankManipulation implements Drawable {
     INSTANCE;
 
     AlgoType algoType = AlgoType.BFS;
-    PlayerTank playerTank = PlayerTank.getInstance();
+    PlayerTank playerTank = PlayerTankManager.getPlayerTank();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
     PathAlgo pathAlgo;
 
@@ -56,9 +57,9 @@ public enum  TankManipulation implements Drawable {
         PathAlgo pathAlgo = null;
 
         switch (algoType) {
-            case BFS -> pathAlgo = new BFSAlgo(playerTank, endEntity);
-            case DFS -> pathAlgo = new DFSAlgo(playerTank, endEntity);
-            case UCS -> pathAlgo = new UCSAlgo(playerTank, endEntity);
+            case BFS -> pathAlgo = new BFSAlgo(playerTank.getSprite().getBoundingRectangle(), endEntity.getSprite().getBoundingRectangle());
+            case DFS -> pathAlgo = new DFSAlgo(playerTank.getSprite().getBoundingRectangle(), endEntity.getSprite().getBoundingRectangle());
+            case UCS -> pathAlgo = new UCSAlgo(playerTank.getSprite().getBoundingRectangle(), endEntity.getSprite().getBoundingRectangle());
         }
 
         return pathAlgo;

@@ -19,15 +19,15 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
     protected RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
     protected final int worldSize;
     protected boolean[][] climbedPeaksMatrix;
-    protected GameEntity startEntity;
-    protected GameEntity endEntity;
+    protected Rectangle startRect;
+    protected Rectangle endRect;
     protected T collection;
 
-    public PathAlgo(GameEntity startEntity, GameEntity endEntity) {
+    public PathAlgo(Rectangle startRect, Rectangle endRect) {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         worldSize = prefs.getInteger("world_size");
-        this.startEntity = startEntity;
-        this.endEntity = endEntity;
+        this.startRect = startRect;
+        this.endRect = endRect;
         climbedPeaksMatrix = new boolean[worldSize][worldSize];
     }
 
@@ -63,7 +63,7 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
     }
 
     protected Coords getFirstVertex() {
-        return getVertexNearest(startEntity.getSprite().getBoundingRectangle());
+        return getVertexNearest(startRect);
     }
 
     private Coords getVertexNearest(Rectangle rectangle) {
@@ -108,7 +108,7 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
 
     protected boolean isMatrixPart(Coords coords) {
         Rectangle nearRect = new Rectangle(coords.x() - 1, coords.y() - 1, 3, 3);
-        return nearRect.overlaps(endEntity.getSprite().getBoundingRectangle());
+        return nearRect.overlaps(endRect);
     }
 
     private RectangleFloat getSmallestRect(Coords coords) {
