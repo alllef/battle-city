@@ -54,8 +54,11 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
     @Override
     public void ride(Direction dir) {
-        if (dir == blockedDirection)
+        if (dir == blockedDirection) {
+            blockedDirection = null;
             return;
+        }
+
         setDir(dir);
         float minDistance = prefs.getFloat("min_change_distance");
 
@@ -75,7 +78,6 @@ public abstract class SingleTank extends GameEntity implements Tank {
         if (sprite.getX() > worldSize - sprite.getHeight())
             sprite.setX(worldSize - sprite.getHeight());
 
-        blockedDirection = null;
     }
 
     public void checkOverlapsObstacle(Obstacle obstacle) {

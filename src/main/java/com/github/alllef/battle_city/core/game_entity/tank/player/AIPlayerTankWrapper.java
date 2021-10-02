@@ -77,20 +77,18 @@ public class AIPlayerTankWrapper extends PlayerTank {
         if (predicateEntry.isPresent())
             predicate = predicateEntry.get().getKey();
 
-
         if (predicate.test(tankCoord, turnCoord)) {
             setRideLooping(true);
             playerTank.ride();
         } else
             turnCoord = getTurnCoord();
-
     }
 
 
     private Coords getTurnCoord() {
-
         Coords first = coordsToTarget.peek();
         coordsToTarget.pop();
+
         if (coordsToTarget.isEmpty()) {
             generatePath();
             getTurnCoord();
@@ -100,8 +98,9 @@ public class AIPlayerTankWrapper extends PlayerTank {
         Map<BiPredicate<Coords, Coords>, Direction> predicateMap = getPredicateMap();
 
         for (BiPredicate<Coords, Coords> predicate : predicateMap.keySet()) {
-            if (predicate.test(first, second)) {
-                this.setDir(predicateMap.get(predicate));
+            Direction dir = predicateMap.get(predicate);
+            if (predicate.test(first, second) && getBlockedDirection() != dir) {
+                this.setDir(dir);
                 break;
             }
         }
