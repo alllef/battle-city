@@ -11,6 +11,7 @@ import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
+import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
@@ -33,13 +34,12 @@ public class AIPlayerTankWrapper extends PlayerTank {
 
     private final PlayerTank playerTank = PlayerTank.getInstance();
     RTreeMap rTreeMap = RTreeMap.getInstance();
-    private final int worldSize;
-    Queue<Coords> coordsToTarget = new LinkedList<>();
+    Stack<Coords> coordsToTarget = new Stack<>();
     private Coords turnCoord = null;
 
     protected AIPlayerTankWrapper(BulletFactory bulletFactory) {
         super(bulletFactory);
-        worldSize = prefs.getInteger("world_size");
+        generatePath();
     }
 
     @Override
@@ -55,8 +55,8 @@ public class AIPlayerTankWrapper extends PlayerTank {
 
     @Override
     public void shoot() {
-        if (areTanksOnParallel())
-            playerTank.shoot();
+        //if (areTanksOnParallel())
+        playerTank.shoot();
     }
 
     @Override
@@ -89,25 +89,33 @@ public class AIPlayerTankWrapper extends PlayerTank {
 
     private Coords getTurnCoord() {
 
+        Coords first = coordsToTarget.peek();
+        coordsToTarget.pop();
         if (coordsToTarget.isEmpty()) {
-            Coords coords = rTreeMap.getRandomNonObstacleCoord();
-            Rectangle coordsRect = new Rectangle(coords.x(), coords.y(), 1, 1);
-            coordsToTarget.addAll(new AStarAlgo(this.getSprite().getBoundingRectangle(), coordsRect).createAlgo());
+            generatePath();
+            getTurnCoord();
         }
+        Coords second = coordsToTarget.peek();
 
-        Coords first = coordsToTarget.poll();
-        Coords second = coordsToTarget.poll();
         Map<BiPredicate<Coords, Coords>, Direction> predicateMap = getPredicateMap();
 
         for (BiPredicate<Coords, Coords> predicate : predicateMap.keySet()) {
             if (predicate.test(first, second)) {
                 this.setDir(predicateMap.get(predicate));
-                turnCoordCycle(predicate, first, second);
                 break;
             }
         }
 
         return first;
+    }
+
+    private void generatePath() {
+
+        Coords coords = rTreeMap.getRandomNonObstacleCoord();
+        Rectangle coordsRect = new Rectangle(coords.x(), coords.y(), 1, 1);
+        AStarAlgo algo = new AStarAlgo(this.getSprite().getBoundingRectangle(), coordsRect);
+        coordsToTarget.addAll(algo.createAlgo());
+
     }
 
     private Map<BiPredicate<Coords, Coords>, Direction> getPredicateMap() {
@@ -120,16 +128,6 @@ public class AIPlayerTankWrapper extends PlayerTank {
 
         return predicateMap;
     }
-
-    private void turnCoordCycle(BiPredicate<Coords, Coords> predicate, Coords first, Coords second) {
-        while (predicate.test(first, second) && !coordsToTarget.isEmpty()) {
-            first = second;
-            second = coordsToTarget.poll();
-        }
-
-    }
-
-
 
     private boolean areTanksOnParallel() {
         Sprite tankSprite = getSprite();

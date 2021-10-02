@@ -56,13 +56,7 @@ public abstract class SingleTank extends GameEntity implements Tank {
     public void ride(Direction dir) {
         if (dir == blockedDirection)
             return;
-
-        if (dir != this.dir) {
-            this.dir = dir;
-            sprite.setRotation(dir.getDegree());
-            return;
-        }
-
+        setDir(dir);
         float minDistance = prefs.getFloat("min_change_distance");
 
         switch (dir) {
@@ -97,8 +91,7 @@ public abstract class SingleTank extends GameEntity implements Tank {
             }
 
         }
-     }
-
+    }
 
 
     public Direction getDir() {
@@ -106,7 +99,10 @@ public abstract class SingleTank extends GameEntity implements Tank {
     }
 
     public void setDir(Direction dir) {
-        this.dir = dir;
+        if (dir != this.dir) {
+            this.dir = dir;
+            sprite.setRotation(dir.getDegree());
+        }
     }
 
     public Direction getBlockedDirection() {

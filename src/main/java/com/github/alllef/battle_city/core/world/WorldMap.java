@@ -22,7 +22,7 @@ public abstract class WorldMap implements Drawable {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        List.of(obstacleGeneration, playerTank, enemyTankManager, bulletFactory)
+        List.of(obstacleGeneration,  enemyTankManager, bulletFactory)
                 .forEach(drawable -> drawable.draw(spriteBatch));
     }
 
