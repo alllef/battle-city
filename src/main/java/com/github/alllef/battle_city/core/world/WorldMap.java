@@ -17,8 +17,7 @@ public abstract class WorldMap implements Drawable {
     protected BulletFactory bulletFactory = BulletFactory.INSTANCE;
     protected EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
     protected ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    protected PlayerTank playerTank = PlayerTank.getInstance();
-
+    PlayerTank playerTank = PlayerTank.getInstance();
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     @Override

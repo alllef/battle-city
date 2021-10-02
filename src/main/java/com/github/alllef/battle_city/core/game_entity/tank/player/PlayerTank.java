@@ -7,6 +7,11 @@ import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
 public class PlayerTank extends SingleTank implements Drawable {
+    private static final PlayerTank playerTank = new PlayerTank(BulletFactory.INSTANCE);
+
+    public static PlayerTank getInstance() {
+        return playerTank;
+    }
 
     private boolean isRideLooping = false;
 

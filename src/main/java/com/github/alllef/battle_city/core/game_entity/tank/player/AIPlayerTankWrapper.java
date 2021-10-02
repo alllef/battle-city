@@ -1,43 +1,62 @@
 package com.github.alllef.battle_city.core.game_entity.tank.player;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.util.SpriteParam;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.RTree;
-import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
-import rx.Observable;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.*;
 import java.util.function.BiPredicate;
-import java.util.function.BooleanSupplier;
 
-public class AIPlayerTank extends PlayerTank {
-    private RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
+public class AIPlayerTankWrapper extends PlayerTank {
+
+    private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.INSTANCE);
+
+    public static final PlayerTank getInstance() {
+        return aIPlayerTankWrapper;
+    }
+
+    private final PlayerTank playerTank = PlayerTank.getInstance();
+    RTreeMap rTreeMap = RTreeMap.getInstance();
     private final int worldSize;
-    GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
     Queue<Coords> coordsToTarget = new LinkedList<>();
     private Coords turnCoord = null;
 
-    protected AIPlayerTank(BulletFactory bulletFactory) {
+    protected AIPlayerTankWrapper(BulletFactory bulletFactory) {
         super(bulletFactory);
         worldSize = prefs.getInteger("world_size");
     }
 
     @Override
+    public void draw(SpriteBatch spriteBatch) {
+        playerTank.draw(spriteBatch);
+
+        ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(new Texture(Gdx.files.internal("sprites/block.png"))));
+        shapeDrawer.setColor(Color.YELLOW);
+        coordsToTarget.forEach(coords ->
+                shapeDrawer.line(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1));
+
+    }
+
+    @Override
     public void shoot() {
         if (areTanksOnParallel())
-            super.shoot();
+            playerTank.shoot();
     }
 
     @Override
@@ -61,13 +80,21 @@ public class AIPlayerTank extends PlayerTank {
 
         if (predicate.test(tankCoord, turnCoord)) {
             setRideLooping(true);
-            super.ride();
+            playerTank.ride();
         } else
             turnCoord = getTurnCoord();
 
     }
 
+
     private Coords getTurnCoord() {
+
+        if (coordsToTarget.isEmpty()) {
+            Coords coords = rTreeMap.getRandomNonObstacleCoord();
+            Rectangle coordsRect = new Rectangle(coords.x(), coords.y(), 1, 1);
+            coordsToTarget.addAll(new AStarAlgo(this.getSprite().getBoundingRectangle(), coordsRect).createAlgo());
+        }
+
         Coords first = coordsToTarget.poll();
         Coords second = coordsToTarget.poll();
         Map<BiPredicate<Coords, Coords>, Direction> predicateMap = getPredicateMap();
@@ -100,47 +127,14 @@ public class AIPlayerTank extends PlayerTank {
             second = coordsToTarget.poll();
         }
 
-        if (coordsToTarget.isEmpty()) {
-           Coords coords = getRandomNonObstacleCoord();
-           Rectangle coordsRect = new Rectangle(coords.x(),coords.y(),1,1);
-            coordsToTarget.addAll(new AStarAlgo(this.getSprite().getBoundingRectangle(),coordsRect).createAlgo());
-        }
     }
 
 
-    private Coords getRandomNonObstacleCoord() {
-        Random random = new Random();
-        SpriteParam tankParam = SpriteParam.PLAYER_TANK;
-        int rightBounds = (int) (worldSize - tankParam.getWidth());
-        int upperBounds = (int) (worldSize - tankParam.getHeight());
-        int x;
-        int y;
-
-        while (true) {
-            x = random.nextInt(rightBounds);
-            y = random.nextInt(upperBounds);
-            RectangleFloat floatRect = (RectangleFloat) Geometries.rectangle(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
-
-            Observable<Entry<GameEntity, RectangleFloat>> tmpList = rTree.search(floatRect);
-
-            if (tmpList.isEmpty().toBlocking().first())
-                break;
-        }
-
-        return new Coords(x, y);
-    }
 
     private boolean areTanksOnParallel() {
-        Rectangle rect = this.getSprite().getBoundingRectangle();
-        Observable<Entry<GameEntity, RectangleFloat>> obstacleList = null;
-        switch (this.getDir()) {
-            case UP -> obstacleList = rTree.search(Geometries.rectangle(rect.getX(), rect.getY() + SpriteParam.PLAYER_TANK.getHeight(), rect.getX(), worldSize));
-            case DOWN -> obstacleList = rTree.search(Geometries.rectangle(rect.getX(), rect.getY() - SpriteParam.PLAYER_TANK.getHeight(), rect.getX(), 0));
-            case RIGHT -> obstacleList = rTree.search(Geometries.rectangle(rect.getX() + SpriteParam.PLAYER_TANK.getHeight(), rect.getY(), worldSize, rect.getY()));
-            case LEFT -> obstacleList = rTree.search(Geometries.rectangle(rect.getX(), rect.getY() + SpriteParam.PLAYER_TANK.getHeight(), 0, rect.getY()));
-        }
-
-        Iterator<Entry<GameEntity, RectangleFloat>> iterator = obstacleList.toBlocking().getIterator();
+        Sprite tankSprite = getSprite();
+        Coords coords = new Coords((int) tankSprite.getX(), (int) tankSprite.getY());
+        Iterator<Entry<GameEntity, RectangleFloat>> iterator = rTreeMap.getParallelObstacles(getDir(), coords);
 
         while (iterator.hasNext()) {
             Entry<GameEntity, RectangleFloat> entry = iterator.next();
@@ -151,4 +145,54 @@ public class AIPlayerTank extends PlayerTank {
         return false;
     }
 
+    @Override
+    public boolean isRideLooping() {
+        return playerTank.isRideLooping();
+    }
+
+    @Override
+    public void setRideLooping(boolean rideLooping) {
+        playerTank.setRideLooping(rideLooping);
+    }
+
+    @Override
+    public Direction getDir() {
+        return playerTank.getDir();
+    }
+
+    @Override
+    public void setDir(Direction dir) {
+        playerTank.setDir(dir);
+    }
+
+    @Override
+    public Direction getBlockedDirection() {
+        return playerTank.getBlockedDirection();
+    }
+
+    @Override
+    public void setBlockedDirection(Direction blockedDirection) {
+        playerTank.setBlockedDirection(blockedDirection);
+    }
+
+    @Override
+    public void ride(Direction dir) {
+        playerTank.ride(dir);
+    }
+
+    @Override
+    public void checkOverlapsObstacle(Obstacle obstacle) {
+        playerTank.checkOverlapsObstacle(obstacle);
+    }
+
+
+    @Override
+    public Sprite getSprite() {
+        return playerTank.getSprite();
+    }
+
+    @Override
+    public void setSprite(Sprite sprite) {
+        playerTank.setSprite(sprite);
+    }
 }

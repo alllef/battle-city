@@ -10,14 +10,20 @@ import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
+import com.github.alllef.battle_city.core.util.Coords;
+import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.util.SpriteParam;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import rx.Observable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class RTreeMap extends WorldMap {
     private static final RTreeMap rTreeMap = new RTreeMap();
@@ -131,6 +137,39 @@ public class RTreeMap extends WorldMap {
     public void update() {
         getEntitiesArray().forEach(this::checkOverlapping);
         createRtree();
+    }
+
+    public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords){
+        Observable<Entry<GameEntity, RectangleFloat>> obstacleList = null;
+        switch (dir) {
+            case UP -> obstacleList = rTree.search(Geometries.rectangle(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), coords.x(), prefs.getInteger("world_size")));
+            case DOWN -> obstacleList = rTree.search(Geometries.rectangle(coords.x(), coords.y() - SpriteParam.PLAYER_TANK.getHeight(), coords.x(), 0));
+            case RIGHT -> obstacleList = rTree.search(Geometries.rectangle(coords.x() + SpriteParam.PLAYER_TANK.getHeight(), coords.y(), prefs.getInteger("world_size"), coords.y()));
+            case LEFT -> obstacleList = rTree.search(Geometries.rectangle(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), 0, coords.y()));
+        }
+        return obstacleList.toBlocking().getIterator();
+    }
+
+    public Coords getRandomNonObstacleCoord() {
+        Random random = new Random();
+        SpriteParam tankParam = SpriteParam.PLAYER_TANK;
+        int rightBounds = (int) (prefs.getInteger("world_size") - tankParam.getWidth());
+        int upperBounds = (int) (prefs.getInteger("world_size") - tankParam.getHeight());
+        int x;
+        int y;
+
+        while (true) {
+            x = random.nextInt(rightBounds);
+            y = random.nextInt(upperBounds);
+            RectangleFloat floatRect = (RectangleFloat) Geometries.rectangle(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
+
+            Observable<Entry<GameEntity, RectangleFloat>> tmpList = rTree.search(floatRect);
+
+            if (tmpList.isEmpty().toBlocking().first())
+                break;
+        }
+
+        return new Coords(x, y);
     }
 
     public RTree<GameEntity, RectangleFloat> getrTree() {

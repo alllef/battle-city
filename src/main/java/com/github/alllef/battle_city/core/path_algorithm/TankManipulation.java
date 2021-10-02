@@ -9,10 +9,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
-import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
-import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.BFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -25,7 +24,7 @@ public enum  TankManipulation implements Drawable {
     INSTANCE;
 
     AlgoType algoType = AlgoType.BFS;
-    PlayerTank playerTank = PlayerTankManager.getPlayerTank();
+    PlayerTank playerTank = PlayerTank.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
     PathAlgo pathAlgo;
 

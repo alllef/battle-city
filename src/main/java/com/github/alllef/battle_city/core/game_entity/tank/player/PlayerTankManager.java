@@ -1,14 +1,27 @@
 package com.github.alllef.battle_city.core.game_entity.tank.player;
 
-import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
-public class PlayerTankManager {
-    private static final PlayerTank playerTank = new PlayerTank(BulletFactory.INSTANCE);
-    private static final PlayerTank aiPlayerTank = new AIPlayerTank(BulletFactory.INSTANCE);
+public enum PlayerTankManager {
+    INSTANCE;
+    protected RTreeMap rTreeMap = RTreeMap.getInstance();
+    private  final PlayerTank playerTank = PlayerTank.getInstance();
+    private  final PlayerTank aiPlayerTank = AIPlayerTankWrapper.getInstance();
 
-    public static PlayerTank getPlayerTank() {
-        return playerTank;
+
+    enum TankType {AI_PLAYER_TANK, USER_PLAYER_TANK}
+
+    TankType type;
+
+    public  PlayerTank getInstance() {
+        return aiPlayerTank;
     }
 
-    public static  PlayerTank getAiPlayerTank(){return aiPlayerTank;}
+
+    public void ride() {
+        aiPlayerTank.ride();
+    }
+
+
+
 }
