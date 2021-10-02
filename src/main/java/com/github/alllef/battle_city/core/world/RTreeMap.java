@@ -20,10 +20,7 @@ import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import rx.Observable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class RTreeMap extends WorldMap {
     private static final RTreeMap rTreeMap = new RTreeMap();
@@ -139,15 +136,30 @@ public class RTreeMap extends WorldMap {
         createRtree();
     }
 
-    public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords){
-        Observable<Entry<GameEntity, RectangleFloat>> obstacleList = null;
+    public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords) {
+        RectangleFloat treeRect = null;
+
         switch (dir) {
-            case UP -> obstacleList = rTree.search(Geometries.rectangle(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), coords.x(), prefs.getInteger("world_size")));
-            case DOWN -> obstacleList = rTree.search(Geometries.rectangle(coords.x(), coords.y() - SpriteParam.PLAYER_TANK.getHeight(), coords.x(), 0));
-            case RIGHT -> obstacleList = rTree.search(Geometries.rectangle(coords.x() + SpriteParam.PLAYER_TANK.getHeight(), coords.y(), prefs.getInteger("world_size"), coords.y()));
-            case LEFT -> obstacleList = rTree.search(Geometries.rectangle(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), 0, coords.y()));
+            case UP -> treeRect = (RectangleFloat) Geometries.rectangle(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), coords.x(), prefs.getInteger("world_size"));
+            case DOWN -> treeRect = (RectangleFloat) Geometries.rectangle(0, coords.x(), coords.y(), coords.x());
+            case RIGHT -> treeRect = (RectangleFloat) Geometries.rectangle(coords.x() + SpriteParam.PLAYER_TANK.getWidth(), coords.y(), prefs.getInteger("world_size"), coords.y());
+            case LEFT -> treeRect = (RectangleFloat) Geometries.rectangle(0, coords.y(), coords.x(), coords.y());
         }
-        return obstacleList.toBlocking().getIterator();
+
+        if (treeRect.y1() < 0 || treeRect.x1() < 0 || treeRect.x2() < 0 || treeRect.y2() < 0)
+            return new Iterator<>() {
+                @Override
+                public boolean hasNext() {
+                    return false;
+                }
+
+                @Override
+                public Entry<GameEntity, RectangleFloat> next() {
+                    return null;
+                }
+            };
+
+        return rTree.search(treeRect).toBlocking().getIterator();
     }
 
     public Coords getRandomNonObstacleCoord() {

@@ -55,7 +55,7 @@ public class AIPlayerTankWrapper extends PlayerTank {
 
     @Override
     public void shoot() {
-        //if (areTanksOnParallel())
+        if (areTanksOnParallel())
         playerTank.shoot();
     }
 
