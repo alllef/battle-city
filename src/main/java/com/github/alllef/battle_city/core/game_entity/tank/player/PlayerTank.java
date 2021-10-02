@@ -20,6 +20,7 @@ public class PlayerTank extends SingleTank implements Drawable {
         this.getSprite().draw(spriteBatch);
     }
 
+
     public void ride() {
         if (isRideLooping)
             ride(this.getDir());

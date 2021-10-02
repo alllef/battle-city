@@ -18,6 +18,8 @@ import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import rx.Observable;
 
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.BooleanSupplier;
 
 public class AIPlayerTank extends PlayerTank {
     private RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
@@ -36,12 +38,51 @@ public class AIPlayerTank extends PlayerTank {
             super.shoot();
     }
 
+    @Override
+    public void ride() {
+        Coords turnCoord = getTurnCoord();
+        if (this.getDir() == Direction.RIGHT) {
+            while (this.getSprite().getX() < turnCoord.x())
+                ride(this.getDir());
+        }
+        if (this.getDir() == Direction.RIGHT) {
+            while (this.getSprite().getX() < turnCoord.x())
+                ride(this.getDir());
+        }
+        if (this.getDir() == Direction.RIGHT) {
+            while (this.getSprite().getX() < turnCoord.x())
+                ride(this.getDir());
+        }
+        if (this.getDir() == Direction.RIGHT) {
+            while (this.getSprite().getX() < turnCoord.x())
+                ride(this.getDir());
+        }
+    }
+
     private Coords getTurnCoord() {
         Coords first = coordsToTarget.poll();
         Coords second = coordsToTarget.poll();
+        BiPredicate<Coords, Coords> rightPredicate = (coord1, coord2) -> coord1.x() < coord2.x();
+        BiPredicate<Coords, Coords> leftPredicate = (coord1, coord2) -> coord1.x() > coord2.x();
+        BiPredicate<Coords, Coords> upPredicate = (coord1, coord2) -> coord1.y() < coord2.y();
+        BiPredicate<Coords, Coords> downPredicate = (coord1, coord2) -> coord1.y() > coord2.y();
 
-        if (second.x() > first.x())
+        if (rightPredicate.test(first, second)) {
+            turnCoordCycle(rightPredicate, first, second);
             this.setDir(Direction.RIGHT);
+        } else if (leftPredicate.test(first, second)) {
+            turnCoordCycle(rightPredicate, first, second);
+            this.setDir(Direction.LEFT);
+        } else if (upPredicate.test(first, second)) {
+            turnCoordCycle(upPredicate, first, second);
+            this.setDir(Direction.UP);
+        }
+
+        else if (downPredicate.test(first, second)) {
+            turnCoordCycle(upPredicate, first, second);
+            this.setDir(Direction.DOWN);
+        }
+
         while (second.x() > first.x()) {
             first = second;
             second = coordsToTarget.poll();
@@ -70,6 +111,13 @@ public class AIPlayerTank extends PlayerTank {
             }
 
         return first;
+    }
+
+    private void turnCoordCycle(BiPredicate<Coords, Coords> predicate, Coords first, Coords second) {
+        while (predicate.test(first, second)) {
+            first = second;
+            second = coordsToTarget.poll();
+        }
     }
 
     private Coords getRandomNonObstacleCoord() {
