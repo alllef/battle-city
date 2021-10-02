@@ -41,76 +41,52 @@ public class AIPlayerTank extends PlayerTank {
     @Override
     public void ride() {
         Coords turnCoord = getTurnCoord();
-        if (this.getDir() == Direction.RIGHT) {
-            while (this.getSprite().getX() < turnCoord.x())
-                ride(this.getDir());
+        Coords tankCoord = new Coords((int) this.getSprite().getX(), (int) this.getSprite().getY());
+
+        Optional<Map.Entry<BiPredicate<Coords, Coords>, Direction>> predicateEntry = getPredicateMap()
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().equals(this.getDir()))
+                .findFirst();
+
+        BiPredicate<Coords, Coords> predicate = null;
+
+        if (predicateEntry.isPresent())
+            predicate = predicateEntry.get().getKey();
+
+
+        if(predicate.test(tankCoord, turnCoord)) {
+            setRideLooping(true);
+            super.ride();
         }
-        if (this.getDir() == Direction.RIGHT) {
-            while (this.getSprite().getX() < turnCoord.x())
-                ride(this.getDir());
-        }
-        if (this.getDir() == Direction.RIGHT) {
-            while (this.getSprite().getX() < turnCoord.x())
-                ride(this.getDir());
-        }
-        if (this.getDir() == Direction.RIGHT) {
-            while (this.getSprite().getX() < turnCoord.x())
-                ride(this.getDir());
-        }
+
     }
 
     private Coords getTurnCoord() {
         Coords first = coordsToTarget.poll();
         Coords second = coordsToTarget.poll();
-        BiPredicate<Coords, Coords> rightPredicate = (coord1, coord2) -> coord1.x() < coord2.x();
-        BiPredicate<Coords, Coords> leftPredicate = (coord1, coord2) -> coord1.x() > coord2.x();
-        BiPredicate<Coords, Coords> upPredicate = (coord1, coord2) -> coord1.y() < coord2.y();
-        BiPredicate<Coords, Coords> downPredicate = (coord1, coord2) -> coord1.y() > coord2.y();
+        Map<BiPredicate<Coords, Coords>, Direction> predicateMap = getPredicateMap();
 
-        if (rightPredicate.test(first, second)) {
-            turnCoordCycle(rightPredicate, first, second);
-            this.setDir(Direction.RIGHT);
-        } else if (leftPredicate.test(first, second)) {
-            turnCoordCycle(rightPredicate, first, second);
-            this.setDir(Direction.LEFT);
-        } else if (upPredicate.test(first, second)) {
-            turnCoordCycle(upPredicate, first, second);
-            this.setDir(Direction.UP);
-        }
-
-        else if (downPredicate.test(first, second)) {
-            turnCoordCycle(upPredicate, first, second);
-            this.setDir(Direction.DOWN);
-        }
-
-        while (second.x() > first.x()) {
-            first = second;
-            second = coordsToTarget.poll();
-        }
-
-        if (second.x() < first.x())
-            while (second.x() < first.x()) {
-                this.setDir(Direction.LEFT);
-
-                first = second;
-                second = coordsToTarget.poll();
+        for (BiPredicate<Coords, Coords> predicate : predicateMap.keySet()) {
+            if (predicate.test(first, second)) {
+                this.setDir(predicateMap.get(predicate));
+                turnCoordCycle(predicate, first, second);
+                break;
             }
-
-        if (second.y() > first.y())
-            while (second.y() > first.y()) {
-                this.setDir(Direction.UP);
-                first = second;
-                second = coordsToTarget.poll();
-            }
-
-        if (second.y() < first.y())
-            while (second.y() < first.y()) {
-                this.setDir(Direction.DOWN);
-                first = second;
-                second = coordsToTarget.poll();
-            }
+        }
 
         return first;
+    }
+
+    private Map<BiPredicate<Coords, Coords>, Direction> getPredicateMap() {
+        Map<BiPredicate<Coords, Coords>, Direction> predicateMap = new HashMap<>();
+
+        predicateMap.put((coord1, coord2) -> coord1.x() < coord2.x(), Direction.RIGHT);
+        predicateMap.put((coord1, coord2) -> coord1.x() > coord2.x(), Direction.LEFT);
+        predicateMap.put((coord1, coord2) -> coord1.y() < coord2.y(), Direction.UP);
+        predicateMap.put((coord1, coord2) -> coord1.y() > coord2.y(), Direction.DOWN);
+
+        return predicateMap;
     }
 
     private void turnCoordCycle(BiPredicate<Coords, Coords> predicate, Coords first, Coords second) {
@@ -162,4 +138,5 @@ public class AIPlayerTank extends PlayerTank {
 
         return false;
     }
+
 }
