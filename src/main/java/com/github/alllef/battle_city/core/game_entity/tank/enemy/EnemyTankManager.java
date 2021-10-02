@@ -44,7 +44,7 @@ public class EnemyTankManager implements Drawable {
         }
     }
 
-    public void ride() {
+    public void ride() {/*
         for (int i = 0; i < enemyTanks.size; i++) {
             EnemyTank tmpTank = enemyTanks.get(i);
             Direction dir = tmpTank.getDir();
@@ -59,7 +59,8 @@ public class EnemyTankManager implements Drawable {
 
             tmpTank.ride(dir);
             stepsNum.put(tmpTank, stepsNum.get(tmpTank) - 1);
-        }
+        }*/
+        enemyTanks.forEach(tank -> tank.ride(tank.getDir()));
     }
 
     public Array<EnemyTank> getEnemyTanks() {
@@ -73,8 +74,7 @@ public class EnemyTankManager implements Drawable {
     @Override
     public void draw(SpriteBatch spriteBatch) {
         this.getEnemyTanks()
-                .forEach(enemyTank ->
-                        enemyTank.getSprite().draw(spriteBatch));
+                .forEach(enemyTank -> enemyTank.draw(spriteBatch));
     }
 
 }

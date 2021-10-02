@@ -1,10 +1,12 @@
 package com.github.alllef.battle_city.core.game_entity.tank.enemy;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
+import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
-public class EnemyTank extends SingleTank {
+public class EnemyTank extends SingleTank implements Drawable {
 
     public EnemyTank(BulletFactory bulletFactory, float x, float y) {
         super(SpriteParam.ENEMY_TANK.getTexturePath(), bulletFactory);
@@ -15,5 +17,10 @@ public class EnemyTank extends SingleTank {
     public void shoot() {
         setDurationBetweenBullets(3 * prefs.getInteger("bullets_cooldown"));
         super.shoot();
+    }
+
+    @Override
+    public void draw(SpriteBatch spriteBatch) {
+        this.getSprite().draw(spriteBatch);
     }
 }
