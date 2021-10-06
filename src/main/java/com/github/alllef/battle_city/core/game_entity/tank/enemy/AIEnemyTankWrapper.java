@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.world.RTreeMap;
@@ -35,6 +34,7 @@ public class AIEnemyTankWrapper {
     private Map<EnemyTank, Coords> turnCoordMap = new HashMap<>();
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     private EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+    private PlayerTank playerTank = PlayerTank.getInstance();
 
     public AIEnemyTankWrapper() {
         enemyTankManager.getEnemyTanks().forEach(enemyTank1 -> {
@@ -74,10 +74,6 @@ public class AIEnemyTankWrapper {
         if (turnCoordMap.get(enemyTank) == null)
             turnCoordMap.put(enemyTank, getTurnCoord());
 
-        if (turnCoordMap.get(enemyTank) == null) {
-            shoot(enemyTank);
-            return;
-        }
         Coords tankCoord = new Coords((int) enemyTank.getSprite().getX(), (int) enemyTank.getSprite().getY());
 
         Optional<Map.Entry<BiPredicate<Coords, Coords>, Direction>> predicateEntry = getPredicateMap()
@@ -99,14 +95,19 @@ public class AIEnemyTankWrapper {
 
 
     private Coords getTurnCoord() {
-        if (coordsToTargetMap.get(enemyTank).isEmpty()){
-            System.out.println("wtf");
+
+        if (coordsToTargetMap.get(enemyTank).isEmpty()) {
             generatePath(this.enemyTank);
             getTurnCoord();
         }
 
         Coords first = coordsToTargetMap.get(enemyTank).peek();
         coordsToTargetMap.get(enemyTank).pop();
+
+        if (coordsToTargetMap.get(enemyTank).isEmpty()) {
+            generatePath(this.enemyTank);
+            getTurnCoord();
+        }
 
         Coords second = coordsToTargetMap.get(enemyTank).peek();
 
@@ -124,11 +125,11 @@ public class AIEnemyTankWrapper {
     }
 
     private void generatePath(EnemyTank enemyTank) {
-        Rectangle playerTank = PlayerTank.getInstance().getSprite().getBoundingRectangle();
-        playerTank.setWidth(playerTank.width+3);
-        playerTank.setHeight(playerTank.height+3);
-        AStarAlgo algo = new AStarAlgo(enemyTank.getSprite().getBoundingRectangle(), PlayerTank.getInstance().getSprite().getBoundingRectangle());
-        coordsToTargetMap.get(enemyTank).addAll(algo.createAlgo());
+        Rectangle playerTankRect = playerTank.getSprite().getBoundingRectangle();
+
+        UCSAlgo algo = new UCSAlgo(enemyTank.getSprite().getBoundingRectangle(), playerTankRect);
+        List<Coords> algoCoords = algo.createAlgo();
+        coordsToTargetMap.get(enemyTank).addAll(algoCoords);
     }
 
     private Map<BiPredicate<Coords, Coords>, Direction> getPredicateMap() {

@@ -1,10 +1,10 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.util.Coords;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class UCSAlgo extends BFSAlgo {
     protected int[][] distanceMatrix = new int[worldSize][worldSize];

@@ -28,7 +28,7 @@ public class AIPlayerTankWrapper extends PlayerTank {
 
     private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.INSTANCE);
 
-    public static final PlayerTank getInstance() {
+    public static PlayerTank getInstance() {
         return aIPlayerTankWrapper;
     }
 
