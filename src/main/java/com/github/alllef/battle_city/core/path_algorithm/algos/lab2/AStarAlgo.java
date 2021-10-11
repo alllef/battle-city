@@ -1,7 +1,6 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab2;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
@@ -15,7 +14,7 @@ public class AStarAlgo extends UCSAlgo {
     }
 
     private float calculateHeuristics(Coords first, Coords second) {
-        return first.calculateDistance(second);
+        return first.calcCoordDist(second);
     }
 
     public float calculateFunction(Coords coords) {
