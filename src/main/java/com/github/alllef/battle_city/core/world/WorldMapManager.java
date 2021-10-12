@@ -13,24 +13,23 @@ public class WorldMapManager extends WorldMap {
     }
 
     private final RTreeMap rTreeMap = RTreeMap.getInstance();
-    PlayerTank aIPlayerTankWrapper = PlayerTank.getInstance();
-    EnemyTankManager aiEnemyTankWrapper =EnemyTankManager.getInstance();
+    PlayerTank aiPlayerTank = PlayerTank.getInstance();
+    EnemyTankManager aiEnemyTank =EnemyTankManager.getInstance();
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
         super.draw(spriteBatch);
-        aIPlayerTankWrapper.draw(spriteBatch);
-        aiEnemyTankWrapper.draw(spriteBatch);
+        aiPlayerTank.draw(spriteBatch);
+        aiEnemyTank.draw(spriteBatch);
     }
 
     @Override
     public void update() {
         rTreeMap.update();
         bulletFactory.updateBullets();
-        aiEnemyTankWrapper.ride();
-        aiEnemyTankWrapper.shoot();
-        aIPlayerTankWrapper.ride();
-        aIPlayerTankWrapper.shoot();
+        aiEnemyTank.ride();
+        aiEnemyTank.shoot();
+        aiPlayerTank.ride();
     }
 
 }
