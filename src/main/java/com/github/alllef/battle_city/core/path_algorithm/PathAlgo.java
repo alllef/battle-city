@@ -111,7 +111,7 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
         return nearRect.overlaps(endRect);
     }
 
-    private RectangleFloat getSmallestRect(Coords coords) {
+    protected RectangleFloat getSmallestRect(Coords coords) {
         return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
     }
 

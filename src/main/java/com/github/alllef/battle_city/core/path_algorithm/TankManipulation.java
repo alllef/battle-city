@@ -13,10 +13,13 @@ import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.BFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import java.nio.charset.CoderResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +30,7 @@ public enum TankManipulation implements Drawable {
     AlgoType algoType = AlgoType.BFS;
     PlayerTank playerTank = PlayerTank.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+    RTreeMap rTreeMap = RTreeMap.getInstance();
     PathAlgo pathAlgo;
 
     List<List<Coords>> pathsToDraw = new ArrayList<>();
@@ -59,12 +63,31 @@ public enum TankManipulation implements Drawable {
         Rectangle endRect = playerTank.getSprite().getBoundingRectangle();
 
         switch (algoType) {
-            case BFS -> pathAlgo = new BFSAlgo(playerRect,endRect);
+            case BFS -> pathAlgo = new BFSAlgo(playerRect, endRect);
             case DFS -> pathAlgo = new DFSAlgo(playerRect, endRect);
             case UCS -> pathAlgo = new UCSAlgo(playerRect, endRect);
         }
 
         return pathAlgo;
+    }
+
+
+    private List<Coords> getAStarSeveralDots(Rectangle start, Rectangle end, int dotsNum) {
+        List<Coords> path = new ArrayList<>();
+        List<Rectangle> dots = new ArrayList<>();
+
+        dots.add(start);
+        for (int i = 0; i < dotsNum; i++)
+            dots.add(rTreeMap.getRandomNonObstacleCoord());
+        dots.add(end);
+
+        for (int i = 0; i < dots.size() - 1; i++) {
+            List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1)).createAlgo();
+            if (partialPath.isEmpty()) return partialPath;
+            path.addAll(partialPath);
+        }
+
+        return path;
     }
 
     @Override
