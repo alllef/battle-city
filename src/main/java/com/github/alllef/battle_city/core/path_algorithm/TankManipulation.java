@@ -61,7 +61,7 @@ public enum TankManipulation implements Drawable {
     private PathAlgo<Collection<Coords>> getPathAlgo(GameEntity endEntity) {
         PathAlgo pathAlgo = null;
         Rectangle playerRect = playerTank.getSprite().getBoundingRectangle();
-        Rectangle endRect = playerTank.getSprite().getBoundingRectangle();
+        Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
 
         switch (algoType) {
             case BFS -> pathAlgo = new BFSAlgo(playerRect, endRect);

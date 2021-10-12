@@ -1,9 +1,7 @@
 package com.github.alllef.battle_city.core.world;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.AIEnemyTankWrapper;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
-import com.github.alllef.battle_city.core.game_entity.tank.player.AIPlayerTankWrapper;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 
 public class WorldMapManager extends WorldMap {
