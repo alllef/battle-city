@@ -12,14 +12,17 @@ public class PlayerTankInputAdapter extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.SPACE)
+        if (keycode == Input.Keys.SPACE) {
             playerTank.shoot();
+            return true;
+        }
 
         Optional<Direction> optionalDir = Direction.of(keycode);
 
         if (optionalDir.isPresent()) {
             playerTank.setRideLooping(true);
             playerTank.ride(optionalDir.get());
+            return true;
         }
 
         return false;

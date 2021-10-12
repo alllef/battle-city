@@ -5,11 +5,14 @@ import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_alg
 import com.github.alllef.battle_city.core.util.Coords;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.PriorityQueue;
 
 public class AStarAlgo extends UCSAlgo {
+
     public AStarAlgo(Rectangle startRect, Rectangle endRect) {
         super(startRect, endRect);
+
         collection = new PriorityQueue<>(Comparator.comparing(this::calculateFunction));
     }
 

@@ -15,7 +15,7 @@ public class WorldMapManager extends WorldMap {
     }
 
     private final RTreeMap rTreeMap = RTreeMap.getInstance();
-    PlayerTank aIPlayerTankWrapper = AIPlayerTankWrapper.getInstance();
+    PlayerTank aIPlayerTankWrapper = PlayerTank.getInstance();
     EnemyTankManager aiEnemyTankWrapper =EnemyTankManager.getInstance();
 
     @Override

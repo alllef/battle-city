@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public enum  TankManipulation implements Drawable {
+public enum TankManipulation implements Drawable {
     INSTANCE;
 
     AlgoType algoType = AlgoType.BFS;
@@ -54,11 +55,13 @@ public enum  TankManipulation implements Drawable {
 
     private PathAlgo<Collection<Coords>> getPathAlgo(GameEntity endEntity) {
         PathAlgo pathAlgo = null;
+        Rectangle playerRect = playerTank.getSprite().getBoundingRectangle();
+        Rectangle endRect = playerTank.getSprite().getBoundingRectangle();
 
         switch (algoType) {
-            case BFS -> pathAlgo = new BFSAlgo(playerTank.getSprite().getBoundingRectangle(), endEntity.getSprite().getBoundingRectangle());
-            case DFS -> pathAlgo = new DFSAlgo(playerTank.getSprite().getBoundingRectangle(), endEntity.getSprite().getBoundingRectangle());
-            case UCS -> pathAlgo = new UCSAlgo(playerTank.getSprite().getBoundingRectangle(), endEntity.getSprite().getBoundingRectangle());
+            case BFS -> pathAlgo = new BFSAlgo(playerRect,endRect);
+            case DFS -> pathAlgo = new DFSAlgo(playerRect, endRect);
+            case UCS -> pathAlgo = new UCSAlgo(playerRect, endRect);
         }
 
         return pathAlgo;
