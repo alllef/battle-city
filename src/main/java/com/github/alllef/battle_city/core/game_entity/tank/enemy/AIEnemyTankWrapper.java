@@ -45,11 +45,13 @@ public class AIEnemyTankWrapper {
     }
 
     public void draw(SpriteBatch spriteBatch) {
-
-        ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(new Texture(Gdx.files.internal("sprites/block.png"))));
+        Texture tmpTexture = new Texture(Gdx.files.internal("sprites/block.png"));
+        ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(tmpTexture));
         shapeDrawer.setColor(Color.YELLOW);
+
         coordsToTargetMap.entrySet().forEach(stack -> {
-            stack.getValue().forEach(coords -> shapeDrawer.line(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1));
+            stack.getValue().forEach(coords ->
+                    shapeDrawer.line(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1));
             stack.getKey().draw(spriteBatch);
         });
     }
