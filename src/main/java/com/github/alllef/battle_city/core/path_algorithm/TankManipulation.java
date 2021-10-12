@@ -30,7 +30,6 @@ public enum TankManipulation implements Drawable {
     AlgoType algoType = AlgoType.BFS;
     PlayerTank playerTank = PlayerTank.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
-    RTreeMap rTreeMap = RTreeMap.getInstance();
     PathAlgo pathAlgo;
 
     List<List<Coords>> pathsToDraw = new ArrayList<>();

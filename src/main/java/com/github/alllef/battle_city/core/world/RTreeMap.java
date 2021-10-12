@@ -59,6 +59,17 @@ public class RTreeMap extends WorldMap {
         rTree = RTree.create(entryList);
     }
 
+    public boolean isEmpty(Coords coords) {
+        return rTree.search(getSmallestRect(coords))
+                .isEmpty()
+                .toBlocking()
+                .first();
+    }
+
+    protected RectangleFloat getSmallestRect(Coords coords) {
+        return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
+    }
+
     private void checkOverlapping(GameEntity gameEntity) {
 
         Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = rTree.search(getEntry(gameEntity).geometry());

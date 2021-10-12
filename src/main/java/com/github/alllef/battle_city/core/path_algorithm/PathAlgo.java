@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class PathAlgo<T extends Collection<Coords>> {
-    protected RTree<GameEntity, RectangleFloat> rTree = RTreeMap.getInstance().getrTree();
+    protected RTreeMap rTreeMap = RTreeMap.getInstance();
     protected final int worldSize;
     protected boolean[][] climbedPeaksMatrix;
     protected Rectangle startRect;
@@ -54,7 +54,7 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
     protected Optional<Coords> getAdjacentCoord(boolean condition, Coords coords) {
         Optional<Coords> tmpCoords = Optional.empty();
         if (condition && !climbedPeaksMatrix[coords.x()][coords.y()]) {
-            if (isEmpty(coords))
+            if (rTreeMap.isEmpty(coords))
                 tmpCoords = Optional.of(coords);
 
             climbedPeaksMatrix[coords.x()][coords.y()] = true;
@@ -81,25 +81,25 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
 
         for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
             int tmpY = yUp;
-            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && rTreeMap.isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpX = x; tmpX <= tmpX + width; tmpX++) {
             int tmpY = yDown;
-            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && rTreeMap.isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpY = y; tmpY <= tmpY + height; tmpY++) {
             int tmpX = xRight;
-            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && rTreeMap.isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
         for (int tmpY = y; tmpY <= tmpY + height; tmpY++) {
             int tmpX = xLeft;
-            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && isEmpty(new Coords(tmpX, tmpY)))
+            if (tmpY < worldSize && tmpX < worldSize && tmpY >= 0 && tmpX >= 0 && rTreeMap.isEmpty(new Coords(tmpX, tmpY)))
                 return new Coords(tmpX, tmpY);
         }
 
@@ -111,14 +111,4 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
         return nearRect.overlaps(endRect);
     }
 
-    protected RectangleFloat getSmallestRect(Coords coords) {
-        return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
-    }
-
-    protected boolean isEmpty(Coords coords) {
-        return rTree.search(getSmallestRect(coords))
-                .isEmpty()
-                .toBlocking()
-                .first();
-    }
 }
