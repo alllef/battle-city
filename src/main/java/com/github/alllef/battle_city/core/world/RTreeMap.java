@@ -66,7 +66,7 @@ public class RTreeMap extends WorldMap {
                 .first();
     }
 
-    protected RectangleFloat getSmallestRect(Coords coords) {
+    public RectangleFloat getSmallestRect(Coords coords) {
         return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
     }
 

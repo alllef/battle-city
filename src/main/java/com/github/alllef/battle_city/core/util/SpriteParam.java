@@ -6,9 +6,10 @@ import com.badlogic.gdx.Preferences;
 public enum SpriteParam {
     OBSTACLE(1.0f / 50, 1.0f / 100, "sprites/block.png"),
     BULLET(1.0f / 50, 1.0f / 50, "sprites/bullet.png"),
-    SINGLE_TANK(1.0f/50,1.0f/50,""),
+    SINGLE_TANK(1.0f / 50, 1.0f / 50, ""),
     PLAYER_TANK(1.0f / 50, 1.0f / 50, "sprites/player.png"),
-    ENEMY_TANK(1.0f / 50, 1.0f / 50, "sprites/enemy.png");
+    ENEMY_TANK(1.0f / 50, 1.0f / 50, "sprites/enemy.png"),
+    COIN(1.0f/100,1.0f/100,"sprites/coin.png");
 
     private final float width, height;
     private final String texturePath;

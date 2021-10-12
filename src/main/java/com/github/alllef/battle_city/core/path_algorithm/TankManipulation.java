@@ -16,10 +16,11 @@ import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-import java.nio.charset.CoderResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,8 +32,9 @@ public enum TankManipulation implements Drawable {
     PlayerTank playerTank = PlayerTank.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
     PathAlgo pathAlgo;
-
+    RTreeMap rTreeMap = RTreeMap.getInstance();
     List<List<Coords>> pathsToDraw = new ArrayList<>();
+    GdxToRTreeRectangleMapper rectMapper = GdxToRTreeRectangleMapper.ENTITY;
     int attempts = 0;
 
     public void setPathAlgo(PathAlgo pathAlgo) {
@@ -76,8 +78,11 @@ public enum TankManipulation implements Drawable {
         List<Rectangle> dots = new ArrayList<>();
 
         dots.add(start);
-        for (int i = 0; i < dotsNum; i++)
-            dots.add(rTreeMap.getRandomNonObstacleCoord());
+        for (int i = 0; i < dotsNum; i++) {
+            Coords coords = rTreeMap.getRandomNonObstacleCoord();
+            Rectangle gdxRect = rectMapper.convertToGdxRectangle(rTreeMap.getSmallestRect(coords));
+            dots.add(gdxRect);
+        }
         dots.add(end);
 
         for (int i = 0; i < dots.size() - 1; i++) {
@@ -92,7 +97,8 @@ public enum TankManipulation implements Drawable {
     @Override
     public void draw(SpriteBatch spriteBatch) {
         List<Color> possibleColors = List.of(Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE);
-        ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(new Texture(Gdx.files.internal("sprites/block.png"))));
+        Texture obstacle = new Texture(SpriteParam.OBSTACLE.getTexturePath());
+        ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(obstacle));
 
         for (int i = 0; i < pathsToDraw.size(); i++) {
             Color tmp = possibleColors.get(i);

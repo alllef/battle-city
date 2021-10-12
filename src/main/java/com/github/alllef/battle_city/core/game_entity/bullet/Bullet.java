@@ -12,7 +12,7 @@ public class Bullet extends GameEntity {
 
     private Direction dir;
 
-    protected Bullet(float x, float y, Direction dir) {
+    protected Bullet(float posX, float posY, Direction dir) {
         this.dir = dir;
         SpriteParam param = SpriteParam.BULLET;
         sprite = new Sprite(new Texture(param.getTexturePath()));
@@ -20,7 +20,7 @@ public class Bullet extends GameEntity {
         sprite.setSize(param.getWidth(), param.getHeight());
         sprite.setOriginCenter();
         sprite.setRotation(dir.getDegree());
-        sprite.setPosition(x, y);
+        sprite.setPosition(posX, posY);
 
     }
 
