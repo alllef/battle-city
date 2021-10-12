@@ -29,11 +29,13 @@ public class RTreeMap extends WorldMap {
         return rTreeMap;
     }
 
-    RTree<GameEntity, RectangleFloat> rTree;
+    RTree<GameEntity, RectangleFloat> worldRTree;
+    RTree<GameEntity, RectangleFloat> coinRTree;
     GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
 
     private RTreeMap() {
         createRtree();
+        createCoinRtree();
     }
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
@@ -53,14 +55,20 @@ public class RTreeMap extends WorldMap {
         };
     }
 
+    public void createCoinRtree() {
+        List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
+        coinManager.getCoinArr().forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
+        coinRTree = RTree.create(entryList);
+    }
+
     public void createRtree() {
         List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
         getEntitiesArray().forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
-        rTree = RTree.create(entryList);
+        worldRTree = RTree.create(entryList);
     }
 
     public boolean isEmpty(Coords coords) {
-        return rTree.search(getSmallestRect(coords))
+        return worldRTree.search(getSmallestRect(coords))
                 .isEmpty()
                 .toBlocking()
                 .first();
@@ -72,7 +80,7 @@ public class RTreeMap extends WorldMap {
 
     private void checkOverlapping(GameEntity gameEntity) {
 
-        Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = rTree.search(getEntry(gameEntity).geometry());
+        Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(getEntry(gameEntity).geometry());
         overlappingEntities.forEach(tmpEntity -> checkOverlaps(gameEntity, tmpEntity.value()));
     }
 
@@ -170,7 +178,7 @@ public class RTreeMap extends WorldMap {
                 }
             };
 
-        return rTree.search(treeRect).toBlocking().getIterator();
+        return worldRTree.search(treeRect).toBlocking().getIterator();
     }
 
     public Coords getRandomNonObstacleCoord() {
@@ -186,7 +194,7 @@ public class RTreeMap extends WorldMap {
             y = random.nextInt(upperBounds);
             RectangleFloat floatRect = (RectangleFloat) Geometries.rectangle(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
 
-            Observable<Entry<GameEntity, RectangleFloat>> tmpList = rTree.search(floatRect);
+            Observable<Entry<GameEntity, RectangleFloat>> tmpList = worldRTree.search(floatRect);
 
             if (tmpList.isEmpty().toBlocking().first())
                 break;
@@ -195,7 +203,7 @@ public class RTreeMap extends WorldMap {
         return new Coords(x, y);
     }
 
-    public RTree<GameEntity, RectangleFloat> getrTree() {
-        return rTree;
+    public RTree<GameEntity, RectangleFloat> getWorldRTree() {
+        return worldRTree;
     }
 }

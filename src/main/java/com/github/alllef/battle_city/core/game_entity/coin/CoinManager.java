@@ -30,4 +30,8 @@ public enum CoinManager implements Drawable {
     public void draw(SpriteBatch spriteBatch) {
         coinArr.forEach(coin -> coin.getSprite().draw(spriteBatch));
     }
+
+    public Array<Coin> getCoinArr() {
+        return coinArr;
+    }
 }

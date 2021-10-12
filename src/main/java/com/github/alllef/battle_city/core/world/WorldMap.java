@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.coin.CoinManager;
 import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
@@ -17,12 +18,13 @@ public abstract class WorldMap implements Drawable {
     protected BulletFactory bulletFactory = BulletFactory.INSTANCE;
     protected EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
     protected ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    PlayerTank playerTank = PlayerTank.getInstance();
+    protected PlayerTank playerTank = PlayerTank.getInstance();
+    protected CoinManager coinManager = CoinManager.INSTANCE;
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        List.of(obstacleGeneration,bulletFactory)
+        List.of(obstacleGeneration, bulletFactory,coinManager)
                 .forEach(drawable -> drawable.draw(spriteBatch));
     }
 
