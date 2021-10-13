@@ -6,9 +6,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.util.Drawable;
 
-public enum CoinManager implements Drawable {
-    INSTANCE;
+public class CoinManager implements Drawable {
+    private static CoinManager coinManager;
+
+    public static CoinManager getInstance() {
+        if (coinManager == null) {
+            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+            coinManager = new CoinManager(prefs.getInteger("coins_number"));
+        }
+        return coinManager;
+    }
+
     private final Array<Coin> coinArr = new Array<>();
+
+    private CoinManager(int coinNum) {
+        generateCoins(coinNum);
+    }
 
     public Coin createCoin(float x, float y) {
         Coin coin = new Coin(x, y);

@@ -12,9 +12,11 @@ public record Coords(int x, int y) {
         return (float) Math.sqrt(xDist + yDist);
     }
 
-    public float calcManhattanDist(Coords second){
-        float xDist= this.x()-second.x();
-        float yDist = this.y()-second.y();
-        return xDist+yDist;
+    public float calcManhattanDist(Coords second) {
+        float xDist = this.x() - second.x();
+        float yDist = this.y() - second.y();
+        if (xDist < 0) xDist = -xDist;
+        if (yDist < 0) yDist = -yDist;
+        return xDist + yDist;
     }
 }

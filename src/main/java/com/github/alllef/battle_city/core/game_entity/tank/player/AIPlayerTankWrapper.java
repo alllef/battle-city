@@ -11,6 +11,7 @@ import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
+import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
@@ -112,7 +113,7 @@ public class AIPlayerTankWrapper extends PlayerTank {
 
         Coords coords = rTreeMap.getRandomNonObstacleCoord();
         Rectangle coordsRect = new Rectangle(coords.x(), coords.y(), 1, 1);
-        AStarAlgo algo = new AStarAlgo(this.getSprite().getBoundingRectangle(), coordsRect);
+        AStarAlgo algo = new AStarAlgo(this.getSprite().getBoundingRectangle(), coordsRect, AlgoType.ASTAR_COORDS);
         coordsToTarget.addAll(algo.createAlgo());
 
     }

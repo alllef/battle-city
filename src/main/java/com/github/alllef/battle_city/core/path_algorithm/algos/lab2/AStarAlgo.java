@@ -1,6 +1,7 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab2;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 
@@ -9,15 +10,22 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class AStarAlgo extends UCSAlgo {
+    AlgoType algoType;
 
-    public AStarAlgo(Rectangle startRect, Rectangle endRect) {
+    public AStarAlgo(Rectangle startRect, Rectangle endRect, AlgoType algoType) {
         super(startRect, endRect);
-
+        this.algoType = algoType;
         collection = new PriorityQueue<>(Comparator.comparing(this::calculateFunction));
     }
 
     private float calculateHeuristics(Coords first, Coords second) {
-        return first.calcCoordDist(second);
+        float res = 0.0f;
+        switch (algoType) {
+            case ASTAR_COORDS -> res = first.calcCoordDist(second);
+            case ASTAR_MANHATTAN -> res = first.calcManhattanDist(second);
+            case ASTAR_GREEDY -> res = 0;
+        }
+        return res;
     }
 
     public float calculateFunction(Coords coords) {
@@ -28,7 +36,7 @@ public class AStarAlgo extends UCSAlgo {
         if (!parent.equals(new Coords(-1, -1))) {
             float coordDist = prefs.getFloat("coord_distance");
             if (rTreeMap.hasCoins(coords))
-                coordDist=coordDist/2;
+                coordDist = coordDist / 2;
 
             functionResult += distanceMatrix[parent.x()][parent.y()] + coordDist;
         }

@@ -1,6 +1,7 @@
 package com.github.alllef.battle_city.core.path_algorithm;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -48,17 +49,21 @@ public enum TankManipulation implements Drawable {
             pathsToDraw.clear();
             long seconds = TimeUtils.millis();
             enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
-
-                        PathAlgo<Collection<Coords>> algo = /*new AStarAlgo(playerTank,enemyTank);*/getPathAlgo(enemyTank);
-                        List<Coords> coords = algo.createAlgo();
-                        pathsToDraw.add(coords);
+                        if (algoType == AlgoType.ASTAR_N) {
+                            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+                            pathsToDraw.add(getAStarSeveralDots(playerTank.getSprite().getBoundingRectangle(), enemyTank.getSprite().getBoundingRectangle(), prefs.getInteger("dots_number_astar")));
+                        } else {
+                            PathAlgo<Collection<Coords>> algo = getPathAlgoLab2(enemyTank);
+                            List<Coords> coords = algo.createAlgo();
+                            pathsToDraw.add(coords);
+                        }
                     }
             );
             System.out.println(TimeUtils.millis() - seconds);
         }
     }
 
-    private PathAlgo<Collection<Coords>> getPathAlgo(GameEntity endEntity) {
+    private PathAlgo<Collection<Coords>> getPathAlgoLab1(GameEntity endEntity) {
         PathAlgo pathAlgo = null;
         Rectangle playerRect = playerTank.getSprite().getBoundingRectangle();
         Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
@@ -72,6 +77,13 @@ public enum TankManipulation implements Drawable {
         return pathAlgo;
     }
 
+    private PathAlgo<Collection<Coords>> getPathAlgoLab2(GameEntity endEntity) {
+        Rectangle playerRect = playerTank.getSprite().getBoundingRectangle();
+        Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
+
+
+        return (PathAlgo) new AStarAlgo(playerRect, endRect, algoType);
+    }
 
     private List<Coords> getAStarSeveralDots(Rectangle start, Rectangle end, int dotsNum) {
         List<Coords> path = new ArrayList<>();
@@ -86,7 +98,7 @@ public enum TankManipulation implements Drawable {
         dots.add(end);
 
         for (int i = 0; i < dots.size() - 1; i++) {
-            List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1)).createAlgo();
+            List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).createAlgo();
             if (partialPath.isEmpty()) return partialPath;
             path.addAll(partialPath);
         }
