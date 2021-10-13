@@ -24,6 +24,7 @@ public class BattleCity extends Game {
         prefs.putInteger("enemy_tanks_number",5);
         prefs.putInteger("obstacle_sets",20);
         prefs.putBoolean("enable_shooting",false);
+        prefs.putFloat("coord_distance",1.0f);
         this.setScreen(new MainScreen());
     }
 

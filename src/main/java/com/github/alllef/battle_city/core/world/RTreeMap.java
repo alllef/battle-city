@@ -74,6 +74,13 @@ public class RTreeMap extends WorldMap {
                 .first();
     }
 
+    public boolean hasCoins(Coords coords){
+        return coinRTree.search(getSmallestRect(coords))
+                .isEmpty()
+                .toBlocking()
+                .first();
+    }
+
     public RectangleFloat getSmallestRect(Coords coords) {
         return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
     }

@@ -25,8 +25,13 @@ public class AStarAlgo extends UCSAlgo {
         Coords parent = parentMatrix[coords.x()][coords.y()];
         float functionResult = calculateHeuristics(coords, endCoords);
 
-        if (!parent.equals(new Coords(-1, -1)))
-            functionResult += distanceMatrix[parent.x()][parent.y()] + 1;
+        if (!parent.equals(new Coords(-1, -1))) {
+            float coordDist = prefs.getFloat("coord_distance");
+            if (rTreeMap.hasCoins(coords))
+                coordDist=coordDist/2;
+
+            functionResult += distanceMatrix[parent.x()][parent.y()] + coordDist;
+        }
 
         return functionResult;
     }
