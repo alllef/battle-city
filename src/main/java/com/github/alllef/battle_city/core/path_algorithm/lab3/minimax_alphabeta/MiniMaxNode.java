@@ -10,14 +10,14 @@ public class MiniMaxNode {
 
     int alpha = Integer.MIN_VALUE;
     int beta = Integer.MAX_VALUE;
-    float costFunc = 0.0f;
+    int costFunc = 0;
     MiniMaxNode parent;
     List<MiniMaxNode> children;
     Direction dir;
     Rectangle rect;
     NodeType type;
 
-    public MiniMaxNode(float costFunc, MiniMaxNode parent, List<MiniMaxNode> children, Direction dir, Rectangle rect, NodeType type) {
+    public MiniMaxNode(int costFunc, MiniMaxNode parent, List<MiniMaxNode> children, Direction dir, Rectangle rect, NodeType type) {
         this.costFunc = costFunc;
         this.parent = parent;
         this.children = children;
@@ -42,11 +42,11 @@ public class MiniMaxNode {
         this.beta = beta;
     }
 
-    public float getCostFunc() {
+    public int getCostFunc() {
         return costFunc;
     }
 
-    public void setCostFunc(float costFunc) {
+    public void setCostFunc(int costFunc) {
         this.costFunc = costFunc;
     }
 

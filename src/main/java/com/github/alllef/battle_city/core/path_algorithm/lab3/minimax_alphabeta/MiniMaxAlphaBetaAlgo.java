@@ -25,9 +25,77 @@ public class MiniMaxAlphaBetaAlgo {
         this.dir = dir;
     }
 
-    public void startAlgo() {
-        minimaxTree = new MiniMaxNode(0.0f, null, null, dir, start, MiniMaxNode.NodeType.MIN);
+    public Direction alphaBetaAlgo() {
+        Stack<MiniMaxNode> stack = new Stack<>();
+        MiniMaxNode node = minimaxTree;
+        Set<MiniMaxNode> traversedNodes = new HashSet<>();
+
+        stack.push(node);
+        traversedNodes.add(node);
+
+        while (!stack.isEmpty()) {
+            Optional<MiniMaxNode> unusedChild = getUnusedChild(stack.peek(), traversedNodes);
+
+            while (unusedChild.isPresent()) {
+                MiniMaxNode child = unusedChild.get();
+                child.beta = stack.peek().beta;
+                child.alpha = stack.peek().alpha;
+                stack.push(child);
+                unusedChild = getUnusedChild(stack.peek(), traversedNodes);
+            }
+
+            MiniMaxNode child = stack.pop();
+            if (stack.isEmpty()) {
+                for (MiniMaxNode child1 : child.children) {
+                    if (child1.costFunc == child.costFunc)
+                        return child1.dir;
+                }
+            }
+
+            MiniMaxNode parent = stack.peek();
+
+            if (parent.type == MiniMaxNode.NodeType.MAX) {
+                parent.alpha = Math.max(parent.alpha, child.costFunc);
+                parent.costFunc = parent.alpha;
+
+                if (parent.beta <= parent.alpha) {
+                    parent.parent.beta = Math.min(parent.parent.alpha, parent.costFunc);
+                    parent.parent.costFunc = parent.parent.beta;
+                    stack.pop();
+                }
+
+            } else if (parent.type == MiniMaxNode.NodeType.MIN) {
+                parent.beta = Math.min(parent.beta, stack.peek().costFunc);
+                parent.costFunc = parent.beta;
+
+                if (parent.beta <= parent.alpha) {
+                    parent.parent.alpha = Math.max(parent.parent.beta, parent.costFunc);
+                    parent.parent.costFunc = parent.parent.alpha;
+                    stack.pop();
+                }
+
+            }
+        }
+
+        return null;
+    }
+
+    private Optional<MiniMaxNode> getUnusedChild(MiniMaxNode node, Set<MiniMaxNode> traversedNodes) {
+        Optional<MiniMaxNode> child = Optional.empty();
+
+        for (MiniMaxNode tmpChild : node.children) {
+            if (!traversedNodes.contains(tmpChild)) {
+                traversedNodes.add(tmpChild);
+                return Optional.of(tmpChild);
+            }
+        }
+        return child;
+    }
+
+    public Direction startAlgo() {
+        minimaxTree = new MiniMaxNode(0, null, null, dir, start, MiniMaxNode.NodeType.MIN);
         minimaxTree.setChildren(getChildren(minimaxTree, 3));
+        return alphaBetaAlgo();
     }
 
     public List<MiniMaxNode> getChildren(MiniMaxNode parent, int depth) {
@@ -61,7 +129,7 @@ public class MiniMaxAlphaBetaAlgo {
                     return rectangleEntry;
                 })
                 .map(rectEntry -> {
-                    MiniMaxNode node = new MiniMaxNode(0.0f, parent, null, rectEntry.getKey(), rectEntry.getValue(), MiniMaxNode.NodeType.values()[parent.type.ordinal() % 2]);
+                    MiniMaxNode node = new MiniMaxNode(0, parent, null, rectEntry.getKey(), rectEntry.getValue(), MiniMaxNode.NodeType.values()[parent.type.ordinal() % 2]);
                     node.setChildren(getChildren(node, depth - 1));
                     return node;
                 })
@@ -70,11 +138,12 @@ public class MiniMaxAlphaBetaAlgo {
         return children;
     }
 
-    public float calcFunc(Rectangle start, Rectangle end) {
+    public int calcFunc(Rectangle start, Rectangle end) {
         PathAlgo algo = new AStarAlgo(start, end, AlgoType.ASTAR_COORDS);
         List<Coords> result = algo.startAlgo();
         if (result.size() == 0)
-            return Float.MAX_VALUE;
+            return Integer.MAX_VALUE;
+
         return result.size();
     }
 }
