@@ -1,11 +1,9 @@
 package com.github.alllef.battle_city.core.world;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
@@ -135,7 +133,7 @@ public class RTreeMap extends WorldMap {
 
     public void checkBulletShootTank(Bullet bullet, EnemyTank enemyTank) {
         if (bullet.getSprite().getBoundingRectangle().overlaps(enemyTank.getSprite().getBoundingRectangle())) {
-            enemyTankManager.getEnemyTanks().removeValue(enemyTank, true);
+            enemyTankManager.getEntities().removeValue(enemyTank, true);
             bulletFactory.getBullets().removeValue(bullet, true);
             scoreManipulation.tankKilled();
         }

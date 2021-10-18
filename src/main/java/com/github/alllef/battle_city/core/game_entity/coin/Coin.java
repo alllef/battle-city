@@ -2,7 +2,7 @@ package com.github.alllef.battle_city.core.game_entity.coin;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
 public class Coin extends GameEntity {

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.BFSAlgo;
@@ -55,7 +55,7 @@ public enum TankManipulation implements Drawable {
         pathsToDraw.clear();
         long seconds = TimeUtils.millis();
 
-        enemyTankManager.getEnemyTanks().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
+        enemyTankManager.getEntities().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
         System.out.println(TimeUtils.millis() - seconds);
     }
 

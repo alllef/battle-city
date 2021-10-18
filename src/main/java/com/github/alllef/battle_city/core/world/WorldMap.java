@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.coin.CoinManager;
 import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
@@ -33,7 +33,7 @@ public abstract class WorldMap implements Drawable {
     protected Array<GameEntity> getEntitiesArray() {
         Array<GameEntity> entitiesArray = new Array<>();
         entitiesArray.addAll(bulletFactory.getBullets());
-        entitiesArray.addAll(enemyTankManager.getEnemyTanks());
+        entitiesArray.addAll(enemyTankManager.getEntities());
         entitiesArray.add(playerTank);
         entitiesArray.addAll(obstacleGeneration.getObstacles());
         return entitiesArray;

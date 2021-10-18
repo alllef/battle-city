@@ -60,7 +60,7 @@ public class ObstacleGeneration implements Drawable {
                 Obstacle obstacle = getObstacleByCoords(i, coords, dir);
                 Sprite sprite = obstacle.getSprite();
                 int worldSize = prefs.getInteger("world_size");
-                float maxHeight = worldSize - sprite.getHeight();
+                /*float maxHeight = worldSize - sprite.getHeight();
                 float maxWidth = worldSize - sprite.getWidth();
                 System.out.println("Before exception" + sprite.getX() + " " + sprite.getY());
 
@@ -70,17 +70,15 @@ public class ObstacleGeneration implements Drawable {
                     System.out.println("After exception" + sprite.getX() + " " + sprite.getY());
                     System.out.println();
                     break;
-                }
+                }*/
 
                 if (obstacleMap.containsKey(obstacle.getSprite().getBoundingRectangle())) {
                     System.out.println("Because contains");
                     break;
                 }
 
-
                 resultSet.add(obstacle);
             }
-
         }
         while (resultSet.size < setSize );
 

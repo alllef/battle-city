@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
@@ -37,7 +37,7 @@ public class AIEnemyTankWrapper {
     private PlayerTank playerTank = PlayerTank.getInstance();
 
     public AIEnemyTankWrapper() {
-        enemyTankManager.getEnemyTanks().forEach(enemyTank1 -> {
+        enemyTankManager.getEntities().forEach(enemyTank1 -> {
             coordsToTargetMap.put(enemyTank1, new Stack<>());
             turnCoordMap.put(enemyTank1, null);
         });
@@ -57,7 +57,7 @@ public class AIEnemyTankWrapper {
     }
 
     public void shoot() {
-        enemyTankManager.getEnemyTanks().forEach(this::ride);
+        enemyTankManager.getEntities().forEach(this::ride);
     }
 
     public void shoot(EnemyTank enemyTank) {
@@ -67,7 +67,7 @@ public class AIEnemyTankWrapper {
     }
 
     public void ride() {
-        enemyTankManager.getEnemyTanks().forEach(this::ride);
+        enemyTankManager.getEntities().forEach(this::ride);
     }
 
     public void ride(EnemyTank enemyTank) {

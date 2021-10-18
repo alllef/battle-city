@@ -3,12 +3,8 @@ package com.github.alllef.battle_city.core.path_algorithm;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.world.RTreeMap;
-import com.github.davidmoten.rtree.RTree;
-import com.github.davidmoten.rtree.geometry.Geometries;
-import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
 import java.util.Collection;
 import java.util.LinkedList;

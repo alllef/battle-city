@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.game_entity;
+package com.github.alllef.battle_city.core.game_entity.common;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 

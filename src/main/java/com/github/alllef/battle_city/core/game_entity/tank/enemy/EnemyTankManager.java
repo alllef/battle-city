@@ -5,6 +5,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class EnemyTankManager implements Drawable {
+public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawable {
     private static EnemyTankManager enemyTankManager;
 
     public static EnemyTankManager getInstance() {
@@ -23,13 +24,11 @@ public class EnemyTankManager implements Drawable {
         return enemyTankManager;
     }
 
-    private Array<EnemyTank> enemyTanks;
     private Map<EnemyTank, Integer> stepsNum;
     private final BulletFactory bulletFactory;
 
     private EnemyTankManager(int tankNumber, BulletFactory bulletFactory) {
         this.bulletFactory = bulletFactory;
-        enemyTanks = new Array<>();
         stepsNum = new HashMap<>();
         generateTanks(tankNumber);
     }
@@ -40,13 +39,13 @@ public class EnemyTankManager implements Drawable {
         for (int i = 0; i < tankNumber; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
             int y = (int) (Math.random() * worldSize * 0.95);
-            enemyTanks.add(new EnemyTank(bulletFactory, x, y));
+           entityArr.add(new EnemyTank(bulletFactory, x, y));
         }
     }
 
     public void ride() {
-        for (int i = 0; i < enemyTanks.size; i++) {
-            EnemyTank tmpTank = enemyTanks.get(i);
+        for (int i = 0; i < entityArr.size; i++) {
+            EnemyTank tmpTank = entityArr.get(i);
             Direction dir = tmpTank.getDir();
 
             if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank) <= 0) {
@@ -63,17 +62,13 @@ public class EnemyTankManager implements Drawable {
         //enemyTanks.forEach(tank -> tank.ride(tank.getDir()));
     }
 
-    public Array<EnemyTank> getEnemyTanks() {
-        return enemyTanks;
-    }
-
     public void shoot() {
-        enemyTanks.forEach(EnemyTank::shoot);
+        entityArr.forEach(EnemyTank::shoot);
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        this.getEnemyTanks()
+        this.getEntities()
                 .forEach(enemyTank -> enemyTank.draw(spriteBatch));
     }
 

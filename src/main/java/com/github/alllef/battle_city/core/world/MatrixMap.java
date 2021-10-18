@@ -1,7 +1,7 @@
 package com.github.alllef.battle_city.core.world;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.github.alllef.battle_city.core.game_entity.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 
 public class MatrixMap extends WorldMap {
     private static final MatrixMap matrixMap = new MatrixMap();
