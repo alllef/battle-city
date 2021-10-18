@@ -30,8 +30,6 @@ public class ObstacleGeneration implements Drawable {
     private final Array<Obstacle> obstacles = new Array<>();
     private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
-
-
     public ObstacleGeneration(int obstacleSetsNumber) {
         generateObstacles(obstacleSetsNumber);
     }
