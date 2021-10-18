@@ -27,6 +27,7 @@ public class BattleCity extends Game {
         prefs.putFloat("coord_distance",1.0f);
         prefs.putInteger("coins_number",100);
         prefs.putInteger("dots_number_astar",3);
+        prefs.putInteger("lab_number",2);
         this.setScreen(new MainScreen());
     }
 

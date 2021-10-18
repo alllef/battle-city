@@ -14,7 +14,7 @@ public class DFSAlgo extends PathAlgo<Stack<Coords>> {
     }
 
     @Override
-    public List<Coords> createAlgo() {
+    public List<Coords> startAlgo() {
         Coords firstCoord = getFirstVertex();
         collection.add(firstCoord);
 

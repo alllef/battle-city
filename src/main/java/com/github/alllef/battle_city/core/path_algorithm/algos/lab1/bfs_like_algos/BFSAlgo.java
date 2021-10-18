@@ -16,7 +16,7 @@ public class BFSAlgo extends PathAlgo<Queue<Coords>> {
     }
 
     @Override
-    public List<Coords> createAlgo() {
+    public List<Coords> startAlgo() {
         Coords last = getFirstVertex();
         collection.add(last);
 

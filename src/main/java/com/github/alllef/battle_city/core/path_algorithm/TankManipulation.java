@@ -23,20 +23,21 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public enum TankManipulation implements Drawable {
     INSTANCE;
 
-    AlgoType algoType = AlgoType.BFS;
     PlayerTank playerTank = PlayerTank.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
-    PathAlgo pathAlgo;
     RTreeMap rTreeMap = RTreeMap.getInstance();
-    List<List<Coords>> pathsToDraw = new ArrayList<>();
     GdxToRTreeRectangleMapper rectMapper = GdxToRTreeRectangleMapper.ENTITY;
+    Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+
+    AlgoType algoType = AlgoType.BFS;
+    PathAlgo pathAlgo;
     int attempts = 0;
+    List<List<Coords>> pathsToDraw = new ArrayList<>();
 
     public void setPathAlgo(PathAlgo pathAlgo) {
         this.pathAlgo = pathAlgo;
@@ -48,22 +49,22 @@ public enum TankManipulation implements Drawable {
             attempts = 0;
             pathsToDraw.clear();
             long seconds = TimeUtils.millis();
-            enemyTankManager.getEnemyTanks().forEach(enemyTank -> {
-                        if (algoType == AlgoType.ASTAR_N) {
-                            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-                            pathsToDraw.add(getAStarSeveralDots(playerTank.getSprite().getBoundingRectangle(), enemyTank.getSprite().getBoundingRectangle(), prefs.getInteger("dots_number_astar")));
-                        } else {
-                            PathAlgo<Collection<Coords>> algo = getPathAlgoLab2(enemyTank);
-                            List<Coords> coords = algo.createAlgo();
-                            pathsToDraw.add(coords);
-                        }
-                    }
-            );
+            enemyTankManager.getEnemyTanks().forEach(enemyTank ->pathsToDraw.add(getPathAlgo(enemyTank)));
             System.out.println(TimeUtils.millis() - seconds);
         }
     }
 
-    private PathAlgo<Collection<Coords>> getPathAlgoLab1(GameEntity endEntity) {
+    private List<Coords> getPathAlgo(GameEntity endEntity) {
+        int labNum = prefs.getInteger("lab_number");
+        if (labNum == 1)
+            return getPathAlgoLab1(endEntity);
+         if (labNum == 2)
+            return getPathAlgoLab2(endEntity);
+
+        return new ArrayList<>();
+    }
+
+    private List<Coords> getPathAlgoLab1(GameEntity endEntity) {
         PathAlgo pathAlgo = null;
         Rectangle playerRect = playerTank.getSprite().getBoundingRectangle();
         Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
@@ -74,15 +75,17 @@ public enum TankManipulation implements Drawable {
             case UCS -> pathAlgo = new UCSAlgo(playerRect, endRect);
         }
 
-        return pathAlgo;
+        return pathAlgo.startAlgo();
     }
 
-    private PathAlgo<Collection<Coords>> getPathAlgoLab2(GameEntity endEntity) {
+
+    private List<Coords> getPathAlgoLab2(GameEntity endEntity) {
         Rectangle playerRect = playerTank.getSprite().getBoundingRectangle();
         Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
+        if (algoType == AlgoType.ASTAR_N)
+            return getAStarSeveralDots(playerRect, endRect, prefs.getInteger("dots_number_astar"));
 
-
-        return (PathAlgo) new AStarAlgo(playerRect, endRect, algoType);
+        return new AStarAlgo(playerRect, endRect, algoType).startAlgo();
     }
 
     private List<Coords> getAStarSeveralDots(Rectangle start, Rectangle end, int dotsNum) {
@@ -98,7 +101,7 @@ public enum TankManipulation implements Drawable {
         dots.add(end);
 
         for (int i = 0; i < dots.size() - 1; i++) {
-            List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).createAlgo();
+            List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).startAlgo();
             if (partialPath.isEmpty()) return partialPath;
             path.addAll(partialPath);
         }

@@ -31,7 +31,7 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
         climbedPeaksMatrix = new boolean[worldSize][worldSize];
     }
 
-    public abstract List<Coords> createAlgo();
+    public abstract List<Coords> startAlgo();
 
     protected abstract List<Coords> getPath(Coords start);
 

@@ -130,7 +130,7 @@ public class AIEnemyTankWrapper {
         Rectangle playerTankRect = playerTank.getSprite().getBoundingRectangle();
 
         UCSAlgo algo = new UCSAlgo(enemyTank.getSprite().getBoundingRectangle(), playerTankRect);
-        List<Coords> algoCoords = algo.createAlgo();
+        List<Coords> algoCoords = algo.startAlgo();
         coordsToTargetMap.get(enemyTank).addAll(algoCoords);
     }
 
