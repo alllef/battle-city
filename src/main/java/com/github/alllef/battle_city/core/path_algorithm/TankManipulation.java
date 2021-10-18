@@ -36,7 +36,7 @@ public enum TankManipulation implements Drawable {
 
     AlgoType algoType = AlgoType.BFS;
     PathAlgo pathAlgo;
-    int attempts = 0;
+    int frames = 0;
     List<List<Coords>> pathsToDraw = new ArrayList<>();
 
     public void setPathAlgo(PathAlgo pathAlgo) {
@@ -44,21 +44,26 @@ public enum TankManipulation implements Drawable {
     }
 
     public void update() {
-        attempts++;
-        if (attempts > 50) {
-            attempts = 0;
-            pathsToDraw.clear();
-            long seconds = TimeUtils.millis();
-            enemyTankManager.getEnemyTanks().forEach(enemyTank ->pathsToDraw.add(getPathAlgo(enemyTank)));
-            System.out.println(TimeUtils.millis() - seconds);
-        }
+        if (frames < 50)
+            frames++;
+        else
+            updatePath();
+    }
+
+    public void updatePath() {
+        frames = 0;
+        pathsToDraw.clear();
+        long seconds = TimeUtils.millis();
+
+        enemyTankManager.getEnemyTanks().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
+        System.out.println(TimeUtils.millis() - seconds);
     }
 
     private List<Coords> getPathAlgo(GameEntity endEntity) {
         int labNum = prefs.getInteger("lab_number");
         if (labNum == 1)
             return getPathAlgoLab1(endEntity);
-         if (labNum == 2)
+        if (labNum == 2)
             return getPathAlgoLab2(endEntity);
 
         return new ArrayList<>();
@@ -90,15 +95,7 @@ public enum TankManipulation implements Drawable {
 
     private List<Coords> getAStarSeveralDots(Rectangle start, Rectangle end, int dotsNum) {
         List<Coords> path = new ArrayList<>();
-        List<Rectangle> dots = new ArrayList<>();
-
-        dots.add(start);
-        for (int i = 0; i < dotsNum; i++) {
-            Coords coords = rTreeMap.getRandomNonObstacleCoord();
-            Rectangle gdxRect = rectMapper.convertToGdxRectangle(rTreeMap.getSmallestRect(coords));
-            dots.add(gdxRect);
-        }
-        dots.add(end);
+        List<Rectangle> dots = getPathDots(start,end,dotsNum);
 
         for (int i = 0; i < dots.size() - 1; i++) {
             List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).startAlgo();
@@ -109,20 +106,38 @@ public enum TankManipulation implements Drawable {
         return path;
     }
 
+    private List<Rectangle> getPathDots(Rectangle start, Rectangle end, int dotsNum) {
+        List<Rectangle> dots = new ArrayList<>();
+
+        dots.add(start);
+        for (int i = 0; i < dotsNum; i++) {
+            Coords coords = rTreeMap.getRandomNonObstacleCoord();
+            Rectangle gdxRect = rectMapper.convertToGdxRectangle(rTreeMap.getSmallestRect(coords));
+            dots.add(gdxRect);
+        }
+        dots.add(end);
+
+        return dots;
+    }
+
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        List<Color> possibleColors = List.of(Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE);
         Texture obstacle = new Texture(SpriteParam.OBSTACLE.getTexturePath());
         ShapeDrawer shapeDrawer = new ShapeDrawer(spriteBatch, new TextureRegion(obstacle));
 
         for (int i = 0; i < pathsToDraw.size(); i++) {
-            Color tmp = possibleColors.get(i);
-            tmp.a = 0.5f;
-            shapeDrawer.setColor(tmp);
+            shapeDrawer.setColor(chooseColor(i));
 
             pathsToDraw.get(i).forEach(coords ->
                     shapeDrawer.line(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1));
         }
+    }
+
+    public Color chooseColor(int colorNum) {
+        List<Color> possibleColors = List.of(Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE);
+        Color tmp = possibleColors.get(colorNum);
+        tmp.a = 0.5f;
+        return tmp;
     }
 
     public AlgoType getAlgoType() {
