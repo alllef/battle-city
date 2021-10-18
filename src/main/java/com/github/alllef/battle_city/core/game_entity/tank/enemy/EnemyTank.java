@@ -18,9 +18,4 @@ public class EnemyTank extends SingleTank implements Drawable {
         setDurationBetweenBullets(3 * prefs.getInteger("bullets_cooldown"));
         super.shoot();
     }
-
-    @Override
-    public void draw(SpriteBatch spriteBatch) {
-        this.getSprite().draw(spriteBatch);
-    }
 }

@@ -26,7 +26,6 @@ public class Bullet extends GameEntity {
 
     public void move() {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-        int worldSize = prefs.getInteger("world_size");
 
         float minDistance = prefs.getFloat("min_change_distance") * prefs.getFloat("bullet_speed_scaled");
 

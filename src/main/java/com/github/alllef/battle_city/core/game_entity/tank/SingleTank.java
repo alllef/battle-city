@@ -31,13 +31,13 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
     @Override
     public void shoot() {
-
         if (!prefs.getBoolean("enable_shooting"))
             return;
 
         double newTime = TimeUtils.millis();
         if (newTime - lastTimeShoot < durationBetweenBullets)
             return;
+
         lastTimeShoot = newTime;
 
         float x = sprite.getX();
@@ -94,7 +94,6 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
         }
     }
-
 
     public Direction getDir() {
         return dir;

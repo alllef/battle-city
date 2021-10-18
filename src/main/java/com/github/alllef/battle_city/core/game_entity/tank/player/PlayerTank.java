@@ -20,12 +20,6 @@ public class PlayerTank extends SingleTank implements Drawable {
         setDurationBetweenBullets(prefs.getInteger("bullets_cooldown"));
     }
 
-    @Override
-    public void draw(SpriteBatch spriteBatch) {
-        this.getSprite().draw(spriteBatch);
-    }
-
-
     public void ride() {
         if (isRideLooping)
             ride(this.getDir());

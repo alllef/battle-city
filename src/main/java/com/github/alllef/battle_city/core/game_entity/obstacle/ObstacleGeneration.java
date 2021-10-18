@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class ObstacleGeneration implements Drawable {
+public class ObstacleGeneration extends EntityManager<Obstacle> {
     private static ObstacleGeneration obstacleGeneration;
 
     public static ObstacleGeneration getInstance() {
@@ -27,10 +29,7 @@ public class ObstacleGeneration implements Drawable {
         return obstacleGeneration;
     }
 
-    private final Array<Obstacle> obstacles = new Array<>();
-    private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-
-    public ObstacleGeneration(int obstacleSetsNumber) {
+    private ObstacleGeneration(int obstacleSetsNumber) {
         generateObstacles(obstacleSetsNumber);
     }
 
@@ -41,7 +40,7 @@ public class ObstacleGeneration implements Drawable {
             generateObstacleSet(obstacleMap).forEach(result ->
                     obstacleMap.put(result.getSprite().getBoundingRectangle(), result));
 
-        obstacleMap.values().forEach(obstacles::add);
+        obstacleMap.values().forEach(entityArr::add);
     }
 
     private Array<Obstacle> generateObstacleSet(Map<Rectangle, Obstacle> obstacleMap) {
@@ -121,13 +120,4 @@ public class ObstacleGeneration implements Drawable {
         return new Obstacle(tmpX, tmpY);
     }
 
-    @Override
-    public void draw(SpriteBatch spriteBatch) {
-        obstacles.forEach(value ->
-                value.getSprite().draw(spriteBatch));
-    }
-
-    public Array<Obstacle> getObstacles() {
-        return obstacles;
-    }
 }

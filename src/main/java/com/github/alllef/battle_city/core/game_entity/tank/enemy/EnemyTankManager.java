@@ -34,7 +34,6 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
     }
 
     private void generateTanks(int tankNumber) {
-        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         int worldSize = prefs.getInteger("world_size");
         for (int i = 0; i < tankNumber; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
@@ -51,8 +50,6 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
             if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank) <= 0) {
                 dir = Direction.values()[new Random().nextInt(Direction.values().length)];
                 tmpTank.ride(dir);
-
-                Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
                 stepsNum.put(tmpTank, new Random().nextInt(prefs.getInteger("max_ride_distance")));
             }
 

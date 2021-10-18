@@ -2,11 +2,10 @@ package com.github.alllef.battle_city.core.game_entity.coin;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 
-public class CoinManager implements Drawable {
+public class CoinManager extends EntityManager<Coin> {
     private static CoinManager coinManager;
 
     public static CoinManager getInstance() {
@@ -17,15 +16,13 @@ public class CoinManager implements Drawable {
         return coinManager;
     }
 
-    private final Array<Coin> coinArr = new Array<>();
-
     private CoinManager(int coinNum) {
         generateCoins(coinNum);
     }
 
     public Coin createCoin(float x, float y) {
         Coin coin = new Coin(x, y);
-        coinArr.add(coin);
+        entityArr.add(coin);
         return coin;
     }
 
@@ -35,16 +32,11 @@ public class CoinManager implements Drawable {
         for (int i = 0; i < coinNumber; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
             int y = (int) (Math.random() * worldSize * 0.95);
-            coinArr.add(new Coin(x, y));
+            entityArr.add(new Coin(x, y));
         }
     }
 
-    @Override
-    public void draw(SpriteBatch spriteBatch) {
-        coinArr.forEach(coin -> coin.getSprite().draw(spriteBatch));
-    }
-
     public Array<Coin> getCoinArr() {
-        return coinArr;
+        return entityArr;
     }
 }
