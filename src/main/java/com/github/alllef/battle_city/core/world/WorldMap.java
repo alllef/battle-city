@@ -11,20 +11,22 @@ import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneratio
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.world.score.ScoreManipulation;
 
 import java.util.List;
 
 public abstract class WorldMap implements Drawable {
-    protected BulletFactory bulletFactory = BulletFactory.INSTANCE;
-    protected EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
-    protected ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    protected PlayerTank playerTank = PlayerTank.getInstance();
-    protected CoinManager coinManager = CoinManager.getInstance();
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    protected final BulletFactory bulletFactory = BulletFactory.INSTANCE;
+    protected final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+    protected final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
+    protected final PlayerTank playerTank = PlayerTank.getInstance();
+    protected final CoinManager coinManager = CoinManager.getInstance();
+    protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        List.of(obstacleGeneration, bulletFactory,coinManager)
+        List.of(obstacleGeneration, bulletFactory, coinManager,scoreManipulation)
                 .forEach(drawable -> drawable.draw(spriteBatch));
     }
 

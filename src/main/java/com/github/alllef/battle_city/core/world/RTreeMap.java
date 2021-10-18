@@ -68,7 +68,7 @@ public class RTreeMap extends WorldMap {
     }
 
     public boolean isEmpty(Coords coords) {
-        return isEmpty(worldRTree,getSmallestRect(coords));
+        return isEmpty(worldRTree, getSmallestRect(coords));
     }
 
     public boolean hasCoins(Coords coords) {
@@ -121,7 +121,6 @@ public class RTreeMap extends WorldMap {
 
     public void tankOverlapTank(SingleTank singleTank) {
         singleTank.setBlockedDirection(singleTank.getDir());
-        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         float minChangeDistance = prefs.getFloat("min_change_distance");
         Sprite tankSprite = singleTank.getSprite();
 
@@ -138,7 +137,7 @@ public class RTreeMap extends WorldMap {
         if (bullet.getSprite().getBoundingRectangle().overlaps(enemyTank.getSprite().getBoundingRectangle())) {
             enemyTankManager.getEnemyTanks().removeValue(enemyTank, true);
             bulletFactory.getBullets().removeValue(bullet, true);
-            //                score += prefs.getInteger("killed_tank_score");
+            scoreManipulation.tankKilled();
         }
     }
 
@@ -201,7 +200,7 @@ public class RTreeMap extends WorldMap {
             y = random.nextInt(upperBounds);
             RectangleFloat floatRect = (RectangleFloat) Geometries.rectangle(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
 
-            if (isEmpty(worldRTree,floatRect))
+            if (isEmpty(worldRTree, floatRect))
                 break;
         }
 

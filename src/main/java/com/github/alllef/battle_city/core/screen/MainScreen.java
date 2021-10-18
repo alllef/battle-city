@@ -30,7 +30,6 @@ public class MainScreen implements Screen {
 
         int worldSize = prefs.getInteger("world_size");
         camera.setToOrtho(false, worldSize, worldSize);
-        font.getData().setScale(prefs.getFloat("score_scale_X"), prefs.getFloat("score_scale_Y"));
 
        InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new MainScreenInputAdapter());
@@ -52,17 +51,12 @@ public class MainScreen implements Screen {
         tankManipulation.update();
 
         batch.begin();
-        float scoreResultPos = prefs.getInteger("world_size") * prefs.getFloat("score_pos");
-        font.draw(batch, "Score: " + score, scoreResultPos, scoreResultPos);
         font.getData().setScale(0.25f,0.25f);
         font.draw(batch,"Algo type: " +tankManipulation.getAlgoType().name(),50,50);
         worldMapManager.draw(batch);
         tankManipulation.draw(batch);
         batch.end();
-
-
     }
-
 
     @Override
     public void resize(int i, int i1) {
