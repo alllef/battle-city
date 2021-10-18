@@ -68,14 +68,15 @@ public class RTreeMap extends WorldMap {
     }
 
     public boolean isEmpty(Coords coords) {
-        return worldRTree.search(getSmallestRect(coords))
-                .isEmpty()
-                .toBlocking()
-                .first();
+        return isEmpty(worldRTree,getSmallestRect(coords));
     }
 
-    public boolean hasCoins(Coords coords){
-        return coinRTree.search(getSmallestRect(coords))
+    public boolean hasCoins(Coords coords) {
+        return isEmpty(coinRTree, getSmallestRect(coords));
+    }
+
+    private boolean isEmpty(RTree<GameEntity, RectangleFloat> rTree, RectangleFloat gdxRect) {
+        return rTree.search(gdxRect)
                 .isEmpty()
                 .toBlocking()
                 .first();
@@ -86,7 +87,6 @@ public class RTreeMap extends WorldMap {
     }
 
     private void checkOverlapping(GameEntity gameEntity) {
-
         Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(getEntry(gameEntity).geometry());
         overlappingEntities.forEach(tmpEntity -> checkOverlaps(gameEntity, tmpEntity.value()));
     }
@@ -201,16 +201,10 @@ public class RTreeMap extends WorldMap {
             y = random.nextInt(upperBounds);
             RectangleFloat floatRect = (RectangleFloat) Geometries.rectangle(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
 
-            Observable<Entry<GameEntity, RectangleFloat>> tmpList = worldRTree.search(floatRect);
-
-            if (tmpList.isEmpty().toBlocking().first())
+            if (isEmpty(worldRTree,floatRect))
                 break;
         }
 
         return new Coords(x, y);
-    }
-
-    public RTree<GameEntity, RectangleFloat> getWorldRTree() {
-        return worldRTree;
     }
 }
