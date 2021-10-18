@@ -1,29 +1,31 @@
 package com.github.alllef.battle_city.core.game_entity.bullet;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 
-public enum BulletFactory implements Drawable {
-    INSTANCE;
-    private final Array<Bullet> bulletArray = new Array<>();
+public class BulletFactory extends EntityManager<Bullet> {
+    private static BulletFactory bulletFactory = new BulletFactory();
+
+    public static BulletFactory getInstance() {
+        return bulletFactory;
+    }
 
     public Bullet createBullet(float x, float y, Direction dir) {
         Bullet bullet = new Bullet(x, y, dir);
-        bulletArray.add(bullet);
+        entityArr.add(bullet);
         return bullet;
-    }
-
-    public Array<Bullet> getBullets() {
-        return bulletArray;
     }
 
     public Array<Bullet> updateBullets() {
         Array<Bullet> bulletsToDelete = new Array<>();
-        bulletArray.forEach(bullet -> {
+        entityArr.forEach(bullet -> {
             Sprite bulletSprite = bullet.getSprite();
             bullet.move();
 
@@ -33,15 +35,10 @@ public enum BulletFactory implements Drawable {
 
             if (bulletSprite.getY() < 0 || bulletSprite.getX() < 0 || bulletSprite.getY() > worldSize - bulletSprite.getWidth()
                     || bulletSprite.getX() > worldSize - bulletSprite.getHeight()) {
-                bulletArray.removeValue(bullet, true);
+                entityArr.removeValue(bullet, true);
                 bulletsToDelete.add(bullet);
             }
         });
         return bulletsToDelete;
     }
-
-    @Override
-    public void draw(SpriteBatch spriteBatch) {
-        getBullets().forEach(bullet -> bullet.getSprite().draw(spriteBatch));
-    }
-}
+   }

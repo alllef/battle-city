@@ -17,7 +17,7 @@ import java.util.List;
 
 public abstract class WorldMap implements Drawable {
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-    protected final BulletFactory bulletFactory = BulletFactory.INSTANCE;
+    protected final BulletFactory bulletFactory = BulletFactory.getInstance();
     protected final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
     protected final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
     protected final PlayerTank playerTank = PlayerTank.getInstance();
@@ -32,10 +32,10 @@ public abstract class WorldMap implements Drawable {
 
     protected Array<GameEntity> getEntitiesArray() {
         Array<GameEntity> entitiesArray = new Array<>();
-        entitiesArray.addAll(bulletFactory.getBullets());
+        entitiesArray.addAll(bulletFactory.getEntities());
         entitiesArray.addAll(enemyTankManager.getEntities());
         entitiesArray.add(playerTank);
-        entitiesArray.addAll(obstacleGeneration.getObstacles());
+        entitiesArray.addAll(obstacleGeneration.getEntities());
         return entitiesArray;
     }
 

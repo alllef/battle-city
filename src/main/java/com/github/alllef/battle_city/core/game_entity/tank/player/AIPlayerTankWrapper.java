@@ -25,7 +25,7 @@ import java.util.function.BiPredicate;
 
 public class AIPlayerTankWrapper extends PlayerTank {
 
-    private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.INSTANCE);
+    private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.getInstance());
 
     public static PlayerTank getInstance() {
         return aIPlayerTankWrapper;

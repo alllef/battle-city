@@ -19,7 +19,7 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
     public static EnemyTankManager getInstance() {
         if (enemyTankManager == null) {
             Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-            enemyTankManager = new EnemyTankManager(prefs.getInteger("enemy_tanks_number"), BulletFactory.INSTANCE);
+            enemyTankManager = new EnemyTankManager(prefs.getInteger("enemy_tanks_number"), BulletFactory.getInstance());
         }
         return enemyTankManager;
     }

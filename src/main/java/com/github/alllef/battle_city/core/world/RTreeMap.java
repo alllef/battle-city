@@ -134,7 +134,7 @@ public class RTreeMap extends WorldMap {
     public void checkBulletShootTank(Bullet bullet, EnemyTank enemyTank) {
         if (bullet.getSprite().getBoundingRectangle().overlaps(enemyTank.getSprite().getBoundingRectangle())) {
             enemyTankManager.getEntities().removeValue(enemyTank, true);
-            bulletFactory.getBullets().removeValue(bullet, true);
+            bulletFactory.getEntities().removeValue(bullet, true);
             scoreManipulation.tankKilled();
         }
     }
@@ -142,13 +142,13 @@ public class RTreeMap extends WorldMap {
     public void checkBulletOverlapping(Bullet firstBullet, Bullet secondBullet) {
         if (firstBullet.getSprite().getBoundingRectangle().overlaps(secondBullet.getSprite().getBoundingRectangle()))
             List.of(firstBullet, secondBullet).forEach(bullet ->
-                    bulletFactory.getBullets().removeValue(firstBullet, true));
+                    bulletFactory.getEntities().removeValue(firstBullet, true));
     }
 
     public void checkBulletShootObstacle(Bullet bullet, Obstacle obstacle) {
-        Array<Bullet> bullets = bulletFactory.getBullets();
+        Array<Bullet> bullets = bulletFactory.getEntities();
         if (bullet.getSprite().getBoundingRectangle().overlaps(obstacle.getSprite().getBoundingRectangle())) {
-            obstacleGeneration.getObstacles().removeValue(obstacle, true);
+            obstacleGeneration.getEntities().removeValue(obstacle, true);
             bullets.removeValue(bullet, true);
         }
     }
