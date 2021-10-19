@@ -51,6 +51,7 @@ public class MiniMaxAlphaBetaAlgo {
             }
 
             MiniMaxNode child = stack.pop();
+
             if (stack.isEmpty()) {
                 for (MiniMaxNode child1 : child.children) {
                     if (child1.costFunc == child.costFunc)
@@ -58,35 +59,39 @@ public class MiniMaxAlphaBetaAlgo {
                 }
             }
 
-            if (stack.isEmpty()){
-                return null;
-            }
-                MiniMaxNode parent = stack.peek();
+            MiniMaxNode parent = stack.peek();
 
             if (parent.type == MiniMaxNode.NodeType.MAX) {
-                parent.alpha = Math.max(parent.alpha, child.costFunc);
-                parent.costFunc = parent.alpha;
+                maximize(child);
 
                 if (parent.beta <= parent.alpha) {
-                    parent.parent.beta = Math.min(parent.parent.alpha, parent.costFunc);
-                    parent.parent.costFunc = parent.parent.beta;
+                    minimize(parent);
                     stack.pop();
                 }
 
             } else if (parent.type == MiniMaxNode.NodeType.MIN) {
-                parent.beta = Math.min(parent.beta, stack.peek().costFunc);
-                parent.costFunc = parent.beta;
+                minimize(child);
 
                 if (parent.beta <= parent.alpha) {
-                    parent.parent.alpha = Math.max(parent.parent.beta, parent.costFunc);
-                    parent.parent.costFunc = parent.parent.alpha;
+                    maximize(parent);
                     stack.pop();
                 }
 
             }
         }
-
         return null;
+    }
+
+    private void maximize(MiniMaxNode child) {
+        MiniMaxNode parent = child.parent;
+        parent.alpha = Math.max(parent.alpha, child.costFunc);
+        parent.costFunc = parent.alpha;
+    }
+
+    private void minimize(MiniMaxNode child) {
+        MiniMaxNode parent = child.parent;
+        parent.beta = Math.min(parent.beta, child.costFunc);
+        parent.costFunc = parent.beta;
     }
 
     private Optional<MiniMaxNode> getUnusedChild(MiniMaxNode node) {
