@@ -15,6 +15,7 @@ import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_alg
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxAlphaBetaAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -33,7 +34,7 @@ public enum TankManipulation implements Drawable {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     GdxToRTreeRectangleMapper rectMapper = GdxToRTreeRectangleMapper.ENTITY;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-
+    int manipulation = 0;
     AlgoType algoType = AlgoType.BFS;
     PathAlgo pathAlgo;
     int frames = 0;
@@ -55,7 +56,15 @@ public enum TankManipulation implements Drawable {
         pathsToDraw.clear();
         long seconds = TimeUtils.millis();
 
-        enemyTankManager.getEntities().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
+        // enemyTankManager.getEntities().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
+        MiniMaxAlphaBetaAlgo algo = new MiniMaxAlphaBetaAlgo(enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
+        algo.startAlgo(2);
+        manipulation++;
+        System.out.println("manipulation" + manipulation);
+        if (manipulation > 5) {
+            System.out.println();
+            System.out.println("manipulation>5");
+        }
         System.out.println(TimeUtils.millis() - seconds);
     }
 
@@ -95,7 +104,7 @@ public enum TankManipulation implements Drawable {
 
     private List<Coords> getAStarSeveralDots(Rectangle start, Rectangle end, int dotsNum) {
         List<Coords> path = new ArrayList<>();
-        List<Rectangle> dots = getPathDots(start,end,dotsNum);
+        List<Rectangle> dots = getPathDots(start, end, dotsNum);
 
         for (int i = 0; i < dots.size() - 1; i++) {
             List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).startAlgo();

@@ -6,11 +6,20 @@ import com.github.alllef.battle_city.core.util.Direction;
 import java.util.List;
 
 public class MiniMaxNode {
-    public enum NodeType {MIN, MAX}
+    public enum NodeType {
+        MIN, MAX;
+
+        static NodeType chooseType(NodeType type) {
+            if (type == MIN) return MAX;
+            if (type == MAX) return MIN;
+            return null;
+        }
+    }
 
     int alpha = Integer.MIN_VALUE;
     int beta = Integer.MAX_VALUE;
     int costFunc = 0;
+    boolean traversed = false;
     MiniMaxNode parent;
     List<MiniMaxNode> children;
     Direction dir;
@@ -90,6 +99,14 @@ public class MiniMaxNode {
         this.type = type;
     }
 
+    public boolean isTraversed() {
+        return traversed;
+    }
+
+    public void setTraversed(boolean traversed) {
+        this.traversed = traversed;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,10 +116,8 @@ public class MiniMaxNode {
 
         if (getAlpha() != that.getAlpha()) return false;
         if (getBeta() != that.getBeta()) return false;
-        if (Float.compare(that.getCostFunc(), getCostFunc()) != 0) return false;
-        if (getParent() != null ? !getParent().equals(that.getParent()) : that.getParent() != null) return false;
-        if (getChildren() != null ? !getChildren().equals(that.getChildren()) : that.getChildren() != null)
-            return false;
+        if (getCostFunc() != that.getCostFunc()) return false;
+        if (traversed != that.traversed) return false;
         if (getDir() != that.getDir()) return false;
         if (getRect() != null ? !getRect().equals(that.getRect()) : that.getRect() != null) return false;
         return getType() == that.getType();
@@ -112,9 +127,8 @@ public class MiniMaxNode {
     public int hashCode() {
         int result = getAlpha();
         result = 31 * result + getBeta();
-        result = 31 * result + (getCostFunc() != +0.0f ? Float.floatToIntBits(getCostFunc()) : 0);
-        result = 31 * result + (getParent() != null ? getParent().hashCode() : 0);
-        result = 31 * result + (getChildren() != null ? getChildren().hashCode() : 0);
+        result = 31 * result + getCostFunc();
+        result = 31 * result + (traversed ? 1 : 0);
         result = 31 * result + (getDir() != null ? getDir().hashCode() : 0);
         result = 31 * result + (getRect() != null ? getRect().hashCode() : 0);
         result = 31 * result + (getType() != null ? getType().hashCode() : 0);
@@ -127,6 +141,7 @@ public class MiniMaxNode {
                 "alpha=" + alpha +
                 ", beta=" + beta +
                 ", costFunc=" + costFunc +
+                ", traversed=" + traversed +
                 ", parent=" + parent +
                 ", children=" + children +
                 ", dir=" + dir +
