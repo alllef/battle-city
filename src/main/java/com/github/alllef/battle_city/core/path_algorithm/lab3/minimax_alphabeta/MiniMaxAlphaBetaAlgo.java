@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.world.RTreeMap;
@@ -26,7 +27,7 @@ public class MiniMaxAlphaBetaAlgo {
     }
 
     public Direction startAlgo(int depth) {
-        minimaxTree = new MiniMaxNode(0, null, null, dir, start, MiniMaxNode.NodeType.MIN);
+        minimaxTree = new MiniMaxNode(0, null, null, dir, start, NodeType.MIN);
         minimaxTree.setChildren(getChildren(minimaxTree, depth));
 
         return alphaBetaAlgo();
@@ -61,7 +62,7 @@ public class MiniMaxAlphaBetaAlgo {
 
             MiniMaxNode parent = stack.peek();
 
-            if (parent.type == MiniMaxNode.NodeType.MAX) {
+            if (parent.type == NodeType.MAX) {
                 maximize(child);
 
                 if (parent.beta <= parent.alpha) {
@@ -69,7 +70,7 @@ public class MiniMaxAlphaBetaAlgo {
                     stack.pop();
                 }
 
-            } else if (parent.type == MiniMaxNode.NodeType.MIN) {
+            } else if (parent.type == NodeType.MIN) {
                 minimize(child);
 
                 if (parent.beta <= parent.alpha) {
@@ -137,7 +138,7 @@ public class MiniMaxAlphaBetaAlgo {
                     return rectangleEntry;
                 })
                 .map(rectEntry -> {
-                    MiniMaxNode node = new MiniMaxNode(0, parent, null, rectEntry.getKey(), rectEntry.getValue(), MiniMaxNode.NodeType.chooseType(parent.type));
+                    MiniMaxNode node = new MiniMaxNode(0, parent, null, rectEntry.getKey(), rectEntry.getValue(), NodeType.chooseType(parent.type));
                     node.setChildren(getChildren(node, depth - 1));
                     return node;
                 })

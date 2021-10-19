@@ -1,20 +1,13 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType;
 import com.github.alllef.battle_city.core.util.Direction;
 
 import java.util.List;
 
 public class MiniMaxNode {
-    public enum NodeType {
-        MIN, MAX;
 
-        static NodeType chooseType(NodeType type) {
-            if (type == MIN) return MAX;
-            if (type == MAX) return MIN;
-            return null;
-        }
-    }
 
     int alpha = Integer.MIN_VALUE;
     int beta = Integer.MAX_VALUE;
