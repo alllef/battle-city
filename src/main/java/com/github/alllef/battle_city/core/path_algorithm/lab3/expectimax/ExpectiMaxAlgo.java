@@ -34,12 +34,10 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
             optChild.ifPresent(chanceNode -> minimaxTree.addChild(chanceNode));
         });
 
-        expectiMaxAlgo();
-
-        return null;
+        return expectiMaxAlgo();
     }
 
-    public void expectiMaxAlgo() {
+    public Direction expectiMaxAlgo() {
         Stack<ExpectiMaxNode> stack = new Stack<>();
         ExpectiMaxNode node = minimaxTree;
 
@@ -54,18 +52,16 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
                 stack.push(child);
                 unusedChild = getUnusedChild(stack.peek());
             }
+            stack.pop();
 
-            ExpectiMaxNode child = stack.pop();
-            if (stack.isEmpty()) {
-                System.out.println("ok");
-                System.out.println("");
-                return;
-            }
+            if (stack.isEmpty())
+                return getFinalResult();
 
-            ExpectiMaxNode parent = stack.pop();
-
+            ExpectiMaxNode parent = stack.peek();
             parent.calcResultFunc();
         }
+
+        return null;
     }
 
     public Optional<ChanceNode> getChanceChild(UtilityNode parent, int depth, ChanceType type) {
@@ -133,8 +129,7 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
                     return Optional.of(tmpChild);
                 }
             }
-        }
-        else if (node instanceof ChanceNode chance) {
+        } else if (node instanceof ChanceNode chance) {
             for (UtilityNode tmpChild : chance.getChildren()) {
                 if (!tmpChild.isTraversed()) {
                     tmpChild.setTraversed(true);
@@ -157,5 +152,33 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
         }
 
         return result;
+    }
+
+    private Direction getFinalResult() {
+        for (ChanceNode child : minimaxTree.getChildren()) {
+            if (Float.compare(child.getCostFunc(), minimaxTree.getCostFunc()) == 0)
+                return maxOrMin(child);
+        }
+
+        return null;
+    }
+
+    private Direction maxOrMin(ChanceNode chanceNode) {
+        float resultFunc = chanceNode.getChildren().get(0).getCostFunc();
+        if (chanceNode.getParent().getType() == NodeType.MIN) {
+            for (UtilityNode child : chanceNode.getChildren()) {
+                resultFunc = Math.min(resultFunc, child.getCostFunc());
+            }
+        } else {
+            for (UtilityNode child : chanceNode.getChildren()) {
+                resultFunc = Math.max(resultFunc, child.getCostFunc());
+            }
+        }
+
+        for (UtilityNode child : chanceNode.getChildren()) {
+            if (Float.compare(child.getCostFunc(), resultFunc) == 0)
+                return child.getDir();
+        }
+        return null;
     }
 }
