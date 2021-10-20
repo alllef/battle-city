@@ -21,7 +21,7 @@ public class BattleCity extends Game {
         prefs.putInteger("min_obstacle_set_size",10);
         prefs.putInteger("obstacle_size_dispersion",15);
         prefs.putInteger("max_ride_distance",40);
-        prefs.putInteger("enemy_tanks_number",5);
+        prefs.putInteger("enemy_tanks_number",1);
         prefs.putInteger("obstacle_sets",20);
         prefs.putBoolean("enable_shooting",true);
         prefs.putFloat("coord_distance",1.0f);

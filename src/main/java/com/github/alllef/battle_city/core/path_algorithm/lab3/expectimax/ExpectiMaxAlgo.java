@@ -7,7 +7,6 @@ import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.Ch
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.ChanceType;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.ExpectiMaxNode;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.UtilityNode;
-import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxNode;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.world.RTreeMap;
@@ -35,12 +34,12 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
             optChild.ifPresent(chanceNode -> minimaxTree.addChild(chanceNode));
         });
 
-        expectiMaxAlgo(depth);
+        expectiMaxAlgo();
 
         return null;
     }
 
-    public void expectiMaxAlgo(int depth) {
+    public void expectiMaxAlgo() {
         Stack<ExpectiMaxNode> stack = new Stack<>();
         ExpectiMaxNode node = minimaxTree;
 
@@ -67,7 +66,6 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
 
             parent.calcResultFunc();
         }
-
     }
 
     public Optional<ChanceNode> getChanceChild(UtilityNode parent, int depth, ChanceType type) {
@@ -77,14 +75,14 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
         Direction[] directions = Direction.values();
 
         children = Arrays.stream(directions)
-                .map(dir -> getNearestCoord(dir, parRect))
-                .filter(entry -> rTreeMap.isEmpty(entry.getValue()))
-                .filter(entry -> {
-                    boolean result = isToEndDirection(entry.getKey(), entry.getValue());
+                .filter(dir -> {
+                    boolean result = isToEndDirection(dir, new Coords((int) parRect.getX(), (int) parRect.getY()));
                     if (type == ChanceType.TO_TANK)
                         return result;
                     return !result;
                 })
+                .map(dir -> getNearestCoord(dir, parRect))
+                .filter(entry -> rTreeMap.isEmpty(entry.getValue()))
                 .map(entry -> mapNearCoordsToRect(entry.getKey(), entry.getValue(), parRect))
                 .collect(Collectors.toList());
 
@@ -93,6 +91,7 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
 
         if (chance.getChildren().isEmpty())
             return Optional.empty();
+
         return Optional.of(chance);
     }
 
@@ -134,7 +133,8 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
                     return Optional.of(tmpChild);
                 }
             }
-        } else if (node instanceof ChanceNode chance) {
+        }
+        else if (node instanceof ChanceNode chance) {
             for (UtilityNode tmpChild : chance.getChildren()) {
                 if (!tmpChild.isTraversed()) {
                     tmpChild.setTraversed(true);
@@ -150,10 +150,10 @@ public class ExpectiMaxAlgo implements MiniMaxAlgo {
         boolean result = false;
 
         switch (dir) {
-            case LEFT -> result = endCoords.x() <= startCoords.x();
-            case RIGHT -> result = endCoords.x() >= endCoords.x();
-            case UP -> result = endCoords.y() >= endCoords.y();
-            case DOWN -> result = endCoords.y() <= endCoords.y();
+            case LEFT -> result = endCoords.x() < startCoords.x();
+            case RIGHT -> result = endCoords.x() >= startCoords.x();
+            case UP -> result = endCoords.y() >= startCoords.y();
+            case DOWN -> result = endCoords.y() < startCoords.y();
         }
 
         return result;
