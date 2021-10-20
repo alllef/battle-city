@@ -9,6 +9,8 @@ public enum SpriteParam {
     SINGLE_TANK(1.0f / 50, 1.0f / 50, ""),
     PLAYER_TANK(1.0f / 50, 1.0f / 50, "sprites/player.png"),
     ENEMY_TANK(1.0f / 50, 1.0f / 50, "sprites/enemy.png"),
+    ENEMY_RANDOM_TANK(1.0f / 50, 1.0f / 50, "sprites/green_enemy.png"),
+    ENEMY_PLAYER_TANK(1.0f / 50, 1.0f / 50, "sprites/purple_enemy.png"),
     COIN(1.0f/100,1.0f/100,"sprites/coin.png");
 
     private final float width, height;

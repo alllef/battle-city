@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.game_entity.tank.enemy;
+package com.github.alllef.battle_city.core.game_entity.tank.enemy.ai;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;

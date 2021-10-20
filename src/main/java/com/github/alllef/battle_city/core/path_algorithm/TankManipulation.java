@@ -60,7 +60,7 @@ public enum TankManipulation implements Drawable {
 
         // enemyTankManager.getEntities().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
         ExpectiMaxAlgo algo = new ExpectiMaxAlgo(enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
-       Direction dir = algo.startAlgo(1);
+        algo.startAlgo(1);
         manipulation++;
         System.out.println("manipulation" + manipulation);
         if (manipulation > 5) {
