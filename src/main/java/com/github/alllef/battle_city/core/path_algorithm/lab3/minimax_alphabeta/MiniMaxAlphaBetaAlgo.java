@@ -73,7 +73,6 @@ public class MiniMaxAlphaBetaAlgo implements MiniMaxAlgo {
                     maximize(parent);
                     stack.pop();
                 }
-
             }
         }
         return null;

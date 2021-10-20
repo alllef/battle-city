@@ -1,12 +1,8 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node;
 
-import com.github.alllef.battle_city.core.util.Direction;
-
-import java.util.List;
-
 public abstract class ExpectiMaxNode {
     private float costFunc;
-
+    private boolean traversed = false;
 
     public float getCostFunc() {
         return costFunc;
@@ -14,6 +10,14 @@ public abstract class ExpectiMaxNode {
 
     public void setCostFunc(float costFunc) {
         this.costFunc = costFunc;
+    }
+
+    public boolean isTraversed() {
+        return traversed;
+    }
+
+    public void setTraversed(boolean traversed) {
+        this.traversed = traversed;
     }
 
     public abstract void calcResultFunc();
@@ -37,6 +41,7 @@ public abstract class ExpectiMaxNode {
     public String toString() {
         return "ExpectiMaxNode{" +
                 "costFunc=" + costFunc +
+                ", traversed=" + traversed +
                 '}';
     }
 }

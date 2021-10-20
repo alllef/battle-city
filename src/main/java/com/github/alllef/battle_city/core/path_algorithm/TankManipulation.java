@@ -15,6 +15,7 @@ import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_alg
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.ExpectiMaxAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxAlphaBetaAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Drawable;
@@ -57,8 +58,8 @@ public enum TankManipulation implements Drawable {
         long seconds = TimeUtils.millis();
 
         // enemyTankManager.getEntities().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
-        MiniMaxAlphaBetaAlgo algo = new MiniMaxAlphaBetaAlgo(enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
-        algo.startAlgo(2);
+        ExpectiMaxAlgo algo = new ExpectiMaxAlgo(enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
+        algo.startAlgo(1);
         manipulation++;
         System.out.println("manipulation" + manipulation);
         if (manipulation > 5) {

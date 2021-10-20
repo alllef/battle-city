@@ -25,6 +25,8 @@ public class UtilityNode extends ExpectiMaxNode {
 
     @Override
     public void calcResultFunc() {
+        if (!children.isEmpty())
+            setCostFunc(children.get(0).getCostFunc());
         switch (type) {
             case MAX -> children.forEach(child -> setCostFunc(Math.max(child.getCostFunc(), getCostFunc())));
             case MIN -> children.forEach(child -> setCostFunc(Math.min(child.getCostFunc(), getCostFunc())));
@@ -51,7 +53,7 @@ public class UtilityNode extends ExpectiMaxNode {
         return children;
     }
 
-    public void addChild(ChanceNode chanceNode){
+    public void addChild(ChanceNode chanceNode) {
         children.add(chanceNode);
     }
 
@@ -78,6 +80,7 @@ public class UtilityNode extends ExpectiMaxNode {
     public void setRect(Rectangle rect) {
         this.rect = rect;
     }
+
 
     public void setChildren(List<ChanceNode> children) {
         this.children = children;
