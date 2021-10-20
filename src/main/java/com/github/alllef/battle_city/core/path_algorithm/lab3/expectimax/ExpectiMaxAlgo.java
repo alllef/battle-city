@@ -1,22 +1,21 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
-import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.MiniMaxAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.ChanceNode;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.ChanceType;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.UtilityNode;
-import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxNode;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ExpectiMaxAlgo {
+public class ExpectiMaxAlgo implements MiniMaxAlgo {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     UtilityNode minimaxTree;
     Rectangle start;
@@ -29,25 +28,14 @@ public class ExpectiMaxAlgo {
         this.dir = dir;
     }
 
-    public List<UtilityNode> getChanceChildren(UtilityNode parent, int depth, ChanceType type) {
+    public ChanceNode getChanceChild(UtilityNode parent, int depth, ChanceType type) {
         Rectangle parRect = parent.getRect();
 
-        if (depth == 0) {
-            parent.setCostFunc(calcFunc(parent.rect, end));
-            return new ArrayList<>();
-        }
-
-        List<Map.Entry<Direction,Rectangle>> children;
+        List<Map.Entry<Direction, Rectangle>> children;
         Direction[] directions = Direction.values();
 
         children = Arrays.stream(directions)
-                .map(dir -> switch (dir) {
-                    case LEFT -> Map.entry(dir, new Coords((int) parRect.getX() - 1, (int) parRect.getY()));
-                    case RIGHT -> Map.entry(dir, new Coords((int) parRect.getX() + (int) parRect.getWidth() + 1, (int) parRect.getY()));
-                    case UP -> Map.entry(dir, new Coords((int) parRect.getX(), (int) parRect.getY() + (int) parRect.getHeight() + 1));
-                    case DOWN -> Map.entry(dir, new Coords((int) parRect.getX(), (int) parRect.getY() - 1));
-
-                })
+                .map(dir -> getNearestCoord(dir,parRect))
                 .filter(entry -> rTreeMap.isEmpty(entry.getValue()))
                 .filter(entry -> {
                     boolean result = isToEndDirection(entry.getKey(), entry.getValue());
@@ -55,20 +43,36 @@ public class ExpectiMaxAlgo {
                         return result;
                     return !result;
                 })
+                .map(entry -> mapNearCoordsToRect(entry.getKey(),entry.getValue(),parRect))
+                .collect(Collectors.toList());
+
+        ChanceNode chance = new ChanceNode(new ArrayList<>(), parent, children, type);
+        chance.setChildren(getUtilityChildren(chance, depth - 1));
+        return chance;
+    }
+
+    public List<UtilityNode> getUtilityChildren(ChanceNode parent, int depth) {
+        List<UtilityNode> children;
+
+        children = parent.getPossibleChildren().stream()
                 .map(entry -> {
-                    Coords coords = entry.getValue();
-                    Map.Entry<Direction, Rectangle> rectangleEntry = null;
-                    switch (entry.getKey()) {
-                        case LEFT, DOWN -> rectangleEntry = Map.entry(entry.getKey(), new Rectangle(coords.x(), coords.y(), parRect.getWidth(), parRect.getHeight()));
-                        case RIGHT -> rectangleEntry = Map.entry(entry.getKey(), new Rectangle(coords.x() - parRect.getWidth(), coords.y(), parRect.getWidth(), parRect.getHeight()));
-                        case UP -> rectangleEntry = Map.entry(entry.getKey(), new Rectangle(coords.x(), coords.y() - parRect.getHeight(), parRect.getWidth(), parRect.getHeight()));
-                    }
-                    return rectangleEntry;
+                    UtilityNode utility = new UtilityNode(parent.getParent().getType(), getPercentage(parent.getType()), new ArrayList<>(), parent, entry.getKey(), entry.getValue());
+                    if (depth == 0)
+                        utility.setCostFunc(calcLeafFunc(utility.getRect(), end));
+                    else
+                        utility.setChildren(List.of(getChanceChild(utility, depth, ChanceType.TO_TANK), getChanceChild(utility, depth, ChanceType.FROM_TANK)));
+                    return utility;
                 })
                 .collect(Collectors.toList());
 
-        ChanceNode chance = new ChanceNode(new ArrayList<>(),parent,children,,type);
         return children;
+    }
+
+    public float getPercentage(ChanceType type) {
+        if (type == ChanceType.TO_TANK)
+            return 0.5f;
+
+        return 0.33f;
     }
 
     public boolean isToEndDirection(Direction dir, Coords startCoords) {
@@ -84,14 +88,4 @@ public class ExpectiMaxAlgo {
 
         return result;
     }
-
-    public int calcFunc(Rectangle start, Rectangle end) {
-        PathAlgo algo = new AStarAlgo(start, end, AlgoType.ASTAR_COORDS);
-        List<Coords> result = algo.startAlgo();
-        if (result.size() == 0)
-            return Integer.MAX_VALUE;
-
-        return result.size();
-    }
-
 }

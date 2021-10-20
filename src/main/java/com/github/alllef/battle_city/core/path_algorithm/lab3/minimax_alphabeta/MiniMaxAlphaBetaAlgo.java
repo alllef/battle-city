@@ -1,19 +1,15 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta;
 
-import com.badlogic.gdx.math.Path;
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
-import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.MiniMaxAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType;
-import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MiniMaxAlphaBetaAlgo {
+public class MiniMaxAlphaBetaAlgo implements MiniMaxAlgo {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     MiniMaxNode minimaxTree;
     Rectangle start;
@@ -111,7 +107,7 @@ public class MiniMaxAlphaBetaAlgo {
         Rectangle parRect = parent.rect;
 
         if (depth == 0) {
-            parent.setCostFunc(calcFunc(parent.rect, end));
+            parent.setCostFunc(calcLeafFunc(parent.rect, end));
             return new ArrayList<>();
         }
 
@@ -119,24 +115,9 @@ public class MiniMaxAlphaBetaAlgo {
         Direction[] directions = Direction.values();
 
         children = Arrays.stream(directions)
-                .map(dir -> switch (dir) {
-                    case LEFT -> Map.entry(dir, new Coords((int) parRect.getX() - 1, (int) parRect.getY()));
-                    case RIGHT -> Map.entry(dir, new Coords((int) parRect.getX() + (int) parRect.getWidth() + 1, (int) parRect.getY()));
-                    case UP -> Map.entry(dir, new Coords((int) parRect.getX(), (int) parRect.getY() + (int) parRect.getHeight() + 1));
-                    case DOWN -> Map.entry(dir, new Coords((int) parRect.getX(), (int) parRect.getY() - 1));
-
-                })
+                .map(dir -> getNearestCoord(dir, parRect))
                 .filter(entry -> rTreeMap.isEmpty(entry.getValue()))
-                .map(entry -> {
-                    Coords coords = entry.getValue();
-                    Map.Entry<Direction, Rectangle> rectangleEntry = null;
-                    switch (entry.getKey()) {
-                        case LEFT, DOWN -> rectangleEntry = Map.entry(entry.getKey(), new Rectangle(coords.x(), coords.y(), parRect.getWidth(), parRect.getHeight()));
-                        case RIGHT -> rectangleEntry = Map.entry(entry.getKey(), new Rectangle(coords.x() - parRect.getWidth(), coords.y(), parRect.getWidth(), parRect.getHeight()));
-                        case UP -> rectangleEntry = Map.entry(entry.getKey(), new Rectangle(coords.x(), coords.y() - parRect.getHeight(), parRect.getWidth(), parRect.getHeight()));
-                    }
-                    return rectangleEntry;
-                })
+                .map(entry -> mapNearCoordsToRect(entry.getKey(),entry.getValue(),parRect))
                 .map(rectEntry -> {
                     MiniMaxNode node = new MiniMaxNode(0, parent, null, rectEntry.getKey(), rectEntry.getValue(), NodeType.chooseType(parent.type));
                     node.setChildren(getChildren(node, depth - 1));
@@ -147,14 +128,4 @@ public class MiniMaxAlphaBetaAlgo {
         return children;
     }
 
-    public int calcFunc(Rectangle start, Rectangle end) {
-        PathAlgo algo = new AStarAlgo(start, end, AlgoType.ASTAR_COORDS);
-        List<Coords> result = algo.startAlgo();
-        if (result.size() == 0) {
-            System.out.println("Max size");
-            return Integer.MAX_VALUE;
-        }
-        System.out.println("size" + result.size());
-        return result.size();
-    }
 }

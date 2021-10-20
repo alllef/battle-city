@@ -79,6 +79,10 @@ public class UtilityNode extends ExpectiMaxNode {
         this.rect = rect;
     }
 
+    public void setChildren(List<ChanceNode> children) {
+        this.children = children;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
