@@ -7,6 +7,7 @@ import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.world.score.ScoreManipulation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Random;
 
 public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawable {
     private static EnemyTankManager enemyTankManager;
+    protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
 
     public static EnemyTankManager getInstance() {
         if (enemyTankManager == null) {
@@ -37,7 +39,7 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
         for (int i = 0; i < tankNumber; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
             int y = (int) (Math.random() * worldSize * 0.95);
-           entityArr.add(new EnemyTank(bulletFactory, x, y));
+            entityArr.add(new EnemyTank(bulletFactory, x, y));
         }
     }
 
@@ -62,10 +64,9 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
         entityArr.forEach(EnemyTank::shoot);
     }
 
-    @Override
-    public void draw(SpriteBatch spriteBatch) {
-        this.getEntities()
-                .forEach(enemyTank -> enemyTank.draw(spriteBatch));
+    public void bulletShoot(EnemyTank enemyTank) {
+        getEntities()
+                .removeValue(enemyTank, false);
+        scoreManipulation.tankKilled();
     }
-
 }

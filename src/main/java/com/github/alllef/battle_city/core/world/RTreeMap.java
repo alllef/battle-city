@@ -7,13 +7,13 @@ import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.PlayerReflexEnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTank;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
+import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -35,6 +35,7 @@ public class RTreeMap extends WorldMap {
     RTree<GameEntity, RectangleFloat> worldRTree;
     RTree<GameEntity, RectangleFloat> coinRTree;
     GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
+    Overlapper overlapper = Overlapper.INSTANCE;
 
     private RTreeMap() {
         createRtree();
@@ -106,9 +107,9 @@ public class RTreeMap extends WorldMap {
             checkBulletShootTank(bullet, enemyTank);
             System.out.println("shoot bullet");
         } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
-            singleTank.checkOverlapsObstacle(obstacle);
+            singleTank.overlapsObstacle(obstacle);
         } else if (firstEntity instanceof Obstacle obstacle && secondEntity instanceof SingleTank singleTank) {
-            singleTank.checkOverlapsObstacle(obstacle);
+            singleTank.overlapsObstacle(obstacle);
         } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof SingleTank singleTank1 && singleTank != singleTank1) {
             checkOverlapsTank(singleTank, singleTank1);
         } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof Bullet bullet1 && bullet != bullet1) {
@@ -118,7 +119,6 @@ public class RTreeMap extends WorldMap {
     }
 
     public void checkOverlapsTank(SingleTank singleTank, SingleTank secondTank) {
-
         if (singleTank.getSprite().getBoundingRectangle().overlaps(secondTank.getSprite().getBoundingRectangle()))
             List.of(singleTank, secondTank).forEach(this::tankOverlapTank);
 

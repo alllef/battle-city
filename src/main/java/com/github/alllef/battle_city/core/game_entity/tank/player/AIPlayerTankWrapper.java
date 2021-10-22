@@ -177,8 +177,8 @@ public class AIPlayerTankWrapper extends PlayerTank {
     }
 
     @Override
-    public void checkOverlapsObstacle(Obstacle obstacle) {
-        playerTank.checkOverlapsObstacle(obstacle);
+    public void overlapsObstacle(Obstacle obstacle) {
+        playerTank.overlapsObstacle(obstacle);
     }
 
 

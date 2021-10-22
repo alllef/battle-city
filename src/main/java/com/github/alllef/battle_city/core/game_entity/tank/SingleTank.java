@@ -11,6 +11,8 @@ import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
+import java.util.Objects;
+
 public abstract class SingleTank extends GameEntity implements Tank {
 
     private Direction dir = Direction.UP;
@@ -60,14 +62,7 @@ public abstract class SingleTank extends GameEntity implements Tank {
         }
 
         setDir(dir);
-        float minDistance = prefs.getFloat("min_change_distance");
-
-        switch (dir) {
-            case UP -> sprite.setY(sprite.getY() + minDistance);
-            case DOWN -> sprite.setY(sprite.getY() - minDistance);
-            case RIGHT -> sprite.setX(sprite.getX() + minDistance);
-            case LEFT -> sprite.setX(sprite.getX() - minDistance);
-        }
+        returnMinDistance();
 
         int worldSize = prefs.getInteger("world_size");
 
@@ -80,18 +75,25 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
     }
 
-    public void checkOverlapsObstacle(Obstacle obstacle) {
+    public void overlapsObstacle(Obstacle obstacle) {
 
-        if (obstacle.getSprite().getBoundingRectangle().overlaps(this.getSprite().getBoundingRectangle())) {
-            this.setBlockedDirection(this.getDir());
-            float minChangeDistance = prefs.getFloat("min_change_distance");
-            switch (this.getDir()) {
-                case UP -> this.getSprite().setY(this.getSprite().getY() - minChangeDistance);
-                case DOWN -> this.getSprite().setY(this.getSprite().getY() + minChangeDistance);
-                case LEFT -> this.getSprite().setX(this.getSprite().getX() + minChangeDistance);
-                case RIGHT -> this.getSprite().setX(this.getSprite().getX() - minChangeDistance);
-            }
+        this.setBlockedDirection(this.getDir());
+        returnMinDistance();
+    }
 
+    public void overlapsTank() {
+        this.setBlockedDirection(this.getDir());
+        returnMinDistance();
+    }
+
+    private void returnMinDistance() {
+        float minDist = prefs.getFloat("min_change_distance");
+
+        switch (this.getDir()) {
+            case UP -> sprite.setY(sprite.getY() - minDist);
+            case DOWN -> sprite.setY(sprite.getY() + minDist);
+            case LEFT -> sprite.setX(sprite.getX() + minDist);
+            case RIGHT -> sprite.setX(sprite.getX() - minDist);
         }
     }
 
@@ -130,9 +132,9 @@ public abstract class SingleTank extends GameEntity implements Tank {
         if (Double.compare(that.durationBetweenBullets, durationBetweenBullets) != 0) return false;
         if (getDir() != that.getDir()) return false;
         if (getBlockedDirection() != that.getBlockedDirection()) return false;
-        if (bulletFactory != null ? !bulletFactory.equals(that.bulletFactory) : that.bulletFactory != null)
+        if (!Objects.equals(bulletFactory, that.bulletFactory))
             return false;
-        return prefs != null ? prefs.equals(that.prefs) : that.prefs == null;
+        return Objects.equals(prefs, that.prefs);
     }
 
     @Override

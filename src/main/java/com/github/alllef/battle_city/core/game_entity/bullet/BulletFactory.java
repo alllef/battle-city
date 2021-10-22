@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
+import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.util.Direction;
 
 public class BulletFactory extends EntityManager<Bullet> {
@@ -37,4 +38,17 @@ public class BulletFactory extends EntityManager<Bullet> {
         });
         return bulletsToDelete;
     }
-   }
+
+    public void shootObstacle(Bullet bullet) {
+        bulletFactory
+                .getEntities()
+                .removeValue(bullet, true);
+    }
+
+    public void shootTank(Bullet bullet){
+        bulletFactory
+                .getEntities()
+                .removeValue(bullet, true);
+    }
+}
+

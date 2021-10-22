@@ -120,4 +120,9 @@ public class ObstacleGeneration extends EntityManager<Obstacle> {
         return new Obstacle(tmpX, tmpY);
     }
 
+    public void bulletShoot(Obstacle obstacle){
+        obstacleGeneration
+                .getEntities()
+                .removeValue(obstacle, true);
+    }
 }
