@@ -2,6 +2,7 @@ package com.github.alllef.battle_city.core.world;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 
 public class WorldMapManager extends WorldMap {
@@ -14,7 +15,7 @@ public class WorldMapManager extends WorldMap {
 
     private final RTreeMap rTreeMap = RTreeMap.getInstance();
     PlayerTank playerTank = PlayerTank.getInstance();
-    EnemyTankManager enemyTank = EnemyTankManager.getInstance();
+    ReflexEnemyTankManager enemyTank = ReflexEnemyTankManager.getInstance();
 
     @Override
     public void draw(SpriteBatch spriteBatch) {

@@ -20,7 +20,7 @@ public class MainScreen implements Screen {
     BitmapFont font;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     WorldMapManager worldMapManager = WorldMapManager.getInstance();
-    TankManipulation tankManipulation = TankManipulation.INSTANCE;
+    //TankManipulation tankManipulation = TankManipulation.INSTANCE;
     int score = 0;
 
     public MainScreen() {
@@ -32,7 +32,7 @@ public class MainScreen implements Screen {
         camera.setToOrtho(false, worldSize, worldSize);
 
        InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(new MainScreenInputAdapter());
+       // multiplexer.addProcessor(new MainScreenInputAdapter());
         multiplexer.addProcessor(new PlayerTankInputAdapter());
         Gdx.input.setInputProcessor(multiplexer);
     }
@@ -48,13 +48,13 @@ public class MainScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         worldMapManager.update();
-        tankManipulation.update();
+       // tankManipulation.update();
 
         batch.begin();
         font.getData().setScale(0.25f,0.25f);
-        font.draw(batch,"Algo type: " +tankManipulation.getAlgoType().name(),50,50);
+       // font.draw(batch,"Algo type: " +tankManipulation.getAlgoType().name(),50,50);
         worldMapManager.draw(batch);
-        tankManipulation.draw(batch);
+        //tankManipulation.draw(batch);
         batch.end();
     }
 

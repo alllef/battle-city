@@ -126,13 +126,27 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
         SingleTank that = (SingleTank) o;
 
-        return getDir() == that.getDir();
+        if (Double.compare(that.lastTimeShoot, lastTimeShoot) != 0) return false;
+        if (Double.compare(that.durationBetweenBullets, durationBetweenBullets) != 0) return false;
+        if (getDir() != that.getDir()) return false;
+        if (getBlockedDirection() != that.getBlockedDirection()) return false;
+        if (bulletFactory != null ? !bulletFactory.equals(that.bulletFactory) : that.bulletFactory != null)
+            return false;
+        return prefs != null ? prefs.equals(that.prefs) : that.prefs == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
+        long temp;
         result = 31 * result + (getDir() != null ? getDir().hashCode() : 0);
+        result = 31 * result + (getBlockedDirection() != null ? getBlockedDirection().hashCode() : 0);
+        temp = Double.doubleToLongBits(lastTimeShoot);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(durationBetweenBullets);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (bulletFactory != null ? bulletFactory.hashCode() : 0);
+        result = 31 * result + (prefs != null ? prefs.hashCode() : 0);
         return result;
     }
 

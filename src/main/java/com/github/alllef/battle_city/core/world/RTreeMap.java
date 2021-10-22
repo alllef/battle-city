@@ -3,11 +3,13 @@ package com.github.alllef.battle_city.core.world;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
+import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.PlayerReflexEnemyTank;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTank;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -18,7 +20,10 @@ import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import rx.Observable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 public class RTreeMap extends WorldMap {
     private static final RTreeMap rTreeMap = new RTreeMap();
@@ -37,7 +42,7 @@ public class RTreeMap extends WorldMap {
     }
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
-        Rectangle gdxRectangle = gameEntity.getSprite().getBoundingRectangle();
+        Rectangle gdxRectangle = gameEntity.getRect();
         RectangleFloat rTreeRectangle = rectangleMapper.convertToRTreeRectangle(gdxRectangle);
 
         return new Entry<>() {
@@ -94,10 +99,12 @@ public class RTreeMap extends WorldMap {
             checkBulletShootObstacle(bullet, obstacle);
         } else if (firstEntity instanceof Obstacle obstacle && secondEntity instanceof Bullet bullet) {
             checkBulletShootObstacle(bullet, obstacle);
-        } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof EnemyTank enemyTank) {
+        } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof PlayerReflexEnemyTank enemyTank) {
             checkBulletShootTank(bullet, enemyTank);
-        } else if (firstEntity instanceof EnemyTank enemyTank && secondEntity instanceof Bullet bullet) {
+            System.out.println("shoot bullet");
+        } else if (firstEntity instanceof PlayerReflexEnemyTank enemyTank && secondEntity instanceof Bullet bullet) {
             checkBulletShootTank(bullet, enemyTank);
+            System.out.println("shoot bullet");
         } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
             singleTank.checkOverlapsObstacle(obstacle);
         } else if (firstEntity instanceof Obstacle obstacle && secondEntity instanceof SingleTank singleTank) {
@@ -131,9 +138,17 @@ public class RTreeMap extends WorldMap {
 
     }
 
-    public void checkBulletShootTank(Bullet bullet, EnemyTank enemyTank) {
-        if (bullet.getSprite().getBoundingRectangle().overlaps(enemyTank.getSprite().getBoundingRectangle())) {
-            enemyTankManager.getEntities().removeValue(enemyTank, true);
+    public void checkBulletShootTank(Bullet bullet, SingleTank enemyTank) {
+
+        if (bullet.getRect().overlaps(enemyTank.getRect())) {
+            System.out.println("Shoot");
+            if (enemyTank instanceof ReflexEnemyTank reflex) {
+                boolean removed = enemyTankManager.getEntities().removeValue(reflex, false);
+                if (removed) {
+                    System.out.println("Bullet removed");
+
+                }
+            }
             bulletFactory.getEntities().removeValue(bullet, true);
             scoreManipulation.tankKilled();
         }

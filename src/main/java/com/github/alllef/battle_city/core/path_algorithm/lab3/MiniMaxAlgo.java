@@ -36,11 +36,12 @@ public interface MiniMaxAlgo {
     }
 
     default int calcLeafFunc(Rectangle start, Rectangle end) {
-        PathAlgo algo = new AStarAlgo(start, end, AlgoType.ASTAR_COORDS);
+        /*PathAlgo algo = new AStarAlgo(start, end, AlgoType.ASTAR_COORDS);
         List<Coords> result = algo.startAlgo();
         if (result.size() == 0)
             return Integer.MAX_VALUE;
 
-        return result.size();
+        return result.size();*/
+        return (int) new Coords((int)start.getX(),(int)start.getY()).calcCoordDist(new Coords((int)end.getX(),(int)end.getY()));
     }
 }

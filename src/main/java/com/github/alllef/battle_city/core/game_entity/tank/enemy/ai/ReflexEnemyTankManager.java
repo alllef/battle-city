@@ -2,18 +2,14 @@ package com.github.alllef.battle_city.core.game_entity.tank.enemy.ai;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxAlphaBetaAlgo;
-import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.RTreeMap;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     private static ReflexEnemyTankManager enemyTankManager;
@@ -21,7 +17,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     public static ReflexEnemyTankManager getInstance() {
         if (enemyTankManager == null) {
             Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-            enemyTankManager = new ReflexEnemyTankManager(3,3,BulletFactory.getInstance());
+            enemyTankManager = new ReflexEnemyTankManager(3, 3, BulletFactory.getInstance());
         }
 
         return enemyTankManager;
@@ -31,7 +27,6 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
 
-    Map<ReflexEnemyTank, Direction> dirMap = new HashMap<>();
     private final BulletFactory bulletFactory;
     private int execCount = 0;
 
@@ -56,23 +51,25 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     }
 
     public void ride() {
-        if (execCount < 50) {
+        if (execCount < 10) {
             execCount++;
-            dirMap.forEach(ReflexEnemyTank::ride);
+            getEntities().forEach(enemyTank->enemyTank.ride(enemyTank.getDir()));
         }
 
         else {
+            Rectangle endRect;
             for (ReflexEnemyTank tank : entityArr) {
-                if (tank instanceof PlayerReflexEnemyTank) {
-                    MiniMaxAlphaBetaAlgo algo = new MiniMaxAlphaBetaAlgo(tank.getRect(), player.getRect(), tank.getDir());
-                    dirMap.put(tank, algo.startAlgo(2));
-                } else {
-                    MiniMaxAlphaBetaAlgo algo = new MiniMaxAlphaBetaAlgo(tank.getRect(),mapper.convertToGdxRectangle(rTreeMap.getSmallestRect(rTreeMap.getRandomNonObstacleCoord())), tank.getDir());
-                    dirMap.put(tank, algo.startAlgo(2));
-                }
+                if (tank instanceof PlayerReflexEnemyTank)
+                    endRect = player.getRect();
+                else
+                    endRect = mapper.convertToGdxRectangle(rTreeMap.getSmallestRect(rTreeMap.getRandomNonObstacleCoord()));
+
+                MiniMaxAlphaBetaAlgo algo = new MiniMaxAlphaBetaAlgo(tank.getRect(), endRect, tank.getDir());
+                tank.setDir(algo.startAlgo(5));
             }
             execCount = 0;
         }
+
     }
 
     public void shoot() {
