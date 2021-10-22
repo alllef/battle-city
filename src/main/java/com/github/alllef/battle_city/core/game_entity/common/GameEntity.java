@@ -6,11 +6,17 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.util.Drawable;
 
 public abstract class GameEntity implements Drawable {
-    protected Sprite sprite = new Sprite();
+    protected Sprite sprite;
 
     public Rectangle getRect() {
         return sprite.getBoundingRectangle();
     }
+
+    public GameEntity() {
+        this.sprite = spriteConfigure();
+    }
+
+    protected abstract Sprite spriteConfigure();
 
     @Override
     public void draw(SpriteBatch spriteBatch) {

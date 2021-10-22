@@ -5,14 +5,19 @@ import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.util.Updatable;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
-public class PlayerTank extends SingleTank implements Drawable {
+import java.util.List;
+
+public class PlayerTank extends SingleTank implements Drawable, Updatable {
     private static final PlayerTank playerTank = new PlayerTank(BulletFactory.getInstance());
 
     public static PlayerTank getInstance() {
         return playerTank;
     }
 
+    RTreeMap rTreeMap = RTreeMap.getInstance();
     private boolean isRideLooping = false;
 
     protected PlayerTank(BulletFactory bulletFactory) {
@@ -34,4 +39,9 @@ public class PlayerTank extends SingleTank implements Drawable {
     }
 
 
+    @Override
+    public void update() {
+        playerTank.ride();
+        rTreeMap.addEntities(List.of(this));
+    }
 }

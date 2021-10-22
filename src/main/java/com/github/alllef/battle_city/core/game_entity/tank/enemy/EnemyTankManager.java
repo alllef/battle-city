@@ -69,4 +69,11 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
                 .removeValue(enemyTank, false);
         scoreManipulation.tankKilled();
     }
+
+    @Override
+    public void update() {
+        this.ride();
+        this.shoot();
+        super.update();
+    }
 }

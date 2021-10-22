@@ -31,13 +31,12 @@ public class RTreeMap extends WorldMap {
         return rTreeMap;
     }
 
-    RTree<GameEntity, RectangleFloat> worldRTree;
+    RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
     RTree<GameEntity, RectangleFloat> coinRTree;
     GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
     Overlapper overlapper = Overlapper.INSTANCE;
 
     private RTreeMap() {
-        createRtree();
         createCoinRtree();
     }
 
@@ -64,10 +63,10 @@ public class RTreeMap extends WorldMap {
         coinRTree = RTree.create(entryList);
     }
 
-    public void createRtree() {
+    public void addEntities(List<GameEntity> entities) {
         List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
-        getEntitiesArray().forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
-        worldRTree = RTree.create(entryList);
+        entities.forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
+        worldRTree = worldRTree.add(entryList);
     }
 
     public boolean isEmpty(Coords coords) {
@@ -91,13 +90,12 @@ public class RTreeMap extends WorldMap {
 
     private void checkOverlapping(GameEntity gameEntity) {
         Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(getEntry(gameEntity).geometry());
-        overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(),gameEntity));
+        overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(), gameEntity));
     }
 
     @Override
     public void update() {
         getEntitiesArray().forEach(this::checkOverlapping);
-        createRtree();
     }
 
     public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords) {

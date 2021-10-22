@@ -57,5 +57,11 @@ public class BulletFactory extends EntityManager<Bullet> {
         entities.removeValue(first,true);
         entities.removeValue(second,true);
     }
+
+    @Override
+    public void update() {
+        updateBullets();
+        super.update();
+    }
 }
 
