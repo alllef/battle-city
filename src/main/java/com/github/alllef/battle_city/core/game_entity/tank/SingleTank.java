@@ -24,11 +24,17 @@ public abstract class SingleTank extends GameEntity implements Tank {
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     protected SingleTank(String textureName, BulletFactory bulletFactory) {
-        this.bulletFactory = bulletFactory;
-        this.sprite = new Sprite(new Texture(Gdx.files.internal(textureName)));
+        super();
+        this.bulletFactory=bulletFactory;
+    }
+
+    @Override
+    protected Sprite spriteConfigure() {
+        Sprite tmp = new Sprite(new Texture(Gdx.files.internal(textureName)));
         sprite.setSize(SpriteParam.SINGLE_TANK.getWidth(), SpriteParam.SINGLE_TANK.getHeight());
         sprite.setPosition(0, 0);
         sprite.setOriginCenter();
+        return tmp;
     }
 
     @Override

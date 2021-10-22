@@ -13,15 +13,8 @@ public class Bullet extends GameEntity {
     private Direction dir;
 
     protected Bullet(float posX, float posY, Direction dir) {
+        super();
         this.dir = dir;
-        SpriteParam param = SpriteParam.BULLET;
-        sprite = new Sprite(new Texture(param.getTexturePath()));
-
-        sprite.setSize(param.getWidth(), param.getHeight());
-        sprite.setOriginCenter();
-        sprite.setRotation(dir.getDegree());
-        sprite.setPosition(posX, posY);
-
     }
 
     public void move() {
@@ -43,6 +36,18 @@ public class Bullet extends GameEntity {
 
     public void setDir(Direction dir) {
         this.dir = dir;
+    }
+
+    @Override
+    protected Sprite spriteConfigure() {
+        SpriteParam param = SpriteParam.BULLET;
+        Sprite tmp = new Sprite(new Texture(param.getTexturePath()));
+
+        sprite.setSize(param.getWidth(), param.getHeight());
+        sprite.setOriginCenter();
+        sprite.setRotation(dir.getDegree());
+        sprite.setPosition(posX, posY);
+        return tmp;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core.game_entity.tank.enemy;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -16,4 +17,5 @@ public class EnemyTank extends SingleTank {
         setDurationBetweenBullets(3 * prefs.getInteger("bullets_cooldown"));
         super.shoot();
     }
+
 }

@@ -8,13 +8,15 @@ import com.github.alllef.battle_city.core.util.Drawable;
 public abstract class GameEntity implements Drawable {
     protected Sprite sprite;
 
+    public GameEntity() {
+        this.sprite = spriteConfigure();
+    }
+
     public Rectangle getRect() {
         return sprite.getBoundingRectangle();
     }
 
-    public GameEntity() {
-        this.sprite = spriteConfigure();
-    }
+
 
     protected abstract Sprite spriteConfigure();
 

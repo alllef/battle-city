@@ -7,10 +7,15 @@ import com.github.alllef.battle_city.core.util.SpriteParam;
 
 public class Coin extends GameEntity {
     public Coin(float posX, float posY) {
-        SpriteParam param = SpriteParam.COIN;
-        sprite = new Sprite(new Texture(param.getTexturePath()));
-        sprite.setSize(param.getWidth(), param.getHeight());
-        sprite.setPosition(posX, posY);
+        super();
     }
 
+    @Override
+    protected Sprite spriteConfigure() {
+        SpriteParam param = SpriteParam.COIN;
+        Sprite tmp = new Sprite(new Texture(param.getTexturePath()));
+        tmp.setSize(param.getWidth(), param.getHeight());
+        tmp.setPosition(posX, posY);
+        return tmp;
+    }
 }
