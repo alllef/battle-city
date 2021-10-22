@@ -2,10 +2,9 @@ package com.github.alllef.battle_city.core.game_entity.tank.enemy;
 
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
-import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
 
-public class EnemyTank extends SingleTank implements Drawable {
+public class EnemyTank extends SingleTank {
 
     public EnemyTank(BulletFactory bulletFactory, float x, float y) {
         super(SpriteParam.ENEMY_TANK.getTexturePath(), bulletFactory);

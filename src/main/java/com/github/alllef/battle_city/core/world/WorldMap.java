@@ -8,7 +8,7 @@ import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.coin.CoinManager;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTankManager;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.world.score.ScoreManipulation;
@@ -22,7 +22,7 @@ public abstract class WorldMap implements Drawable {
     protected final PlayerTank playerTank = PlayerTank.getInstance();
     protected final CoinManager coinManager = CoinManager.getInstance();
     protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
-    protected final ReflexEnemyTankManager enemyTankManager = ReflexEnemyTankManager.getInstance();
+    protected final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
 
     @Override
     public void draw(SpriteBatch spriteBatch) {

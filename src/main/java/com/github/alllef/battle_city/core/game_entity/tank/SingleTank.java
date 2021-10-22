@@ -46,11 +46,12 @@ public abstract class SingleTank extends GameEntity implements Tank {
         float y = sprite.getY();
 
         switch (dir) {
-            case UP -> y += sprite.getHeight();
-            case DOWN -> y -= sprite.getHeight();
-            case RIGHT -> x += sprite.getWidth();
-            case LEFT -> x -= sprite.getWidth();
+            case UP -> y += sprite.getHeight() + 0.2f;
+            case DOWN -> y -= (sprite.getHeight() + 0.2f);
+            case RIGHT -> x += (sprite.getWidth() + 0.2f);
+            case LEFT -> x -= (sprite.getWidth() + 0.2f);
         }
+
         bulletFactory.createBullet(x, y, dir);
     }
 
@@ -61,8 +62,19 @@ public abstract class SingleTank extends GameEntity implements Tank {
             return;
         }
 
-        setDir(dir);
-        returnMinDistance();
+        if (this.dir != dir) {
+            setDir(dir);
+            return;
+        }
+
+        float minDist = prefs.getFloat("min_change_distance");
+
+        switch (this.getDir()) {
+            case UP -> sprite.setY(sprite.getY() + minDist);
+            case DOWN -> sprite.setY(sprite.getY() - minDist);
+            case RIGHT -> sprite.setX(sprite.getX() + minDist);
+            case LEFT -> sprite.setX(sprite.getX() - minDist);
+        }
 
         int worldSize = prefs.getInteger("world_size");
 
@@ -92,8 +104,8 @@ public abstract class SingleTank extends GameEntity implements Tank {
         switch (this.getDir()) {
             case UP -> sprite.setY(sprite.getY() - minDist);
             case DOWN -> sprite.setY(sprite.getY() + minDist);
-            case LEFT -> sprite.setX(sprite.getX() + minDist);
             case RIGHT -> sprite.setX(sprite.getX() - minDist);
+            case LEFT -> sprite.setX(sprite.getX() + minDist);
         }
     }
 

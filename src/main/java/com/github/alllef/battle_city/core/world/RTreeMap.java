@@ -7,8 +7,7 @@ import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.PlayerReflexEnemyTank;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTank;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.SpriteParam;
@@ -92,80 +91,7 @@ public class RTreeMap extends WorldMap {
 
     private void checkOverlapping(GameEntity gameEntity) {
         Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(getEntry(gameEntity).geometry());
-        overlappingEntities.forEach(tmpEntity -> checkOverlaps(gameEntity, tmpEntity.value()));
-    }
-
-    public void checkOverlaps(GameEntity firstEntity, GameEntity secondEntity) {
-        if (firstEntity instanceof Bullet bullet && secondEntity instanceof Obstacle obstacle) {
-            checkBulletShootObstacle(bullet, obstacle);
-        } else if (firstEntity instanceof Obstacle obstacle && secondEntity instanceof Bullet bullet) {
-            checkBulletShootObstacle(bullet, obstacle);
-        } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof PlayerReflexEnemyTank enemyTank) {
-            checkBulletShootTank(bullet, enemyTank);
-            System.out.println("shoot bullet");
-        } else if (firstEntity instanceof PlayerReflexEnemyTank enemyTank && secondEntity instanceof Bullet bullet) {
-            checkBulletShootTank(bullet, enemyTank);
-            System.out.println("shoot bullet");
-        } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
-            singleTank.overlapsObstacle(obstacle);
-        } else if (firstEntity instanceof Obstacle obstacle && secondEntity instanceof SingleTank singleTank) {
-            singleTank.overlapsObstacle(obstacle);
-        } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof SingleTank singleTank1 && singleTank != singleTank1) {
-            checkOverlapsTank(singleTank, singleTank1);
-        } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof Bullet bullet1 && bullet != bullet1) {
-            checkBulletOverlapping(bullet, bullet1);
-        }
-
-    }
-
-    public void checkOverlapsTank(SingleTank singleTank, SingleTank secondTank) {
-        if (singleTank.getSprite().getBoundingRectangle().overlaps(secondTank.getSprite().getBoundingRectangle()))
-            List.of(singleTank, secondTank).forEach(this::tankOverlapTank);
-
-    }
-
-    public void tankOverlapTank(SingleTank singleTank) {
-        singleTank.setBlockedDirection(singleTank.getDir());
-        float minChangeDistance = prefs.getFloat("min_change_distance");
-        Sprite tankSprite = singleTank.getSprite();
-
-        switch (singleTank.getDir()) {
-            case UP -> singleTank.getSprite().setY(tankSprite.getY() - minChangeDistance);
-            case DOWN -> singleTank.getSprite().setY(tankSprite.getY() + minChangeDistance);
-            case LEFT -> singleTank.getSprite().setX(tankSprite.getX() + minChangeDistance);
-            case RIGHT -> singleTank.getSprite().setX(tankSprite.getX() - minChangeDistance);
-        }
-
-    }
-
-    public void checkBulletShootTank(Bullet bullet, SingleTank enemyTank) {
-
-        if (bullet.getRect().overlaps(enemyTank.getRect())) {
-            System.out.println("Shoot");
-            if (enemyTank instanceof ReflexEnemyTank reflex) {
-                boolean removed = enemyTankManager.getEntities().removeValue(reflex, false);
-                if (removed) {
-                    System.out.println("Bullet removed");
-
-                }
-            }
-            bulletFactory.getEntities().removeValue(bullet, true);
-            scoreManipulation.tankKilled();
-        }
-    }
-
-    public void checkBulletOverlapping(Bullet firstBullet, Bullet secondBullet) {
-        if (firstBullet.getSprite().getBoundingRectangle().overlaps(secondBullet.getSprite().getBoundingRectangle()))
-            List.of(firstBullet, secondBullet).forEach(bullet ->
-                    bulletFactory.getEntities().removeValue(firstBullet, true));
-    }
-
-    public void checkBulletShootObstacle(Bullet bullet, Obstacle obstacle) {
-        Array<Bullet> bullets = bulletFactory.getEntities();
-        if (bullet.getSprite().getBoundingRectangle().overlaps(obstacle.getSprite().getBoundingRectangle())) {
-            obstacleGeneration.getEntities().removeValue(obstacle, true);
-            bullets.removeValue(bullet, true);
-        }
+        overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(),gameEntity));
     }
 
     @Override

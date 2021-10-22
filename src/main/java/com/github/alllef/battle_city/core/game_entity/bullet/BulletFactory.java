@@ -7,6 +7,8 @@ import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.util.Direction;
 
+import java.util.List;
+
 public class BulletFactory extends EntityManager<Bullet> {
     private static BulletFactory bulletFactory = new BulletFactory();
 
@@ -49,6 +51,11 @@ public class BulletFactory extends EntityManager<Bullet> {
         bulletFactory
                 .getEntities()
                 .removeValue(bullet, true);
+    }
+    public void shootBullet(Bullet first,Bullet second){
+        Array<Bullet> entities = bulletFactory.getEntities();
+        entities.removeValue(first,true);
+        entities.removeValue(second,true);
     }
 }
 
