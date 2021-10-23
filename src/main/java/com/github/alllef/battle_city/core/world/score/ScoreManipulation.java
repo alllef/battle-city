@@ -24,7 +24,7 @@ public enum ScoreManipulation implements Drawable {
 
     public void tankKilled() {
         score += prefs.getInteger("killed_tank_score");
-    }
+       }
 
     public int getScore() {
         return score;

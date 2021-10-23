@@ -19,31 +19,26 @@ public enum Overlapper {
 
     public void overlaps(GameEntity firstEntity, GameEntity secondEntity) {
         List<GameEntity> entities = List.of(firstEntity, secondEntity);
-        for (int i = 0; i < 2; i++) {
-            firstEntity = entities.get(i % 2);
-            secondEntity = entities.get((i + 1) % 2);
 
             if (firstEntity instanceof Bullet bullet && secondEntity instanceof Obstacle obstacle) {
                 bulletFactory.shootObstacle(bullet);
                 obstacleGeneration.bulletShoot(obstacle);
-                break;
+
             } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof EnemyTank enemyTank) {
                 bulletFactory.shootTank(bullet);
                 enemyTankManager.bulletShoot(enemyTank);
-                break;
+
             } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
                 singleTank.overlapsObstacle(obstacle);
-                break;
+
             } else if (firstEntity instanceof SingleTank firstTank && secondEntity instanceof SingleTank secondTank && firstTank != secondTank) {
                 firstTank.overlapsTank();
                 secondTank.overlapsTank();
-                break;
+
             } else if (firstEntity instanceof Bullet bullet1 && secondEntity instanceof Bullet bullet2 && bullet1 != bullet2) {
                 bulletFactory.shootBullet(bullet1, bullet2);
-                break;
             }
 
         }
     }
 
-}

@@ -46,15 +46,17 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
         for (int i = 0; i < entityArr.size; i++) {
             EnemyTank tmpTank = entityArr.get(i);
             Direction dir = tmpTank.getDir();
+            Random rand = new Random();
 
             if (stepsNum.get(tmpTank) == null || stepsNum.get(tmpTank) <= 0) {
-                dir = Direction.values()[new Random().nextInt(Direction.values().length)];
+                dir = Direction.values()[rand.nextInt(Direction.values().length)];
                 tmpTank.ride(dir);
-                stepsNum.put(tmpTank, new Random().nextInt(prefs.getInteger("max_ride_distance")));
+                stepsNum.put(tmpTank, rand.nextInt(prefs.getInteger("max_ride_distance")));
             }
+            Integer result = stepsNum.get(tmpTank);
 
             tmpTank.ride(dir);
-            stepsNum.put(tmpTank, stepsNum.get(tmpTank) - 1);
+            stepsNum.put(tmpTank, result - 1);
         }
         //enemyTanks.forEach(tank -> tank.ride(tank.getDir()));
     }
