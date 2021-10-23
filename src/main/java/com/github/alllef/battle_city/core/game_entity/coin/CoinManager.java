@@ -20,12 +20,6 @@ public class CoinManager extends EntityManager<Coin> {
         generateCoins(coinNum);
     }
 
-    public Coin createCoin(float x, float y) {
-        Coin coin = new Coin(x, y);
-        entityArr.add(coin);
-        return coin;
-    }
-
     private void generateCoins(int coinNumber) {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         int worldSize = prefs.getInteger("world_size");

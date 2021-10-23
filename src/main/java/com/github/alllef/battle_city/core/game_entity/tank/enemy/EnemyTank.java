@@ -8,8 +8,7 @@ import com.github.alllef.battle_city.core.util.SpriteParam;
 public class EnemyTank extends SingleTank {
 
     public EnemyTank(BulletFactory bulletFactory, float x, float y) {
-        super(SpriteParam.ENEMY_TANK.getTexturePath(), bulletFactory);
-        this.getSprite().setPosition(x, y);
+        super(x,y,SpriteParam.ENEMY_TANK, bulletFactory);
     }
 
     @Override
