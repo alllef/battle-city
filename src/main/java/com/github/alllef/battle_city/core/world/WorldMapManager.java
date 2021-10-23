@@ -42,8 +42,8 @@ public class WorldMapManager implements Drawable, Updatable {
 
     @Override
     public void update() {
-     List.of(obstacleGeneration, bulletFactory, coinManager,enemyTankManager,playerTankManager)
-             .forEach(EntityManager::update);
+     List.of(obstacleGeneration, bulletFactory, coinManager,enemyTankManager,playerTankManager,rTreeMap)
+             .forEach(Updatable::update);
     }
 
 }

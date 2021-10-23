@@ -17,10 +17,7 @@ import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.ExpectiMaxAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxAlphaBetaAlgo;
-import com.github.alllef.battle_city.core.util.Coords;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.util.Drawable;
-import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.util.*;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -123,7 +120,7 @@ public enum TankManipulation implements Drawable {
         dots.add(start);
         for (int i = 0; i < dotsNum; i++) {
             Coords coords = rTreeMap.getRandomNonObstacleCoord();
-            Rectangle gdxRect = rectMapper.convertToGdxRectangle(rTreeMap.getSmallestRect(coords));
+            Rectangle gdxRect = rectMapper.convertToGdxRectangle(RectUtils.getSmallestRect(coords));
             dots.add(gdxRect);
         }
         dots.add(end);

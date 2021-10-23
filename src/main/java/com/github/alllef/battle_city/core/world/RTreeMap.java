@@ -10,9 +10,7 @@ import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
-import com.github.alllef.battle_city.core.util.Coords;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.util.*;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.davidmoten.rtree.Entry;
@@ -26,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class RTreeMap {
+public class RTreeMap implements Updatable {
     private static final RTreeMap rTreeMap = new RTreeMap();
 
     public static RTreeMap getInstance() {
@@ -40,7 +38,8 @@ public class RTreeMap {
     RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
     RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
 
-    private RTreeMap() {}
+    private RTreeMap() {
+    }
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
         Rectangle gdxRectangle = gameEntity.getRect();
@@ -59,6 +58,7 @@ public class RTreeMap {
         };
     }
 
+
     public void addEntities(List<GameEntity> entities) {
         List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
         entities.forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
@@ -66,11 +66,11 @@ public class RTreeMap {
     }
 
     public boolean isEmpty(Coords coords) {
-        return isEmpty(worldRTree, getSmallestRect(coords));
+        return isEmpty(worldRTree, RectUtils.getSmallestRect(coords));
     }
 
     public boolean hasCoins(Coords coords) {
-        return isEmpty(coinRTree, getSmallestRect(coords));
+        return isEmpty(coinRTree, RectUtils.getSmallestRect(coords));
     }
 
     private boolean isEmpty(RTree<GameEntity, RectangleFloat> rTree, RectangleFloat gdxRect) {
@@ -80,23 +80,25 @@ public class RTreeMap {
                 .first();
     }
 
-    public RectangleFloat getSmallestRect(Coords coords) {
-        return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
-    }
 
     private void checkOverlapping(Entry<GameEntity, RectangleFloat> entry) {
         Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(entry.geometry());
         overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(), entry.value()));
     }
 
+    @Override
+    public void update() {
+        worldRTree.entries().forEach(this::checkOverlapping);
+    }
+
     public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords) {
         RectangleFloat treeRect = null;
 
         switch (dir) {
-            case UP -> treeRect = (RectangleFloat) Geometries.rectangle(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), coords.x(), prefs.getInteger("world_size"));
-            case DOWN -> treeRect = (RectangleFloat) Geometries.rectangle(0, coords.x(), coords.y(), coords.x());
-            case RIGHT -> treeRect = (RectangleFloat) Geometries.rectangle(coords.x() + SpriteParam.PLAYER_TANK.getWidth(), coords.y(), prefs.getInteger("world_size"), coords.y());
-            case LEFT -> treeRect = (RectangleFloat) Geometries.rectangle(0, coords.y(), coords.x(), coords.y());
+            case UP -> treeRect = RectUtils.getFloatRect(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), coords.x(), prefs.getInteger("world_size"));
+            case DOWN -> treeRect = RectUtils.getFloatRect(0, coords.x(), coords.y(), coords.x());
+            case RIGHT -> treeRect = RectUtils.getFloatRect(coords.x() + SpriteParam.PLAYER_TANK.getWidth(), coords.y(), prefs.getInteger("world_size"), coords.y());
+            case LEFT -> treeRect = RectUtils.getFloatRect(0, coords.y(), coords.x(), coords.y());
         }
 
         if (treeRect.y1() < 0 || treeRect.x1() < 0 || treeRect.x2() < 0 || treeRect.y2() < 0)
@@ -126,7 +128,7 @@ public class RTreeMap {
         while (true) {
             x = random.nextInt(rightBounds);
             y = random.nextInt(upperBounds);
-            RectangleFloat floatRect = (RectangleFloat) Geometries.rectangle(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
+            RectangleFloat floatRect = RectUtils.getFloatRect(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
 
             if (isEmpty(worldRTree, floatRect))
                 break;
