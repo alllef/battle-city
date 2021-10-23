@@ -4,12 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.util.Drawable;
-import com.github.alllef.battle_city.core.util.Updatable;
-import com.github.alllef.battle_city.core.world.RTreeMap;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.github.alllef.battle_city.core.util.interfaces.Drawable;
+import com.github.alllef.battle_city.core.util.interfaces.Updatable;
 
 public abstract class EntityManager<T extends GameEntity> implements Drawable, Updatable {
     protected final Array<T> entityArr = new Array<>();

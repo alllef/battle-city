@@ -5,13 +5,11 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.coin.CoinManager;
-import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
-import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
-import com.github.alllef.battle_city.core.util.Drawable;
-import com.github.alllef.battle_city.core.util.Updatable;
+import com.github.alllef.battle_city.core.util.interfaces.Drawable;
+import com.github.alllef.battle_city.core.util.interfaces.Updatable;
 import com.github.alllef.battle_city.core.world.score.ScoreManipulation;
 
 import java.util.List;

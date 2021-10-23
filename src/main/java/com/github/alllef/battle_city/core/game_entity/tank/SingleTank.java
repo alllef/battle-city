@@ -2,20 +2,18 @@ package com.github.alllef.battle_city.core.game_entity.tank;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
-import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.game_entity.common.MovingEntity;
+import com.github.alllef.battle_city.core.util.enums.Direction;
+import com.github.alllef.battle_city.core.util.enums.Move;
+import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 
 import java.util.Objects;
 
-public abstract class SingleTank extends GameEntity implements Tank {
+public abstract class SingleTank extends MovingEntity implements Tank {
 
-    private Direction dir = Direction.UP;
     private Direction blockedDirection = null;
     private double lastTimeShoot = TimeUtils.millis();
     private double durationBetweenBullets;
@@ -24,13 +22,13 @@ public abstract class SingleTank extends GameEntity implements Tank {
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     protected SingleTank(float posX, float posY, SpriteParam param, BulletFactory bulletFactory) {
-        super(posX, posY, param);
+        super(posX, posY, param,Direction.UP);
         this.bulletFactory = bulletFactory;
     }
 
     @Override
     protected Sprite spriteConfigure(float posX, float posY, SpriteParam param) {
-        Sprite tmp = super.spriteConfigure(posX,posY,param);
+        Sprite tmp = super.spriteConfigure(posX, posY, param);
         tmp.setOriginCenter();
         return tmp;
     }
@@ -62,23 +60,18 @@ public abstract class SingleTank extends GameEntity implements Tank {
     @Override
     public void ride(Direction dir) {
         if (dir == blockedDirection) {
-            blockedDirection = null;
             return;
         }
 
         if (this.dir != dir) {
-            setDir(dir);
+            this.setDir(dir);
+            blockedDirection=null;
+            sprite.setRotation(dir.getDegree());
             return;
         }
 
         float minDist = prefs.getFloat("min_change_distance");
-
-        switch (this.getDir()) {
-            case UP -> sprite.setY(sprite.getY() + minDist);
-            case DOWN -> sprite.setY(sprite.getY() - minDist);
-            case RIGHT -> sprite.setX(sprite.getX() + minDist);
-            case LEFT -> sprite.setX(sprite.getX() - minDist);
-        }
+        this.move(Move.FORWARD, minDist);
 
         int worldSize = prefs.getInteger("world_size");
 
@@ -91,8 +84,7 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
     }
 
-    public void overlapsObstacle(Obstacle obstacle) {
-
+    public void overlapsObstacle() {
         this.setBlockedDirection(this.getDir());
         returnMinDistance();
     }
@@ -104,24 +96,7 @@ public abstract class SingleTank extends GameEntity implements Tank {
 
     private void returnMinDistance() {
         float minDist = prefs.getFloat("min_change_distance");
-
-        switch (this.getDir()) {
-            case UP -> sprite.setY(sprite.getY() - minDist);
-            case DOWN -> sprite.setY(sprite.getY() + minDist);
-            case RIGHT -> sprite.setX(sprite.getX() - minDist);
-            case LEFT -> sprite.setX(sprite.getX() + minDist);
-        }
-    }
-
-    public Direction getDir() {
-        return dir;
-    }
-
-    public void setDir(Direction dir) {
-        if (dir != this.dir) {
-            this.dir = dir;
-            sprite.setRotation(dir.getDegree());
-        }
+        this.move(Move.BACKWARD, minDist);
     }
 
     public Direction getBlockedDirection() {

@@ -1,28 +1,5 @@
 package com.github.alllef.battle_city.core.game_entity.tank.player;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
-import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
-import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
-import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
-import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
-import com.github.alllef.battle_city.core.util.Coords;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.world.RTreeMap;
-import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
-import space.earlygrey.shapedrawer.ShapeDrawer;
-
-import java.util.*;
-import java.util.function.BiPredicate;
-
 public class AIPlayerTankWrapper /*extends PlayerTank*/ {
 
    /* private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.getInstance());

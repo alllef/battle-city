@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.util.Drawable;
-import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.util.interfaces.Drawable;
+import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 
 public abstract class GameEntity implements Drawable {
     protected Sprite sprite;

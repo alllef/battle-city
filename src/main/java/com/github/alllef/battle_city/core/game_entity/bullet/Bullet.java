@@ -2,19 +2,17 @@ package com.github.alllef.battle_city.core.game_entity.bullet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.game_entity.common.MovingEntity;
+import com.github.alllef.battle_city.core.util.enums.Direction;
+import com.github.alllef.battle_city.core.util.enums.Move;
+import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 
-public class Bullet extends GameEntity {
-
-    private Direction dir;
+public class Bullet extends MovingEntity {
 
     protected Bullet(float posX, float posY, Direction dir) {
-        super(posX, posY, SpriteParam.BULLET);
-        this.dir = dir;
+        super(posX, posY, SpriteParam.BULLET,dir);
         sprite.setRotation(dir.getDegree());
     }
 
@@ -22,21 +20,7 @@ public class Bullet extends GameEntity {
         Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
         float minDistance = prefs.getFloat("min_change_distance") * prefs.getFloat("bullet_speed_scaled");
-
-        switch (dir) {
-            case UP -> sprite.setY(sprite.getY() + minDistance);
-            case DOWN -> sprite.setY(sprite.getY() - minDistance);
-            case RIGHT -> sprite.setX(sprite.getX() + minDistance);
-            case LEFT -> sprite.setX(sprite.getX() - minDistance);
-        }
-    }
-
-    public Direction getDir() {
-        return dir;
-    }
-
-    public void setDir(Direction dir) {
-        this.dir = dir;
+        this.move(Move.FORWARD, minDistance);
     }
 
     @Override

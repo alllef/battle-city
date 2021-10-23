@@ -3,16 +3,12 @@ package com.github.alllef.battle_city.core.game_entity.obstacle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.util.Coords;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.util.Drawable;
-import com.github.alllef.battle_city.core.util.SpriteParam;
-import com.github.alllef.battle_city.core.world.RTreeMap;
+import com.github.alllef.battle_city.core.util.enums.Direction;
+import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 
 import java.util.Collection;
 import java.util.HashMap;

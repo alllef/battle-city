@@ -2,7 +2,7 @@ package com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType;
-import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.util.enums.Direction;
 
 import java.util.List;
 

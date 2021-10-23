@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.util;
+package com.github.alllef.battle_city.core.util.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

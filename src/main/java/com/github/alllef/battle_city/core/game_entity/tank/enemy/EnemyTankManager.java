@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
-import com.github.alllef.battle_city.core.util.Direction;
-import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.util.enums.Direction;
+import com.github.alllef.battle_city.core.util.interfaces.Drawable;
 import com.github.alllef.battle_city.core.world.score.ScoreManipulation;
 
 import java.util.HashMap;

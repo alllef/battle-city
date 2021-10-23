@@ -1,13 +1,9 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab3;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
-import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
-import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.util.enums.Direction;
 
-import java.util.List;
 import java.util.Map;
 
 public interface MiniMaxAlgo {

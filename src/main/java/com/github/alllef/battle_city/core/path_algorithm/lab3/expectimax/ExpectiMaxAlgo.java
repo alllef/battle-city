@@ -8,7 +8,7 @@ import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.Ch
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.ExpectiMaxNode;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.node.UtilityNode;
 import com.github.alllef.battle_city.core.util.Coords;
-import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.util.enums.Direction;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 
 import java.util.*;

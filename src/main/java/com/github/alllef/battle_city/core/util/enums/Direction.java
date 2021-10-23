@@ -1,7 +1,4 @@
-package com.github.alllef.battle_city.core.util;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+package com.github.alllef.battle_city.core.util.enums;
 
 import java.util.Optional;
 

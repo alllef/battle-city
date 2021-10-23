@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.util;
+package com.github.alllef.battle_city.core.util.enums;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;

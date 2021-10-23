@@ -18,27 +18,21 @@ public enum Overlapper {
     private final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
 
     public void overlaps(GameEntity firstEntity, GameEntity secondEntity) {
-        List<GameEntity> entities = List.of(firstEntity, secondEntity);
 
-            if (firstEntity instanceof Bullet bullet && secondEntity instanceof Obstacle obstacle) {
-                bulletFactory.shootObstacle(bullet);
-                obstacleGeneration.bulletShoot(obstacle);
-
-            } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof EnemyTank enemyTank) {
-                bulletFactory.shootTank(bullet);
-                enemyTankManager.bulletShoot(enemyTank);
-
-            } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
-                singleTank.overlapsObstacle(obstacle);
-
-            } else if (firstEntity instanceof SingleTank firstTank && secondEntity instanceof SingleTank secondTank && firstTank != secondTank) {
-                firstTank.overlapsTank();
-                secondTank.overlapsTank();
-
-            } else if (firstEntity instanceof Bullet bullet1 && secondEntity instanceof Bullet bullet2 && bullet1 != bullet2) {
-                bulletFactory.shootBullet(bullet1, bullet2);
-            }
-
+        if (firstEntity instanceof Bullet bullet && secondEntity instanceof Obstacle obstacle) {
+            bulletFactory.shootObstacle(bullet);
+            obstacleGeneration.bulletShoot(obstacle);
+        } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof EnemyTank enemyTank) {
+            bulletFactory.shootTank(bullet);
+            enemyTankManager.bulletShoot(enemyTank);
+        } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
+            singleTank.overlapsObstacle();
+        } else if (firstEntity instanceof SingleTank firstTank && secondEntity instanceof SingleTank secondTank && firstTank != secondTank) {
+            firstTank.overlapsTank();
+            secondTank.overlapsTank();
+        } else if (firstEntity instanceof Bullet bullet1 && secondEntity instanceof Bullet bullet2 && bullet1 != bullet2) {
+            bulletFactory.shootBullet(bullet1, bullet2);
         }
-    }
 
+    }
+}

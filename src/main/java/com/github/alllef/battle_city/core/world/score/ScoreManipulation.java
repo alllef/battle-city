@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.alllef.battle_city.core.util.Drawable;
+import com.github.alllef.battle_city.core.util.interfaces.Drawable;
 
 public enum ScoreManipulation implements Drawable {
     INSTANCE;
