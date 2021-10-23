@@ -9,6 +9,7 @@ import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
+import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public enum Overlapper {
     INSTANCE;
     protected final BulletFactory bulletFactory = BulletFactory.getInstance();
     protected final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    protected final PlayerTank playerTank = PlayerTank.getInstance();
+    protected final PlayerTankManager playerTank = PlayerTank.getInstance();
     protected final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
 
     public void overlaps(GameEntity firstEntity, GameEntity secondEntity) {
@@ -43,6 +44,5 @@ public enum Overlapper {
 
         }
     }
-
 
 }

@@ -23,9 +23,9 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import java.util.*;
 import java.util.function.BiPredicate;
 
-public class AIPlayerTankWrapper extends PlayerTank {
+public class AIPlayerTankWrapper /*extends PlayerTank*/ {
 
-    private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.getInstance());
+   /* private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.getInstance());
 
     public static PlayerTank getInstance() {
         return aIPlayerTankWrapper;
@@ -191,4 +191,6 @@ public class AIPlayerTankWrapper extends PlayerTank {
     public void setSprite(Sprite sprite) {
         playerTank.setSprite(sprite);
     }
+    */
+
 }
