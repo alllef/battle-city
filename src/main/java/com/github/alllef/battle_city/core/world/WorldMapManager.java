@@ -26,13 +26,13 @@ public class WorldMapManager implements Drawable, Updatable {
 
     private final RTreeMap rTreeMap = RTreeMap.getInstance();
 
-    protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-    protected final BulletFactory bulletFactory = BulletFactory.getInstance();
-    protected final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    protected final PlayerTankManager playerTankManager = PlayerTankManager.getInstance();
-    protected final CoinManager coinManager = CoinManager.getInstance();
-    protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
-    protected final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+    private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    private final BulletFactory bulletFactory = BulletFactory.getInstance();
+    private final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
+    private final PlayerTankManager playerTankManager = PlayerTankManager.getInstance();
+    private final CoinManager coinManager = CoinManager.getInstance();
+    private final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
+    private final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
 
     @Override
     public void draw(SpriteBatch spriteBatch) {

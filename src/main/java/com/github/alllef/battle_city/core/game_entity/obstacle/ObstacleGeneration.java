@@ -12,6 +12,7 @@ import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.Direction;
 import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.SpriteParam;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -79,7 +80,7 @@ public class ObstacleGeneration extends EntityManager<Obstacle> {
                 resultSet.add(obstacle);
             }
         }
-        while (resultSet.size < setSize );
+        while (resultSet.size < setSize);
 
         return resultSet;
     }
@@ -120,7 +121,7 @@ public class ObstacleGeneration extends EntityManager<Obstacle> {
         return new Obstacle(tmpX, tmpY);
     }
 
-    public void bulletShoot(Obstacle obstacle){
+    public void bulletShoot(Obstacle obstacle) {
         obstacleGeneration
                 .getEntities()
                 .removeValue(obstacle, true);

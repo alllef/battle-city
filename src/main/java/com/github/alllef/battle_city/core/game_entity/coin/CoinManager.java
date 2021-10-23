@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
 public class CoinManager extends EntityManager<Coin> {
     private static CoinManager coinManager;

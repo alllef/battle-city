@@ -2,7 +2,6 @@ package com.github.alllef.battle_city.core.game_entity.tank.enemy;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.util.Direction;
@@ -65,8 +64,7 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
     }
 
     public void bulletShoot(EnemyTank enemyTank) {
-        getEntities()
-                .removeValue(enemyTank, false);
+        getEntities().removeValue(enemyTank, false);
         scoreManipulation.tankKilled();
     }
 

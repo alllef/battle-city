@@ -3,10 +3,17 @@ package com.github.alllef.battle_city.core.world;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.coin.CoinManager;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
+import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
+import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 import com.github.alllef.battle_city.core.util.*;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.overlap.Overlapper;
+import com.github.alllef.battle_city.core.world.score.ScoreManipulation;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
@@ -18,9 +25,12 @@ import java.util.List;
 import java.util.Random;
 
 public class RTreeMap implements Updatable {
-    private static final RTreeMap rTreeMap = new RTreeMap();
+    private static RTreeMap rTreeMap;
 
     public static RTreeMap getInstance() {
+        if (rTreeMap == null)
+            rTreeMap = new RTreeMap();
+
         return rTreeMap;
     }
 
@@ -30,7 +40,29 @@ public class RTreeMap implements Updatable {
     private RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
     private RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
 
+    protected final BulletFactory bulletFactory = BulletFactory.getInstance();
+    protected final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
+    protected final PlayerTankManager playerTankManager = PlayerTankManager.getInstance();
+    protected final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+
+
+    protected Array<GameEntity> getEntitiesArray() {
+        Array<GameEntity> entitiesArray = new Array<>();
+        entitiesArray.addAll(bulletFactory.getEntities());
+        entitiesArray.addAll(enemyTankManager.getEntities());
+        entitiesArray.addAll(playerTankManager.getEntities());
+        entitiesArray.addAll(obstacleGeneration.getEntities());
+        return entitiesArray;
+    }
+
+    public void createRtree() {
+        List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
+        getEntitiesArray().forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
+        worldRTree = RTree.create(entryList);
+    }
+
     private RTreeMap() {
+        createRtree();
     }
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
@@ -50,11 +82,15 @@ public class RTreeMap implements Updatable {
         };
     }
 
+    public int getRtreeSize() {
+        return worldRTree.size();
+    }
 
     public void addEntities(List<GameEntity> entities) {
         List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
         entities.forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
         worldRTree = worldRTree.add(entryList);
+        System.out.println(worldRTree.size());
     }
 
     public boolean isEmpty(Coords coords) {
@@ -81,6 +117,7 @@ public class RTreeMap implements Updatable {
     @Override
     public void update() {
         worldRTree.entries().forEach(this::checkOverlapping);
+        createRtree();
     }
 
     public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords) {

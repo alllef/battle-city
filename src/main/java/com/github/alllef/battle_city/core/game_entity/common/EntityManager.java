@@ -8,12 +8,12 @@ import com.github.alllef.battle_city.core.util.Drawable;
 import com.github.alllef.battle_city.core.util.Updatable;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityManager<T extends GameEntity> implements Drawable, Updatable {
     protected final Array<T> entityArr = new Array<>();
     protected Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-    protected RTreeMap rTreeMap = RTreeMap.getInstance();
 
     public Array<T> getEntities() {
         return entityArr;
@@ -25,7 +25,5 @@ public abstract class EntityManager<T extends GameEntity> implements Drawable, U
     }
 
     @Override
-    public void update() {
-        rTreeMap.addEntities((List<GameEntity>) entityArr);
-    }
+    public void update() {}
 }

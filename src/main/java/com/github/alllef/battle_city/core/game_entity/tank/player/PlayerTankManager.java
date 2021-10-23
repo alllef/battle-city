@@ -1,8 +1,10 @@
 package com.github.alllef.battle_city.core.game_entity.tank.player;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.util.Direction;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
 public class PlayerTankManager extends EntityManager<PlayerTank> {
     private static PlayerTankManager playerTankManager;
@@ -33,8 +35,14 @@ public class PlayerTankManager extends EntityManager<PlayerTank> {
     }
 
     public void ride(Direction dir) {
+            playerTank.ride(dir);
+    }
+
+
+    @Override
+    public void update() {
         if (isRideLooping)
-            ride(dir);
+            ride(playerTank.getDir());
     }
 
     public Direction getDir() {
@@ -49,10 +57,7 @@ public class PlayerTankManager extends EntityManager<PlayerTank> {
         this.isRideLooping = rideLooping;
     }
 
-    @Override
-    public void update() {
-        if (isRideLooping)
-            ride(playerTank.getDir());
+    public Sprite getSprite(){
+        return playerTank.getSprite();
     }
-
 }

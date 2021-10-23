@@ -4,15 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
-import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
 import com.github.alllef.battle_city.core.util.Direction;
 
-import java.util.List;
-
 public class BulletFactory extends EntityManager<Bullet> {
-    private static BulletFactory bulletFactory = new BulletFactory();
+    private static BulletFactory bulletFactory;
+
+    public BulletFactory() {}
 
     public static BulletFactory getInstance() {
+        if (bulletFactory == null)
+            bulletFactory = new BulletFactory();
         return bulletFactory;
     }
 
@@ -47,15 +48,16 @@ public class BulletFactory extends EntityManager<Bullet> {
                 .removeValue(bullet, true);
     }
 
-    public void shootTank(Bullet bullet){
+    public void shootTank(Bullet bullet) {
         bulletFactory
                 .getEntities()
                 .removeValue(bullet, true);
     }
-    public void shootBullet(Bullet first,Bullet second){
+
+    public void shootBullet(Bullet first, Bullet second) {
         Array<Bullet> entities = bulletFactory.getEntities();
-        entities.removeValue(first,true);
-        entities.removeValue(second,true);
+        entities.removeValue(first, true);
+        entities.removeValue(second, true);
     }
 
     @Override

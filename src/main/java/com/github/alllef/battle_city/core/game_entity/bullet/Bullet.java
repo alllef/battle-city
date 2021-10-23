@@ -15,6 +15,7 @@ public class Bullet extends GameEntity {
     protected Bullet(float posX, float posY, Direction dir) {
         super(posX, posY, SpriteParam.BULLET);
         this.dir = dir;
+        sprite.setRotation(dir.getDegree());
     }
 
     public void move() {
@@ -41,8 +42,7 @@ public class Bullet extends GameEntity {
     @Override
     protected Sprite spriteConfigure(float posX, float posY, SpriteParam param) {
         Sprite tmp = super.spriteConfigure(posX, posY, param);
-        sprite.setOriginCenter();
-        sprite.setRotation(dir.getDegree());
+        tmp.setOriginCenter();
         return tmp;
     }
 
