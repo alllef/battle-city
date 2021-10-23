@@ -1,5 +1,7 @@
 package com.github.alllef.battle_city.core.world;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -24,21 +26,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class RTreeMap extends WorldMap {
+public class RTreeMap {
     private static final RTreeMap rTreeMap = new RTreeMap();
 
     public static RTreeMap getInstance() {
         return rTreeMap;
     }
 
-    RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
-    RTree<GameEntity, RectangleFloat> coinRTree;
-    GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
-    Overlapper overlapper = Overlapper.INSTANCE;
 
-    private RTreeMap() {
-        createCoinRtree();
-    }
+    private final GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
+    private final Overlapper overlapper = Overlapper.INSTANCE;
+    private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
+    RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
+
+    private RTreeMap() {}
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
         Rectangle gdxRectangle = gameEntity.getRect();
@@ -55,12 +57,6 @@ public class RTreeMap extends WorldMap {
                 return rTreeRectangle;
             }
         };
-    }
-
-    public void createCoinRtree() {
-        List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();
-        coinManager.getCoinArr().forEach(gameEntity -> entryList.add(getEntry(gameEntity)));
-        coinRTree = RTree.create(entryList);
     }
 
     public void addEntities(List<GameEntity> entities) {
@@ -88,14 +84,9 @@ public class RTreeMap extends WorldMap {
         return (RectangleFloat) Geometries.rectangle(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1);
     }
 
-    private void checkOverlapping(GameEntity gameEntity) {
-        Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(getEntry(gameEntity).geometry());
-        overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(), gameEntity));
-    }
-
-    @Override
-    public void update() {
-        getEntitiesArray().forEach(this::checkOverlapping);
+    private void checkOverlapping(Entry<GameEntity, RectangleFloat> entry) {
+        Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(entry.geometry());
+        overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(), entry.value()));
     }
 
     public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords) {
