@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
+import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.BFSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos.DFSAlgo;
@@ -28,7 +29,7 @@ import java.util.List;
 public enum TankManipulation implements Drawable {
     INSTANCE;
 
-    PlayerTank playerTank = PlayerTank.getInstance();
+    PlayerTankManager playerTank = PlayerTankManager.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
     RTreeMap rTreeMap = RTreeMap.getInstance();
     GdxToRTreeRectangleMapper rectMapper = GdxToRTreeRectangleMapper.ENTITY;
