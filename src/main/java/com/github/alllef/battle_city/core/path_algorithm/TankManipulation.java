@@ -120,7 +120,7 @@ public enum TankManipulation implements Drawable {
 
         dots.add(start);
         for (int i = 0; i < dotsNum; i++) {
-            Coords coords = rTreeMap.getRandomNonObstacleCoord();
+            Coords coords = rTreeMap.getRandomNonObstacleCoord(SpriteParam.PLAYER_TANK);
             Rectangle gdxRect = rectMapper.convertToGdxRectangle(RectUtils.getSmallestRect(coords));
             dots.add(gdxRect);
         }

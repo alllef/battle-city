@@ -2,20 +2,13 @@ package com.github.alllef.battle_city.core.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
-import com.github.alllef.battle_city.core.game_entity.bullet.Bullet;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
-import com.github.alllef.battle_city.core.game_entity.obstacle.Obstacle;
-import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.util.*;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
-import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import rx.Observable;
 
@@ -31,12 +24,11 @@ public class RTreeMap implements Updatable {
         return rTreeMap;
     }
 
-
     private final GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
     private final Overlapper overlapper = Overlapper.INSTANCE;
     private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-    RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
-    RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
+    private RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
+    private RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
 
     private RTreeMap() {
     }
@@ -93,11 +85,12 @@ public class RTreeMap implements Updatable {
 
     public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords) {
         RectangleFloat treeRect = null;
+        SpriteParam param = SpriteParam.PLAYER_TANK;
 
         switch (dir) {
-            case UP -> treeRect = RectUtils.getFloatRect(coords.x(), coords.y() + SpriteParam.PLAYER_TANK.getHeight(), coords.x(), prefs.getInteger("world_size"));
+            case UP -> treeRect = RectUtils.getFloatRect(coords.x(), coords.y() + param.getHeight(), coords.x(), prefs.getInteger("world_size"));
             case DOWN -> treeRect = RectUtils.getFloatRect(0, coords.x(), coords.y(), coords.x());
-            case RIGHT -> treeRect = RectUtils.getFloatRect(coords.x() + SpriteParam.PLAYER_TANK.getWidth(), coords.y(), prefs.getInteger("world_size"), coords.y());
+            case RIGHT -> treeRect = RectUtils.getFloatRect(coords.x() + param.getWidth(), coords.y(), prefs.getInteger("world_size"), coords.y());
             case LEFT -> treeRect = RectUtils.getFloatRect(0, coords.y(), coords.x(), coords.y());
         }
 
@@ -114,21 +107,22 @@ public class RTreeMap implements Updatable {
                 }
             };
 
-        return worldRTree.search(treeRect).toBlocking().getIterator();
+        return worldRTree.search(treeRect)
+                .toBlocking()
+                .getIterator();
     }
 
-    public Coords getRandomNonObstacleCoord() {
+    public Coords getRandomNonObstacleCoord(SpriteParam param) {
         Random random = new Random();
-        SpriteParam tankParam = SpriteParam.PLAYER_TANK;
-        int rightBounds = (int) (prefs.getInteger("world_size") - tankParam.getWidth());
-        int upperBounds = (int) (prefs.getInteger("world_size") - tankParam.getHeight());
+        int rightBounds = (int) (prefs.getInteger("world_size") - param.getWidth());
+        int upperBounds = (int) (prefs.getInteger("world_size") - param.getHeight());
         int x;
         int y;
 
         while (true) {
             x = random.nextInt(rightBounds);
             y = random.nextInt(upperBounds);
-            RectangleFloat floatRect = RectUtils.getFloatRect(x, y, x + tankParam.getWidth(), y + tankParam.getHeight());
+            RectangleFloat floatRect = RectUtils.getFloatRect(x, y, x + param.getWidth(), y + param.getHeight());
 
             if (isEmpty(worldRTree, floatRect))
                 break;
