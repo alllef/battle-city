@@ -23,7 +23,7 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo {
     }
 
     public Direction startAlgo(int depth) {
-        minimaxTree = new UtilityNode(NodeType.MIN, 0.0f, new ArrayList<>(), null, dir, start);
+        minimaxTree = new UtilityNode(NodeType.MIN, 1.0f, new ArrayList<>(), null, dir, start);
         List<Optional<ChanceNode>> tmpChanceNode = List.of(getChanceChild(minimaxTree, depth, ChanceType.TO_TANK), getChanceChild(minimaxTree, depth, ChanceType.FROM_TANK));
         tmpChanceNode.forEach(optChild -> optChild.ifPresent(chanceNode -> minimaxTree.addChild(chanceNode)));
 
@@ -47,9 +47,9 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo {
             }
             stack.pop();
 
-            if (stack.isEmpty())
+            if (stack.isEmpty()) {
                 return getFinalResult();
-
+            }
             ExpectiMaxNode parent = stack.peek();
             parent.calcResultFunc();
         }
@@ -141,10 +141,11 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo {
     private Direction getFinalResult() {
         for (ExpectiMaxNode child : minimaxTree.getChildren()) {
             if (Float.compare(child.getCostFunc(), minimaxTree.getCostFunc()) == 0)
-              if (child instanceof ChanceNode chanceNode)
-                  return chanceNode.getPossibleChildren().get(new Random().nextInt(chanceNode.getPossibleChildren().size())).getKey();
+                if (child instanceof ChanceNode chanceNode)
+                    return chanceNode.getPossibleChildren().get(new Random().nextInt(chanceNode.getPossibleChildren().size())).getKey();
         }
-        return null;
+
+        return Direction.values()[new Random().nextInt(Direction.values().length)];
     }
 
 /*    private Direction maxOrMin(ExpectiMaxNode chanceNode) {
