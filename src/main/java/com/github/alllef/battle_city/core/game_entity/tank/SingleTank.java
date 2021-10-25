@@ -22,7 +22,7 @@ public abstract class SingleTank extends MovingEntity implements Tank {
     protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     protected SingleTank(float posX, float posY, SpriteParam param, BulletFactory bulletFactory) {
-        super(posX, posY, param,Direction.UP);
+        super(posX, posY, param, Direction.UP);
         this.bulletFactory = bulletFactory;
     }
 
@@ -65,7 +65,7 @@ public abstract class SingleTank extends MovingEntity implements Tank {
 
         if (this.dir != dir) {
             this.setDir(dir);
-            blockedDirection=null;
+            blockedDirection = null;
             sprite.setRotation(dir.getDegree());
             return;
         }
@@ -107,7 +107,7 @@ public abstract class SingleTank extends MovingEntity implements Tank {
         this.blockedDirection = blockedDirection;
     }
 
-    public void setDurationBetweenBullets(double durationBetweenBullets) {
+    public void  setDurationBetweenBullets(double durationBetweenBullets) {
         this.durationBetweenBullets = durationBetweenBullets;
     }
 

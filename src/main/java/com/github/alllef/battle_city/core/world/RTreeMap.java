@@ -8,6 +8,7 @@ import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTankManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 import com.github.alllef.battle_city.core.util.*;
 import com.github.alllef.battle_city.core.util.enums.Direction;
@@ -44,12 +45,19 @@ public class RTreeMap implements Updatable {
     protected final BulletFactory bulletFactory = BulletFactory.getInstance();
     protected final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
     protected final PlayerTankManager playerTankManager = PlayerTankManager.getInstance();
-    protected final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+    protected ReflexEnemyTankManager enemyTankManager;
 
+    private RTreeMap() {
+        createRtree();
+    }
 
     protected Array<GameEntity> getEntitiesArray() {
         Array<GameEntity> entitiesArray = new Array<>();
         entitiesArray.addAll(bulletFactory.getEntities());
+
+        if (enemyTankManager == null)
+            enemyTankManager = ReflexEnemyTankManager.getInstance();
+
         entitiesArray.addAll(enemyTankManager.getEntities());
         entitiesArray.addAll(playerTankManager.getEntities());
         entitiesArray.addAll(obstacleGeneration.getEntities());
@@ -62,9 +70,6 @@ public class RTreeMap implements Updatable {
         worldRTree = RTree.create(entryList);
     }
 
-    private RTreeMap() {
-        createRtree();
-    }
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
         Rectangle gdxRectangle = gameEntity.getRect();
@@ -111,7 +116,7 @@ public class RTreeMap implements Updatable {
 
 
     private void checkOverlapping(Entry<GameEntity, RectangleFloat> entry) {
-        Observable<Entry<GameEntity, RectangleFloat>> overlappingEntities = worldRTree.search(entry.geometry());
+        var overlappingEntities = worldRTree.search(entry.geometry());
         overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(), entry.value()));
     }
 

@@ -8,6 +8,8 @@ import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneratio
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTankManager;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTank;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTankManager;
 
 import java.util.List;
 
@@ -15,14 +17,14 @@ public enum Overlapper {
     INSTANCE;
     private final BulletFactory bulletFactory = BulletFactory.getInstance();
     private final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    private final EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
+    private final ReflexEnemyTankManager enemyTankManager = ReflexEnemyTankManager.getInstance();
 
     public void overlaps(GameEntity firstEntity, GameEntity secondEntity) {
 
         if (firstEntity instanceof Bullet bullet && secondEntity instanceof Obstacle obstacle) {
             bulletFactory.shootObstacle(bullet);
             obstacleGeneration.bulletShoot(obstacle);
-        } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof EnemyTank enemyTank) {
+        } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof ReflexEnemyTank enemyTank) {
             bulletFactory.shootTank(bullet);
             enemyTankManager.bulletShoot(enemyTank);
         } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
