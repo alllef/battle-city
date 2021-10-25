@@ -9,17 +9,12 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MiniMaxAlphaBetaAlgo implements MiniMaxAlgo {
+public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     MiniMaxNode minimaxTree;
-    Rectangle start;
-    Rectangle end;
-    Direction dir;
 
     public MiniMaxAlphaBetaAlgo(Rectangle start, Rectangle end, Direction dir) {
-        this.start = start;
-        this.end = end;
-        this.dir = dir;
+        super(start, end, dir);
     }
 
     public Direction startAlgo(int depth) {

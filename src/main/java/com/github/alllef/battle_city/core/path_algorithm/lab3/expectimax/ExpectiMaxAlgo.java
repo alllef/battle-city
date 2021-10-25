@@ -14,25 +14,18 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ExpectiMaxAlgo implements MiniMaxAlgo {
+public class ExpectiMaxAlgo extends MiniMaxAlgo {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     UtilityNode minimaxTree;
-    Rectangle start;
-    Rectangle end;
-    Direction dir;
 
     public ExpectiMaxAlgo(Rectangle start, Rectangle end, Direction dir) {
-        this.start = start;
-        this.end = end;
-        this.dir = dir;
+        super(start, end, dir);
     }
 
     public Direction startAlgo(int depth) {
         minimaxTree = new UtilityNode(NodeType.MIN, 0.0f, new ArrayList<>(), null, dir, start);
         List<Optional<ChanceNode>> tmpChanceNode = List.of(getChanceChild(minimaxTree, depth, ChanceType.TO_TANK), getChanceChild(minimaxTree, depth, ChanceType.FROM_TANK));
-        tmpChanceNode.forEach(optChild -> {
-            optChild.ifPresent(chanceNode -> minimaxTree.addChild(chanceNode));
-        });
+        tmpChanceNode.forEach(optChild -> optChild.ifPresent(chanceNode -> minimaxTree.addChild(chanceNode)));
 
         return expectiMaxAlgo();
     }

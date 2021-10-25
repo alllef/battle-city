@@ -6,9 +6,18 @@ import com.github.alllef.battle_city.core.util.enums.Direction;
 
 import java.util.Map;
 
-public interface MiniMaxAlgo {
+public class MiniMaxAlgo {
+    protected Rectangle start;
+    protected Rectangle end;
+    protected Direction dir;
 
-    default Map.Entry<Direction, Coords> getNearestCoord(Direction dir, Rectangle parRect) {
+    public MiniMaxAlgo(Rectangle start, Rectangle end, Direction dir) {
+        this.start = start;
+        this.end = end;
+        this.dir = dir;
+    }
+
+    protected Map.Entry<Direction, Coords> getNearestCoord(Direction dir, Rectangle parRect) {
         Coords coords = null;
         switch (dir) {
             case LEFT -> coords = new Coords((int) parRect.getX() - 1, (int) parRect.getY());
@@ -20,7 +29,7 @@ public interface MiniMaxAlgo {
         return Map.entry(dir, coords);
     }
 
-    default Map.Entry<Direction, Rectangle> mapNearCoordsToRect(Direction dir, Coords coords, Rectangle parRect) {
+    protected Map.Entry<Direction, Rectangle> mapNearCoordsToRect(Direction dir, Coords coords, Rectangle parRect) {
         Rectangle rect = null;
         switch (dir) {
             case LEFT, DOWN -> rect = new Rectangle(coords.x(), coords.y(), parRect.getWidth(), parRect.getHeight());
@@ -31,13 +40,7 @@ public interface MiniMaxAlgo {
         return Map.entry(dir, rect);
     }
 
-    default int calcLeafFunc(Rectangle start, Rectangle end) {
-        /*PathAlgo algo = new AStarAlgo(start, end, AlgoType.ASTAR_COORDS);
-        List<Coords> result = algo.startAlgo();
-        if (result.size() == 0)
-            return Integer.MAX_VALUE;
-
-        return result.size();*/
-        return (int) new Coords((int)start.getX(),(int)start.getY()).calcCoordDist(new Coords((int)end.getX(),(int)end.getY()));
+    protected int calcLeafFunc(Rectangle start, Rectangle end) {
+        return (int) new Coords((int) start.getX(), (int) start.getY()).calcCoordDist(new Coords((int) end.getX(), (int) end.getY()));
     }
 }
