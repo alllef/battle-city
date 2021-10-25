@@ -9,49 +9,49 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo {
+public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
     RTreeMap rTreeMap = RTreeMap.getInstance();
-    MiniMaxNode minimaxTree;
+    AlphaBetaNode minimaxTree;
 
     public MiniMaxAlphaBetaAlgo(Rectangle start, Rectangle end, Direction dir) {
         super(start, end, dir);
     }
 
     public Direction startAlgo(int depth) {
-        minimaxTree = new MiniMaxNode(0, null, null, dir, start, NodeType.MIN);
+        minimaxTree = new AlphaBetaNode(0, null, null, dir, start, NodeType.MIN);
         minimaxTree.setChildren(getChildren(minimaxTree, depth));
 
         return alphaBetaAlgo();
     }
 
     public Direction alphaBetaAlgo() {
-        Stack<MiniMaxNode> stack = new Stack<>();
-        MiniMaxNode node = minimaxTree;
+        Stack<AlphaBetaNode> stack = new Stack<>();
+        AlphaBetaNode node = minimaxTree;
 
         stack.push(node);
         node.setTraversed(true);
 
         while (!stack.isEmpty()) {
-            Optional<MiniMaxNode> unusedChild = getUnusedChild(stack.peek());
+            Optional<AlphaBetaNode> unusedChild = getUnusedChild(stack.peek(),stack.peek().children);
 
             while (unusedChild.isPresent()) {
-                MiniMaxNode child = unusedChild.get();
+                AlphaBetaNode child = unusedChild.get();
                 child.beta = stack.peek().beta;
                 child.alpha = stack.peek().alpha;
                 stack.push(child);
-                unusedChild = getUnusedChild(stack.peek());
+                unusedChild = getUnusedChild(stack.peek(),stack.peek().children);
             }
 
-            MiniMaxNode child = stack.pop();
+            AlphaBetaNode child = stack.pop();
 
             if (stack.isEmpty()) {
-                for (MiniMaxNode child1 : child.children) {
+                for (AlphaBetaNode child1 : child.children) {
                     if (child1.costFunc == child.costFunc)
                         return child1.dir;
                 }
             }
 
-            MiniMaxNode parent = stack.peek();
+            AlphaBetaNode parent = stack.peek();
 
             if (parent.type == NodeType.MAX) {
                 maximize(child);
@@ -73,31 +73,21 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo {
         return null;
     }
 
-    private void maximize(MiniMaxNode child) {
-        MiniMaxNode parent = child.parent;
+    private void maximize(AlphaBetaNode child) {
+        AlphaBetaNode parent = child.parent;
         parent.alpha = Math.max(parent.alpha, child.costFunc);
         parent.costFunc = parent.alpha;
     }
 
-    private void minimize(MiniMaxNode child) {
-        MiniMaxNode parent = child.parent;
+    private void minimize(AlphaBetaNode child) {
+        AlphaBetaNode parent = child.parent;
         parent.beta = Math.min(parent.beta, child.costFunc);
         parent.costFunc = parent.beta;
     }
 
-    private Optional<MiniMaxNode> getUnusedChild(MiniMaxNode node) {
-        Optional<MiniMaxNode> child = Optional.empty();
 
-        for (MiniMaxNode tmpChild : node.children) {
-            if (!tmpChild.isTraversed()) {
-                tmpChild.setTraversed(true);
-                return Optional.of(tmpChild);
-            }
-        }
-        return child;
-    }
 
-    public List<MiniMaxNode> getChildren(MiniMaxNode parent, int depth) {
+    public List<AlphaBetaNode> getChildren(AlphaBetaNode parent, int depth) {
         Rectangle parRect = parent.rect;
 
         if (depth == 0) {
@@ -105,7 +95,7 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo {
             return new ArrayList<>();
         }
 
-        List<MiniMaxNode> children;
+        List<AlphaBetaNode> children;
         Direction[] directions = Direction.values();
 
         children = Arrays.stream(directions)
@@ -113,7 +103,7 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo {
                 .filter(entry -> rTreeMap.isEmpty(entry.getValue()))
                 .map(entry -> mapNearCoordsToRect(entry.getKey(),entry.getValue(),parRect))
                 .map(rectEntry -> {
-                    MiniMaxNode node = new MiniMaxNode(0, parent, null, rectEntry.getKey(), rectEntry.getValue(), NodeType.chooseType(parent.type));
+                    AlphaBetaNode node = new AlphaBetaNode(0, parent, null, rectEntry.getKey(), rectEntry.getValue(), NodeType.chooseType(parent.type));
                     node.setChildren(getChildren(node, depth - 1));
                     return node;
                 })

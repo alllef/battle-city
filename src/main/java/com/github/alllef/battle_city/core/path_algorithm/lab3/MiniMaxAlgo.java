@@ -1,12 +1,15 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab3;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.AlphaBetaNode;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-public class MiniMaxAlgo {
+public class MiniMaxAlgo<T extends MiniMaxNode> {
     protected Rectangle start;
     protected Rectangle end;
     protected Direction dir;
@@ -42,5 +45,17 @@ public class MiniMaxAlgo {
 
     protected int calcLeafFunc(Rectangle start, Rectangle end) {
         return (int) new Coords((int) start.getX(), (int) start.getY()).calcCoordDist(new Coords((int) end.getX(), (int) end.getY()));
+    }
+
+    protected Optional<T> getUnusedChild(T node, List<T> children) {
+        Optional<T> child = Optional.empty();
+
+        for (T tmpChild : children) {
+            if (!tmpChild.isTraversed()) {
+                tmpChild.setTraversed(true);
+                return Optional.of(tmpChild);
+            }
+        }
+        return child;
     }
 }

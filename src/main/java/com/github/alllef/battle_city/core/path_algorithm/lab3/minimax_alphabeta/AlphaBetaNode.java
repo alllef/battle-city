@@ -1,25 +1,26 @@
 package com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.MiniMaxNode;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 
 import java.util.List;
 
-public class MiniMaxNode {
+public class AlphaBetaNode extends MiniMaxNode {
 
 
     int alpha = Integer.MIN_VALUE;
     int beta = Integer.MAX_VALUE;
     int costFunc = 0;
     boolean traversed = false;
-    MiniMaxNode parent;
-    List<MiniMaxNode> children;
+    AlphaBetaNode parent;
+    List<AlphaBetaNode> children;
     Direction dir;
     Rectangle rect;
     NodeType type;
 
-    public MiniMaxNode(int costFunc, MiniMaxNode parent, List<MiniMaxNode> children, Direction dir, Rectangle rect, NodeType type) {
+    public AlphaBetaNode(int costFunc, AlphaBetaNode parent, List<AlphaBetaNode> children, Direction dir, Rectangle rect, NodeType type) {
         this.costFunc = costFunc;
         this.parent = parent;
         this.children = children;
@@ -52,19 +53,19 @@ public class MiniMaxNode {
         this.costFunc = costFunc;
     }
 
-    public MiniMaxNode getParent() {
+    public AlphaBetaNode getParent() {
         return parent;
     }
 
-    public void setParent(MiniMaxNode parent) {
+    public void setParent(AlphaBetaNode parent) {
         this.parent = parent;
     }
 
-    public List<MiniMaxNode> getChildren() {
+    public List<AlphaBetaNode> getChildren() {
         return children;
     }
 
-    public void setChildren(List<MiniMaxNode> children) {
+    public void setChildren(List<AlphaBetaNode> children) {
         this.children = children;
     }
 
@@ -92,20 +93,12 @@ public class MiniMaxNode {
         this.type = type;
     }
 
-    public boolean isTraversed() {
-        return traversed;
-    }
-
-    public void setTraversed(boolean traversed) {
-        this.traversed = traversed;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MiniMaxNode)) return false;
+        if (!(o instanceof AlphaBetaNode)) return false;
 
-        MiniMaxNode that = (MiniMaxNode) o;
+        AlphaBetaNode that = (AlphaBetaNode) o;
 
         if (getAlpha() != that.getAlpha()) return false;
         if (getBeta() != that.getBeta()) return false;

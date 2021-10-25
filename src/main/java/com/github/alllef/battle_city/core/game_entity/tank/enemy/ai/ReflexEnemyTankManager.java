@@ -58,7 +58,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
 
     public void ride() {
         Rectangle endRect;
-        if (counter < 10)
+        if (counter < 30)
             counter++;
         else {
             counter = 0;

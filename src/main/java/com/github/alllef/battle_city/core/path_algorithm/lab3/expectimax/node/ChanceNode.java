@@ -12,7 +12,7 @@ public class ChanceNode extends ExpectiMaxNode {
     List<Map.Entry<Direction, Rectangle>> possibleChildren;
     ChanceType type;
 
-    public ChanceNode(List<ExpectiMaxNode> children, UtilityNode parent, List<Map.Entry<Direction,Rectangle>> possibleChildren, ChanceType type) {
+    public ChanceNode(List<ExpectiMaxNode> children, UtilityNode parent, List<Map.Entry<Direction, Rectangle>> possibleChildren, ChanceType type) {
         super(children);
         this.parent = parent;
         this.possibleChildren = possibleChildren;
@@ -25,7 +25,7 @@ public class ChanceNode extends ExpectiMaxNode {
         for (ExpectiMaxNode child : children)
             result += child.getCostFunc();
 
-        this.setCostFunc(result);
+        this.setCostFunc(result / children.size());
     }
 
     public UtilityNode getParent() {
@@ -36,7 +36,7 @@ public class ChanceNode extends ExpectiMaxNode {
         this.parent = parent;
     }
 
-    public void addPossibleChild(Map.Entry<Direction,Rectangle> child){
+    public void addPossibleChild(Map.Entry<Direction, Rectangle> child) {
         possibleChildren.add(child);
     }
 
