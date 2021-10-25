@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ChanceNode extends ExpectiMaxNode {
-
-    private List<UtilityNode> children;
     protected UtilityNode parent;
     List<Map.Entry<Direction, Rectangle>> possibleChildren;
     ChanceType type;
 
-    public ChanceNode(List<UtilityNode> children, UtilityNode parent, List<Map.Entry<Direction,Rectangle>> possibleChildren, ChanceType type) {
-        this.children = children;
+    public ChanceNode(List<ExpectiMaxNode> children, UtilityNode parent, List<Map.Entry<Direction,Rectangle>> possibleChildren, ChanceType type) {
+        super(children);
         this.parent = parent;
         this.possibleChildren = possibleChildren;
         this.type = type;
@@ -24,18 +22,10 @@ public class ChanceNode extends ExpectiMaxNode {
     @Override
     public void calcResultFunc() {
         float result = 0.0f;
-        for (UtilityNode child : children)
-            result += child.getCostFunc() * child.getPercentage();
+        for (ExpectiMaxNode child : children)
+            result += child.getCostFunc();
 
         this.setCostFunc(result);
-    }
-
-    public List<UtilityNode> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<UtilityNode> children) {
-        this.children = children;
     }
 
     public UtilityNode getParent() {

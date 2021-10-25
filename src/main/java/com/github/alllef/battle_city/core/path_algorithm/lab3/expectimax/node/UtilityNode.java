@@ -9,15 +9,14 @@ import java.util.List;
 public class UtilityNode extends ExpectiMaxNode {
     NodeType type;
     protected float percentage;
-    protected List<ChanceNode> children;
     protected ChanceNode parent;
     protected Direction dir;
     protected Rectangle rect;
 
-    public UtilityNode(NodeType type, float percentage, List<ChanceNode> children, ChanceNode parent, Direction dir, Rectangle rect) {
+    public UtilityNode(NodeType type, float percentage, List<ExpectiMaxNode> children, ChanceNode parent, Direction dir, Rectangle rect) {
+        super(children);
         this.type = type;
         this.percentage = percentage;
-        this.children = children;
         this.parent = parent;
         this.dir = dir;
         this.rect = rect;
@@ -31,6 +30,11 @@ public class UtilityNode extends ExpectiMaxNode {
             case MAX -> children.forEach(child -> setCostFunc(Math.max(child.getCostFunc(), getCostFunc())));
             case MIN -> children.forEach(child -> setCostFunc(Math.min(child.getCostFunc(), getCostFunc())));
         }
+    }
+
+    @Override
+    public float getCostFunc() {
+        return super.getCostFunc() * percentage;
     }
 
     public float getPercentage() {
@@ -49,13 +53,6 @@ public class UtilityNode extends ExpectiMaxNode {
         this.type = type;
     }
 
-    public List<ChanceNode> getChildren() {
-        return children;
-    }
-
-    public void addChild(ChanceNode chanceNode) {
-        children.add(chanceNode);
-    }
 
     public ChanceNode getParent() {
         return parent;
@@ -79,11 +76,6 @@ public class UtilityNode extends ExpectiMaxNode {
 
     public void setRect(Rectangle rect) {
         this.rect = rect;
-    }
-
-
-    public void setChildren(List<ChanceNode> children) {
-        this.children = children;
     }
 
     @Override
