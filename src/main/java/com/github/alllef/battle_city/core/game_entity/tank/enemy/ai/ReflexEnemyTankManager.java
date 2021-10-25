@@ -5,16 +5,13 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
-import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
-import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.ExpectiMaxAlgo;
-import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxAlphaBetaAlgo;
 import com.github.alllef.battle_city.core.util.RectUtils;
 import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.RTreeMap;
-import com.github.alllef.battle_city.core.world.score.ScoreManipulation;
+import com.github.alllef.battle_city.core.world.stats.ScoreManipulation;
 
 public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     private static ReflexEnemyTankManager enemyTankManager;
@@ -58,7 +55,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
 
     public void ride() {
         Rectangle endRect;
-        if (counter < 30)
+        if (counter < 10)
             counter++;
         else {
             counter = 0;
@@ -77,7 +74,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
 
 
     public void shoot() {
-        entityArr.forEach(EnemyTank::shoot);
+        entityArr.forEach(ReflexEnemyTank::shoot);
     }
 
     public void bulletShoot(ReflexEnemyTank enemyTank) {

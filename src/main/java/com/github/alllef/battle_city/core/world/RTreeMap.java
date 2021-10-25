@@ -8,17 +8,13 @@ import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.RectUtils;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 import com.github.alllef.battle_city.core.util.enums.SpriteParam;
-import com.github.alllef.battle_city.core.util.interfaces.Updatable;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
 import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class RTreeMap {
     private static RTreeMap rTreeMap;
@@ -42,6 +38,9 @@ public class RTreeMap {
         worldRTree = RTree.create(entryList);
     }
 
+    public void delete(GameEntity entity) {
+        worldRTree = worldRTree.delete(entity, rectangleMapper.convertToRTreeRectangle(entity.getRect()));
+    }
 
     Entry<GameEntity, RectangleFloat> getEntry(GameEntity gameEntity) {
         Rectangle gdxRectangle = gameEntity.getRect();
@@ -79,7 +78,7 @@ public class RTreeMap {
                 .first();
     }
 
-    protected void checkOverlappings(){
+    protected void checkOverlappings() {
         worldRTree.entries().forEach(this::checkOverlapping);
     }
 
@@ -88,33 +87,23 @@ public class RTreeMap {
         overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(), entry.value()));
     }
 
-    public Iterator<Entry<GameEntity, RectangleFloat>> getParallelObstacles(Direction dir, Coords coords) {
+    public Optional<Iterator<Entry<GameEntity, RectangleFloat>>> getParallelObstacles(Direction dir, Coords coords) {
         RectangleFloat treeRect = null;
         SpriteParam param = SpriteParam.PLAYER_TANK;
 
         switch (dir) {
-            case UP -> treeRect = RectUtils.getFloatRect(coords.x(), coords.y() + param.getHeight(), coords.x(), prefs.getInteger("world_size"));
-            case DOWN -> treeRect = RectUtils.getFloatRect(0, coords.x(), coords.y(), coords.x());
-            case RIGHT -> treeRect = RectUtils.getFloatRect(coords.x() + param.getWidth(), coords.y(), prefs.getInteger("world_size"), coords.y());
-            case LEFT -> treeRect = RectUtils.getFloatRect(0, coords.y(), coords.x(), coords.y());
+            case UP -> treeRect = RectUtils.getFloatRect(coords.x(), coords.y() + param.getHeight(), coords.x() + 3, prefs.getInteger("world_size"));
+            case DOWN -> treeRect = RectUtils.getFloatRect(0, coords.x(), coords.y(), coords.x() + 3);
+            case RIGHT -> treeRect = RectUtils.getFloatRect(coords.x() + param.getWidth(), coords.y(), prefs.getInteger("world_size"), coords.y() + 3);
+            case LEFT -> treeRect = RectUtils.getFloatRect(0, coords.y(), coords.x(), coords.y() + 3);
         }
 
         if (treeRect.y1() < 0 || treeRect.x1() < 0 || treeRect.x2() < 0 || treeRect.y2() < 0)
-            return new Iterator<>() {
-                @Override
-                public boolean hasNext() {
-                    return false;
-                }
+            return Optional.empty();
 
-                @Override
-                public Entry<GameEntity, RectangleFloat> next() {
-                    return null;
-                }
-            };
-
-        return worldRTree.search(treeRect)
+        return Optional.of(worldRTree.search(treeRect)
                 .toBlocking()
-                .getIterator();
+                .getIterator());
     }
 
     public Coords getRandomNonObstacleCoord(SpriteParam param) {

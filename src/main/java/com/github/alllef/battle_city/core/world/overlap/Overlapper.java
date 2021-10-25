@@ -8,12 +8,16 @@ import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneratio
 import com.github.alllef.battle_city.core.game_entity.tank.SingleTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTankManager;
+import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
+import com.github.alllef.battle_city.core.util.enums.GameResult;
+import com.github.alllef.battle_city.core.world.stats.GameStats;
 
 public enum Overlapper {
     INSTANCE;
     private final BulletFactory bulletFactory = BulletFactory.getInstance();
     private final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
     private final ReflexEnemyTankManager enemyTankManager = ReflexEnemyTankManager.getInstance();
+    private final GameStats stats = GameStats.getInstance();
 
     public void overlaps(GameEntity firstEntity, GameEntity secondEntity) {
 
@@ -23,7 +27,14 @@ public enum Overlapper {
         } else if (firstEntity instanceof Bullet bullet && secondEntity instanceof ReflexEnemyTank enemyTank) {
             bulletFactory.shootTank(bullet);
             enemyTankManager.bulletShoot(enemyTank);
-        } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
+            if (enemyTankManager.getEntities().isEmpty())
+                stats.setGameOver(GameResult.WIN);
+        }
+        else if (firstEntity instanceof PlayerTank tank && secondEntity instanceof Bullet bullet) {
+            stats.setGameOver(GameResult.LOSE);
+        }
+
+        else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
             singleTank.overlapsObstacle();
         } else if (firstEntity instanceof SingleTank firstTank && secondEntity instanceof SingleTank secondTank && firstTank != secondTank) {
             firstTank.overlapsTank();

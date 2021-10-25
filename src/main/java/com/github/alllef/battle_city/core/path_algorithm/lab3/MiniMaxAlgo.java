@@ -47,7 +47,7 @@ public class MiniMaxAlgo<T extends MiniMaxNode> {
         return (int) new Coords((int) start.getX(), (int) start.getY()).calcCoordDist(new Coords((int) end.getX(), (int) end.getY()));
     }
 
-    protected Optional<T> getUnusedChild(T node, List<T> children) {
+    protected Optional<T> getUnusedChild(List<T> children) {
         Optional<T> child = Optional.empty();
 
         for (T tmpChild : children) {

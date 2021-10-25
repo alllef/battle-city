@@ -1,4 +1,4 @@
-package com.github.alllef.battle_city.core.world.score;
+package com.github.alllef.battle_city.core.world.stats;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;

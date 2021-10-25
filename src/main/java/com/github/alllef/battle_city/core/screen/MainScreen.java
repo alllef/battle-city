@@ -21,7 +21,6 @@ public class MainScreen implements Screen {
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     WorldMapManager worldMapManager = WorldMapManager.getInstance();
     //TankManipulation tankManipulation = TankManipulation.INSTANCE;
-    int score = 0;
 
     public MainScreen() {
         camera = new OrthographicCamera();
@@ -77,5 +76,6 @@ public class MainScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        font.dispose();
     }
 }

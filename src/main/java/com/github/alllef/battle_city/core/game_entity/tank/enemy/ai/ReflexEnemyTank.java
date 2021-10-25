@@ -16,6 +16,7 @@ public class ReflexEnemyTank extends EnemyTank {
     public ReflexEnemyTank(BulletFactory bulletFactory, float x, float y) {
         super(bulletFactory, x, y);
     }
+
     protected RTreeMap rTreeMap;
 
     public ReflexEnemyTank(RTreeMap rTreeMap, BulletFactory bulletFactory, float x, float y) {
@@ -31,14 +32,18 @@ public class ReflexEnemyTank extends EnemyTank {
 
     protected boolean areTanksOnParallel() {
         Coords coords = new Coords((int) sprite.getX(), (int) sprite.getY());
-        var iterator = rTreeMap.getParallelObstacles(getDir(), coords);
+        var optionalIt = rTreeMap.getParallelObstacles(getDir(), coords);
+        Iterator<Entry<GameEntity, RectangleFloat>> iterator;
+        System.out.println(rTreeMap.getRtreeSize());
+        if (optionalIt.isPresent()) {
+            iterator = optionalIt.get();
 
-        while (iterator.hasNext()) {
-            Entry<GameEntity, RectangleFloat> entry = iterator.next();
-            if (entry.value() instanceof PlayerTank)
+            while (iterator.hasNext()) {
+                Entry<GameEntity, RectangleFloat> entry = iterator.next();
+                //  if (entry.value() instanceof PlayerTank)
                 return true;
+            }
         }
-
         return false;
     }
 

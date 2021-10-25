@@ -14,6 +14,9 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType.MAX;
+import static com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType.MIN;
+
 public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     UtilityNode minimaxTree;
@@ -23,7 +26,7 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
     }
 
     public Direction startAlgo(int depth) {
-        minimaxTree = new UtilityNode(NodeType.MIN, 1.0f, new ArrayList<>(), null, dir, start);
+        minimaxTree = new UtilityNode(MIN, 1.0f, new ArrayList<>(), null, dir, start);
         var tmpChanceNode = List.of(getChanceChild(minimaxTree, depth, ChanceType.TO_TANK), getChanceChild(minimaxTree, depth, ChanceType.FROM_TANK));
         tmpChanceNode.forEach(optChild -> optChild.ifPresent(chanceNode -> minimaxTree.addChild(chanceNode)));
 
@@ -38,12 +41,12 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
         node.setTraversed(true);
 
         while (!stack.isEmpty()) {
-            Optional<ExpectiMaxNode> unusedChild = getUnusedChild(stack.peek(),stack.peek().getChildren());
+            Optional<ExpectiMaxNode> unusedChild = getUnusedChild( stack.peek().getChildren());
 
             while (unusedChild.isPresent()) {
                 ExpectiMaxNode child = unusedChild.get();
                 stack.push(child);
-                unusedChild = getUnusedChild(stack.peek(),stack.peek().getChildren());
+                unusedChild = getUnusedChild( stack.peek().getChildren());
             }
             stack.pop();
 
@@ -93,10 +96,8 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
                     if (depth == 0)
                         utility.setCostFunc(calcLeafFunc(utility.getRect(), end));
                     else {
-                        List<Optional<ChanceNode>> tmpChanceNode = List.of(getChanceChild(utility, depth, ChanceType.TO_TANK), getChanceChild(utility, depth, ChanceType.FROM_TANK));
-                        tmpChanceNode.forEach(optChild -> {
-                            optChild.ifPresent(utility::addChild);
-                        });
+                        var tmpChanceNode = List.of(getChanceChild(utility, depth, ChanceType.TO_TANK), getChanceChild(utility, depth, ChanceType.FROM_TANK));
+                        tmpChanceNode.forEach(optChild -> optChild.ifPresent(utility::addChild));
 
                     }
                     return utility;
@@ -141,22 +142,23 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
 
     private Direction maxOrMin(ExpectiMaxNode node) {
         float resultFunc = node.getChildren().get(0).getCostFunc();
+        List<Direction> possibleDirections = new ArrayList<>();
         if (node instanceof ChanceNode chanceNode) {
-            if (chanceNode.getParent().getType() == NodeType.MIN) {
 
-                for (ExpectiMaxNode child : node.getChildren())
-                    resultFunc = Math.min(resultFunc, child.getCostFunc());
-            } else {
-                for (ExpectiMaxNode child : node.getChildren())
-                    resultFunc = Math.max(resultFunc, child.getCostFunc());
+            for (ExpectiMaxNode child : node.getChildren()) {
+                switch (chanceNode.getParent().getType()) {
+                    case MIN -> resultFunc = Math.min(resultFunc, child.getCostFunc());
+                    case MAX -> resultFunc = Math.max(resultFunc, child.getCostFunc());
+                }
             }
 
             for (ExpectiMaxNode child : node.getChildren()) {
                 if (Float.compare(child.getCostFunc(), resultFunc) == 0)
                     if (child instanceof UtilityNode utilityNode)
-                        return utilityNode.getDir();
+                       possibleDirections.add(utilityNode.getDir());
             }
         }
-        return null;
+
+        return possibleDirections.get(new Random().nextInt(possibleDirections.size()));
     }
 }

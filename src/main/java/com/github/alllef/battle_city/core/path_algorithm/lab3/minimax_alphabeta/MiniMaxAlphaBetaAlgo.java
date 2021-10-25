@@ -32,14 +32,14 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
         node.setTraversed(true);
 
         while (!stack.isEmpty()) {
-            Optional<AlphaBetaNode> unusedChild = getUnusedChild(stack.peek(),stack.peek().children);
+            Optional<AlphaBetaNode> unusedChild = getUnusedChild(stack.peek().children);
 
             while (unusedChild.isPresent()) {
                 AlphaBetaNode child = unusedChild.get();
                 child.beta = stack.peek().beta;
                 child.alpha = stack.peek().alpha;
                 stack.push(child);
-                unusedChild = getUnusedChild(stack.peek(),stack.peek().children);
+                unusedChild = getUnusedChild(stack.peek().children);
             }
 
             AlphaBetaNode child = stack.pop();
@@ -52,23 +52,25 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
             }
 
             AlphaBetaNode parent = stack.peek();
+            switch (parent.type) {
+                case MAX -> {
+                    maximize(child);
 
-            if (parent.type == NodeType.MAX) {
-                maximize(child);
-
-                if (parent.beta <= parent.alpha) {
-                    minimize(parent);
-                    stack.pop();
+                    if (parent.beta <= parent.alpha) {
+                        minimize(parent);
+                        stack.pop();
+                    }
                 }
 
-            } else if (parent.type == NodeType.MIN) {
-                minimize(child);
-
-                if (parent.beta <= parent.alpha) {
-                    maximize(parent);
-                    stack.pop();
+                case MIN -> {
+                    minimize(child);
+                    if (parent.beta <= parent.alpha) {
+                        maximize(parent);
+                        stack.pop();
+                    }
                 }
             }
+
         }
         return null;
     }
@@ -86,7 +88,6 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
     }
 
 
-
     public List<AlphaBetaNode> getChildren(AlphaBetaNode parent, int depth) {
         Rectangle parRect = parent.rect;
 
@@ -101,7 +102,7 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
         children = Arrays.stream(directions)
                 .map(dir -> getNearestCoord(dir, parRect))
                 .filter(entry -> rTreeMap.isEmpty(entry.getValue()))
-                .map(entry -> mapNearCoordsToRect(entry.getKey(),entry.getValue(),parRect))
+                .map(entry -> mapNearCoordsToRect(entry.getKey(), entry.getValue(), parRect))
                 .map(rectEntry -> {
                     AlphaBetaNode node = new AlphaBetaNode(0, parent, null, rectEntry.getKey(), rectEntry.getValue(), NodeType.chooseType(parent.type));
                     node.setChildren(getChildren(node, depth - 1));
