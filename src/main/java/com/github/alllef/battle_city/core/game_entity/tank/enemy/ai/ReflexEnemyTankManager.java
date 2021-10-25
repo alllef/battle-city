@@ -32,6 +32,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     RTreeMap rTreeMap = RTreeMap.getInstance();
     GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
     protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
+    int counter = 0;
 
     private final BulletFactory bulletFactory;
 
@@ -57,16 +58,20 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
 
     public void ride() {
         Rectangle endRect;
-        for (ReflexEnemyTank tank : entityArr) {
-            if (tank instanceof PlayerReflexEnemyTank)
-                endRect = player.getSprite().getBoundingRectangle();
-            else
-                endRect = mapper.convertToGdxRectangle(RectUtils.getSmallestRect(rTreeMap.getRandomNonObstacleCoord(SpriteParam.ENEMY_TANK)));
+        if (counter < 10)
+            counter++;
+        else {
+            counter = 0;
+            for (ReflexEnemyTank tank : entityArr) {
+                if (tank instanceof PlayerReflexEnemyTank)
+                    endRect = player.getSprite().getBoundingRectangle();
+                else
+                    endRect = mapper.convertToGdxRectangle(RectUtils.getSmallestRect(rTreeMap.getRandomNonObstacleCoord(SpriteParam.ENEMY_TANK)));
 
-            ExpectiMaxAlgo algo = new ExpectiMaxAlgo(tank.getRect(), endRect, tank.getDir());
-            tank.setDir(algo.startAlgo(3));
+                ExpectiMaxAlgo algo = new ExpectiMaxAlgo(tank.getRect(), endRect, tank.getDir());
+                tank.ride(algo.startAlgo(5));
+            }
         }
-
         getEntities().forEach(enemyTank -> enemyTank.ride(enemyTank.getDir()));
     }
 

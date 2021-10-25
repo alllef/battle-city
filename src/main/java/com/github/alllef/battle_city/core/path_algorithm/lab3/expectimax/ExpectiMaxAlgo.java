@@ -108,9 +108,9 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo {
 
     public float getPercentage(ChanceType type) {
         if (type == ChanceType.TO_TANK)
-            return 0.5f;
+            return 0.33f;
 
-        return 0.33f;
+        return 0.5f;
     }
 
     private Optional<ExpectiMaxNode> getUnusedChild(ExpectiMaxNode node) {
