@@ -29,6 +29,10 @@ public class BattleCity extends Game {
         prefs.putInteger("dots_number_astar",3);
         prefs.putInteger("lab_number",2);
         prefs.putString("stats_file","stats.csv");
+        prefs.putInteger("minimax_algo_depth",5);
+        prefs.putInteger("player_reflex_tank_number",3);
+        prefs.putInteger("random_reflex_tank_number",3);
+        prefs.putInteger("update_minimax_path_frame",10);
         this.setScreen(new MainScreen(this));
     }
 

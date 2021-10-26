@@ -61,7 +61,7 @@ public class WorldMapManager implements Drawable, Updatable {
         obstacleGeneration = new ObstacleGeneration(prefs.getInteger("obstacle_sets"), prefs);
         playerTankManager = new PlayerTankManager(bulletFactory, prefs);
         coinManager = new CoinManager(prefs.getInteger("coins_number"), prefs);
-        enemyTankManager = new ReflexEnemyTankManager(2, 2, bulletFactory, playerTankManager, rTreeMap, scoreManipulation, prefs);
+        enemyTankManager = new ReflexEnemyTankManager(prefs.getInteger("random_reflex_tank_number"), prefs.getInteger("player_reflex_tank_number"), bulletFactory, playerTankManager, rTreeMap, scoreManipulation, prefs);
 
         overlapper = new Overlapper(bulletFactory, obstacleGeneration, enemyTankManager, stats);
         configureInputHandling(playerTankManager);

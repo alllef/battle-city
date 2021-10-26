@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
     AlphaBetaNode minimaxTree;
 
-    public MiniMaxAlphaBetaAlgo(RTreeMap rTreeMap,Rectangle start, Rectangle end, Direction dir) {
-        super(rTreeMap,start, end, dir);
+    public MiniMaxAlphaBetaAlgo(RTreeMap rTreeMap, Rectangle start, Rectangle end, Direction dir) {
+        super(rTreeMap, start, end, dir);
     }
 
     public Direction startAlgo(int depth) {
@@ -96,9 +96,8 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
         }
 
         List<AlphaBetaNode> children;
-        Direction[] directions = Direction.values();
 
-        children = Arrays.stream(directions)
+        children = Direction.shuffleDirections().stream()
                 .map(dir -> getNearestCoord(dir, parRect))
                 .filter(entry -> rTreeMap.isEmpty(entry.getValue()))
                 .map(entry -> mapNearCoordsToRect(entry.getKey(), entry.getValue(), parRect))

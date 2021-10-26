@@ -64,9 +64,8 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
         Rectangle parRect = parent.getRect();
 
         List<Map.Entry<Direction, Rectangle>> children;
-        Direction[] directions = Direction.values();
 
-        children = Arrays.stream(directions)
+        children = Direction.shuffleDirections().stream()
                 .filter(dir -> {
                     boolean result = isToEndDirection(dir, new Coords((int) parRect.getX(), (int) parRect.getY()));
                     if (type == ChanceType.TO_TANK)

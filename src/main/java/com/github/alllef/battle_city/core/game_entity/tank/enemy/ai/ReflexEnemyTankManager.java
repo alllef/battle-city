@@ -1,6 +1,5 @@
 package com.github.alllef.battle_city.core.game_entity.tank.enemy.ai;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
@@ -19,7 +18,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     RTreeMap rTreeMap;
     GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
     protected final ScoreManipulation scoreManipulation;
-    int counter = 0;
+    int updatePathCounter = 0;
 
     private final BulletFactory bulletFactory;
 
@@ -49,18 +48,18 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
 
     public void ride() {
         Rectangle endRect;
-        if (counter < 10)
-            counter++;
+        if (updatePathCounter < prefs.getInteger("update_minimax_path_frame"))
+            updatePathCounter++;
         else {
-            counter = 0;
+            updatePathCounter = 0;
             for (ReflexEnemyTank tank : entityArr) {
                 if (tank instanceof PlayerReflexEnemyTank)
                     endRect = player.getSprite().getBoundingRectangle();
                 else
                     endRect = mapper.convertToGdxRectangle(RectUtils.getSmallestRect(rTreeMap.getRandomNonObstacleCoord(SpriteParam.ENEMY_TANK)));
 
-                ExpectiMaxAlgo algo = new ExpectiMaxAlgo(this.rTreeMap, tank.getRect(), endRect, tank.getDir());
-                tank.ride(algo.startAlgo(5));
+               ExpectiMaxAlgo algo = new ExpectiMaxAlgo(this.rTreeMap, tank.getRect(), endRect, tank.getDir());
+                tank.ride(algo.startAlgo(prefs.getInteger("minimax_algo_depth")));
             }
         }
         getEntities().forEach(enemyTank -> enemyTank.ride(enemyTank.getDir()));
