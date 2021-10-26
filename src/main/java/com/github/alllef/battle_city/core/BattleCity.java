@@ -22,14 +22,14 @@ public class BattleCity extends Game {
         prefs.putInteger("obstacle_size_dispersion",15);
         prefs.putInteger("max_ride_distance",40);
         prefs.putInteger("enemy_tanks_number",5);
-        prefs.putInteger("obstacle_sets",20);
+        prefs .putInteger("obstacle_sets",20);
         prefs.putBoolean("enable_shooting",true);
         prefs.putFloat("coord_distance",1.0f);
         prefs.putInteger("coins_number",0);
         prefs.putInteger("dots_number_astar",3);
         prefs.putInteger("lab_number",2);
         prefs.putString("stats_file","stats.csv");
-        this.setScreen(new MainScreen());
+        this.setScreen(new MainScreen(this));
     }
 
     @Override

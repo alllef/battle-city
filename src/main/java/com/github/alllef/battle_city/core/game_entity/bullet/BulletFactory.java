@@ -7,15 +7,6 @@ import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 
 public class BulletFactory extends EntityManager<Bullet> {
-    private static BulletFactory bulletFactory;
-
-    public BulletFactory() {}
-
-    public static BulletFactory getInstance() {
-        if (bulletFactory == null)
-            bulletFactory = new BulletFactory();
-        return bulletFactory;
-    }
 
     public Bullet createBullet(float x, float y, Direction dir) {
         Bullet bullet = new Bullet(x, y, dir);
@@ -43,19 +34,15 @@ public class BulletFactory extends EntityManager<Bullet> {
     }
 
     public void shootObstacle(Bullet bullet) {
-        bulletFactory
-                .getEntities()
-                .removeValue(bullet, true);
+        this.getEntities().removeValue(bullet, true);
     }
 
     public void shootTank(Bullet bullet) {
-        bulletFactory
-                .getEntities()
-                .removeValue(bullet, true);
+        this.getEntities().removeValue(bullet, true);
     }
 
     public void shootBullet(Bullet first, Bullet second) {
-        Array<Bullet> entities = bulletFactory.getEntities();
+        Array<Bullet> entities = this.getEntities();
         entities.removeValue(first, true);
         entities.removeValue(second, true);
     }

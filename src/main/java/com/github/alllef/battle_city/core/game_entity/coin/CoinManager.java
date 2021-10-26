@@ -7,17 +7,8 @@ import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 
 public class CoinManager extends EntityManager<Coin> {
-    private static CoinManager coinManager;
 
-    public static CoinManager getInstance() {
-        if (coinManager == null) {
-            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-            coinManager = new CoinManager(prefs.getInteger("coins_number"));
-        }
-        return coinManager;
-    }
-
-    private CoinManager(int coinNum) {
+    public CoinManager(int coinNum) {
         generateCoins(coinNum);
     }
 

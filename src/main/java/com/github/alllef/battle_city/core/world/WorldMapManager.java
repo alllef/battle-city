@@ -13,6 +13,7 @@ import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankMana
 import com.github.alllef.battle_city.core.util.interfaces.Drawable;
 import com.github.alllef.battle_city.core.util.interfaces.Updatable;
 import com.github.alllef.battle_city.core.world.stats.ScoreManipulation;
+import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +26,14 @@ public class WorldMapManager implements Drawable, Updatable {
         return worldMapManager;
     }
 
-    private final RTreeMap rTreeMap = RTreeMap.getInstance();
-
-    private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-    private final BulletFactory bulletFactory = BulletFactory.getInstance();
-    private final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    private final PlayerTankManager playerTankManager = PlayerTankManager.getInstance();
-    private final CoinManager coinManager = CoinManager.getInstance();
+    private RTreeMap rTreeMap;
+    private Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    private BulletFactory bulletFactory;
+    private ObstacleGeneration obstacleGeneration;
+    private PlayerTankManager playerTankManager;
+    private CoinManager coinManager;
     private final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
-    private final ReflexEnemyTankManager enemyTankManager = ReflexEnemyTankManager.getInstance();
+    private ReflexEnemyTankManager enemyTankManager;
 
     protected List<GameEntity> getEntities() {
         List<GameEntity> entitiesArray = new ArrayList<>();
@@ -45,6 +45,15 @@ public class WorldMapManager implements Drawable, Updatable {
         }
 
         return entitiesArray;
+    }
+
+    public void initialize() {
+        rTreeMap = new RTreeMap();
+        bulletFactory = new BulletFactory();
+        obstacleGeneration = new ObstacleGeneration(prefs.getInteger("obstacle_sets"));
+        playerTankManager = new PlayerTankManager(bulletFactory);
+        coinManager = new CoinManager(prefs.getInteger("coins_number"));
+        enemyTankManager = new ReflexEnemyTankManager(2,2,bulletFactory,playerTankManager,rTreeMap);
     }
 
     @Override
@@ -60,6 +69,7 @@ public class WorldMapManager implements Drawable, Updatable {
         obstacleGeneration.update();
         bulletFactory.update();
         coinManager.update();
+        System.out.println(rTreeMap.getRtreeSize() + "Size in worldmapmanager");
         enemyTankManager.update();
         playerTankManager.update();
 

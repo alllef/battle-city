@@ -16,17 +16,8 @@ import java.util.Map;
 import java.util.Random;
 
 public class ObstacleGeneration extends EntityManager<Obstacle> {
-    private static ObstacleGeneration obstacleGeneration;
 
-    public static ObstacleGeneration getInstance() {
-        if (obstacleGeneration == null) {
-            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-            obstacleGeneration = new ObstacleGeneration(prefs.getInteger("obstacle_sets"));
-        }
-        return obstacleGeneration;
-    }
-
-    private ObstacleGeneration(int obstacleSetsNumber) {
+    public ObstacleGeneration(int obstacleSetsNumber) {
         generateObstacles(obstacleSetsNumber);
     }
 
@@ -118,7 +109,7 @@ public class ObstacleGeneration extends EntityManager<Obstacle> {
     }
 
     public void bulletShoot(Obstacle obstacle) {
-        obstacleGeneration
+        this
                 .getEntities()
                 .removeValue(obstacle, true);
     }

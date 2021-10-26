@@ -13,9 +13,6 @@ import java.util.Iterator;
 import java.util.Objects;
 
 public class ReflexEnemyTank extends EnemyTank {
-    public ReflexEnemyTank(BulletFactory bulletFactory, float x, float y) {
-        super(bulletFactory, x, y);
-    }
 
     protected RTreeMap rTreeMap;
 
@@ -26,15 +23,16 @@ public class ReflexEnemyTank extends EnemyTank {
 
     @Override
     public void shoot() {
-        if (areTanksOnParallel())
+        System.out.println(rTreeMap.getRtreeSize()+ " Size in ReflexEnemyTank");
+        if (areTanksOnParallel()) {
             super.shoot();
+        }
     }
 
     protected boolean areTanksOnParallel() {
         Coords coords = new Coords((int) sprite.getX(), (int) sprite.getY());
         var optionalIt = rTreeMap.getParallelObstacles(getDir(), coords);
         Iterator<Entry<GameEntity, RectangleFloat>> iterator;
-        System.out.println(rTreeMap.getRtreeSize());
         if (optionalIt.isPresent()) {
             iterator = optionalIt.get();
 

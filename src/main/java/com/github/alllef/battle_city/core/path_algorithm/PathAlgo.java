@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class PathAlgo<T extends Collection<Coords>> {
-    protected RTreeMap rTreeMap = RTreeMap.getInstance();
+    protected RTreeMap rTreeMap = RTreeMap.INSTANCE;
     protected final int worldSize;
     protected boolean[][] climbedPeaksMatrix;
     protected Rectangle startRect;

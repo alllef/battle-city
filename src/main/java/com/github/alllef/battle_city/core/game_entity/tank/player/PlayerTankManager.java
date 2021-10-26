@@ -6,20 +6,12 @@ import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 
 public class PlayerTankManager extends EntityManager<PlayerTank> {
-    private static PlayerTankManager playerTankManager;
     private BulletFactory bulletFactory;
     private PlayerTank playerTank;
 
-    public static PlayerTankManager getInstance() {
-        if (playerTankManager == null)
-            playerTankManager = new PlayerTankManager(BulletFactory.getInstance());
-
-        return playerTankManager;
-    }
-
     private boolean isRideLooping = false;
 
-    private PlayerTankManager(BulletFactory bulletFactory) {
+    public PlayerTankManager(BulletFactory bulletFactory) {
         this.bulletFactory = bulletFactory;
         generateTanks();
     }

@@ -14,27 +14,19 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import com.github.alllef.battle_city.core.world.stats.ScoreManipulation;
 
 public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
-    private static ReflexEnemyTankManager enemyTankManager;
 
-    public static ReflexEnemyTankManager getInstance() {
-        if (enemyTankManager == null) {
-            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-            enemyTankManager = new ReflexEnemyTankManager(3, 3, BulletFactory.getInstance());
-        }
-
-        return enemyTankManager;
-    }
-
-    PlayerTankManager player = PlayerTankManager.getInstance();
-    RTreeMap rTreeMap = RTreeMap.getInstance();
+    PlayerTankManager player;
+    RTreeMap rTreeMap;
     GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
     protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
     int counter = 0;
 
     private final BulletFactory bulletFactory;
 
-    private ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory) {
+    public ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory,PlayerTankManager player,RTreeMap rTreeMap) {
         this.bulletFactory = bulletFactory;
+        this.player=player;
+        this.rTreeMap=rTreeMap;
         generateTanks(randomTankNum, playerTankNum);
     }
 
@@ -85,6 +77,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     @Override
     public void update() {
         this.ride();
+        System.out.println(rTreeMap.getRtreeSize()+ " Size in ReflexEnemyTankManager");
         this.shoot();
         super.update();
     }

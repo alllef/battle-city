@@ -31,7 +31,7 @@ public enum TankManipulation implements Drawable {
 
     PlayerTankManager playerTank = PlayerTankManager.getInstance();
     EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
-    RTreeMap rTreeMap = RTreeMap.getInstance();
+    RTreeMap rTreeMap = RTreeMap.INSTANCE;
     GdxToRTreeRectangleMapper rectMapper = GdxToRTreeRectangleMapper.ENTITY;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     int manipulation = 0;

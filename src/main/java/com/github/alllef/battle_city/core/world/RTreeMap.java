@@ -17,14 +17,6 @@ import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 import java.util.*;
 
 public class RTreeMap {
-    private static RTreeMap rTreeMap;
-
-    public static RTreeMap getInstance() {
-        if (rTreeMap == null)
-            rTreeMap = new RTreeMap();
-
-        return rTreeMap;
-    }
 
     private final GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
     private final Overlapper overlapper = Overlapper.INSTANCE;

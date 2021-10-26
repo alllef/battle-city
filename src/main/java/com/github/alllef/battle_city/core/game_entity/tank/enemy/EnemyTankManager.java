@@ -13,16 +13,8 @@ import java.util.Map;
 import java.util.Random;
 
 public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawable {
-    private static EnemyTankManager enemyTankManager;
     protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
 
-    public static EnemyTankManager getInstance() {
-        if (enemyTankManager == null) {
-            Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-            enemyTankManager = new EnemyTankManager(prefs.getInteger("enemy_tanks_number"), BulletFactory.getInstance());
-        }
-        return enemyTankManager;
-    }
 
     private Map<EnemyTank, Integer> stepsNum;
     private final BulletFactory bulletFactory;

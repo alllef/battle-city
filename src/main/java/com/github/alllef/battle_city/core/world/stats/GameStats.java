@@ -28,7 +28,7 @@ public class GameStats {
 
     private void onGameOver() {
         if (isGameOver) {
-            try (FileWriter writer = new FileWriter(prefs.getString("stats.csv"), true)) {
+            try (FileWriter writer = new FileWriter(prefs.getString("stats_file"), true)) {
                 writer.write(TimeUtils.millis() - startTime + "," + scoreNumber + "," + result + "," + algorithm + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -46,4 +46,5 @@ public class GameStats {
         isGameOver = true;
         onGameOver();
     }
+
 }
