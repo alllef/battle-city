@@ -45,7 +45,7 @@ public class MainScreen implements Screen {
 
         batch.begin();
         font.getData().setScale(0.25f, 0.25f);
-        font.draw(batch, "Algo type: " + tankManipulation.getAlgoType().name(), 50, 50);
+        font.draw(batch, "Algo type: " + prefs.getString("minimax_algo_type"), 50, 50);
         worldMapManager.draw(batch);
         batch.end();
 

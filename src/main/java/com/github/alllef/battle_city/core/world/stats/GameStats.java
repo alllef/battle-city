@@ -27,7 +27,7 @@ public class GameStats {
     private void onGameOver() {
         if (isGameOver) {
             try (FileWriter writer = new FileWriter(prefs.getString("stats_file"), true)) {
-                writer.write(TimeUtils.millis() - startTime + "," + scoreNumber + "," + result + "," + algorithm + "\n");
+                writer.write(TimeUtils.millis() - startTime + "," + scoreNumber + "," + result + "," + prefs.getString("minimax_algo_type") + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }

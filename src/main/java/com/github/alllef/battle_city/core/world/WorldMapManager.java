@@ -53,6 +53,11 @@ public class WorldMapManager implements Drawable, Updatable {
 
 
     public void initialize() {
+        if (prefs.getString("minimax_algo_type").equals("expectimax"))
+            prefs.putString("minimax_algo_type", "alphabeta");
+        else
+            prefs.putString("minimax_algo_type", "expectimax");
+
         rTreeMap = new RTreeMap(prefs);
         scoreManipulation = new ScoreManipulation(prefs);
         stats = new GameStats(scoreManipulation, prefs);

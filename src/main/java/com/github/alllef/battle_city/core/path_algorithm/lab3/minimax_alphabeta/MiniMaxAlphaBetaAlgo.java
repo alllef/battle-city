@@ -48,6 +48,7 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
                     if (child1.costFunc == child.costFunc)
                         return child1.dir;
                 }
+                return Direction.UP;
             }
 
             AlphaBetaNode parent = stack.peek();

@@ -33,6 +33,7 @@ public class BattleCity extends Game {
         prefs.putInteger("player_reflex_tank_number",3);
         prefs.putInteger("random_reflex_tank_number",3);
         prefs.putInteger("update_minimax_path_frame",10);
+        prefs.putString("minimax_algo_type","expectimax");
         this.setScreen(new MainScreen(this));
     }
 
