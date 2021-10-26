@@ -17,7 +17,8 @@ import java.util.Random;
 
 public class ObstacleGeneration extends EntityManager<Obstacle> {
 
-    public ObstacleGeneration(int obstacleSetsNumber) {
+    public ObstacleGeneration(int obstacleSetsNumber, Preferences prefs) {
+        super(prefs);
         generateObstacles(obstacleSetsNumber);
     }
 

@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core.game_entity.tank.enemy.ai;
 
+import com.badlogic.gdx.Preferences;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
@@ -16,8 +17,8 @@ public class ReflexEnemyTank extends EnemyTank {
 
     protected RTreeMap rTreeMap;
 
-    public ReflexEnemyTank(RTreeMap rTreeMap, BulletFactory bulletFactory, float x, float y) {
-        super(bulletFactory, x, y);
+    public ReflexEnemyTank(RTreeMap rTreeMap, BulletFactory bulletFactory, float x, float y, Preferences prefs) {
+        super(bulletFactory, x, y,prefs);
         this.rTreeMap = rTreeMap;
     }
 

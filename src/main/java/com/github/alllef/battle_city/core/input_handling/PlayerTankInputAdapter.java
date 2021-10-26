@@ -8,7 +8,11 @@ import com.github.alllef.battle_city.core.util.enums.Direction;
 import java.util.Optional;
 
 public class PlayerTankInputAdapter extends InputAdapter {
-    PlayerTankManager playerTankManager = PlayerTankManager.getInstance();
+    private final PlayerTankManager playerTankManager;
+
+    public PlayerTankInputAdapter(PlayerTankManager playerTankManager) {
+        this.playerTankManager = playerTankManager;
+    }
 
     @Override
     public boolean keyDown(int keycode) {

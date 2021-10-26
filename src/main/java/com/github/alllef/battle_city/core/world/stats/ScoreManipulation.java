@@ -8,7 +8,7 @@ import com.github.alllef.battle_city.core.util.interfaces.Drawable;
 
 public class ScoreManipulation implements Drawable {
 
-    private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    private final Preferences prefs;
     private final BitmapFont font = BitMapFontSingleton.getInstance();
 
     private int score = 0;
@@ -16,7 +16,8 @@ public class ScoreManipulation implements Drawable {
     private final float scoreScaleY;
     private float scorePos;
 
-    public ScoreManipulation() {
+    public ScoreManipulation(Preferences prefs) {
+        this.prefs = prefs;
         scoreScaleX = prefs.getFloat("score_scale_X");
         scoreScaleY = prefs.getFloat("score_scaly_Y");
         scorePos = prefs.getInteger("world_size") * prefs.getFloat("score_pos");

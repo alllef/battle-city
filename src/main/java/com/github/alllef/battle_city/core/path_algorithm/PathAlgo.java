@@ -18,9 +18,10 @@ public abstract class PathAlgo<T extends Collection<Coords>> {
     protected Rectangle startRect;
     protected Rectangle endRect;
     protected T collection;
-    protected Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    protected Preferences prefs;
 
-    public PathAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect) {
+    public PathAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect, Preferences prefs) {
+        this.prefs = prefs;
         this.rTreeMap = rTreeMap;
         worldSize = prefs.getInteger("world_size");
         this.startRect = startRect;

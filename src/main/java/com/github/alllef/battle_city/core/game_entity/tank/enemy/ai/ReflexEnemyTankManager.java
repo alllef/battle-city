@@ -18,12 +18,13 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     PlayerTankManager player;
     RTreeMap rTreeMap;
     GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
-    protected final ScoreManipulation scoreManipulation
+    protected final ScoreManipulation scoreManipulation;
     int counter = 0;
 
     private final BulletFactory bulletFactory;
 
-    public ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory, PlayerTankManager player, RTreeMap rTreeMap, ScoreManipulation scoreManipulation) {
+    public ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory, PlayerTankManager player, RTreeMap rTreeMap, ScoreManipulation scoreManipulation,Preferences prefs) {
+       super(prefs);
         this.bulletFactory = bulletFactory;
         this.player = player;
         this.rTreeMap = rTreeMap;
@@ -36,7 +37,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
         for (int i = 0; i < randomTankNum; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
             int y = (int) (Math.random() * worldSize * 0.95);
-            entityArr.add(new RandomReflexEnemyTank(rTreeMap, bulletFactory, x, y));
+            entityArr.add(new RandomReflexEnemyTank(rTreeMap, bulletFactory, x, y,prefs));
         }
 
         for (int i = 0; i < playerTankNum; i++) {

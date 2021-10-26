@@ -1,6 +1,5 @@
 package com.github.alllef.battle_city.core.world;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
@@ -9,7 +8,6 @@ import com.github.alllef.battle_city.core.util.RectUtils;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
-import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
@@ -20,11 +18,12 @@ import java.util.*;
 public class RTreeMap {
 
     private final GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
-    private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    private final Preferences prefs;
     private RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
     private RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
 
-    public RTreeMap() {
+    public RTreeMap(Preferences prefs) {
+        this.prefs = prefs;
     }
 
     public void createRtree(List<GameEntity> entities) {

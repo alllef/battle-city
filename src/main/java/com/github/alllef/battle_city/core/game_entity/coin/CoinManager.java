@@ -8,12 +8,12 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 
 public class CoinManager extends EntityManager<Coin> {
 
-    public CoinManager(int coinNum) {
+    public CoinManager(int coinNum,Preferences prefs) {
+        super(prefs);
         generateCoins(coinNum);
     }
 
     private void generateCoins(int coinNumber) {
-        Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
         int worldSize = prefs.getInteger("world_size");
         for (int i = 0; i < coinNumber; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);

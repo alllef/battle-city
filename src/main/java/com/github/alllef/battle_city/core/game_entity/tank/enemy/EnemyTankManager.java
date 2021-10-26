@@ -19,7 +19,8 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
     private Map<EnemyTank, Integer> stepsNum;
     private final BulletFactory bulletFactory;
 
-    private EnemyTankManager(int tankNumber, BulletFactory bulletFactory, ScoreManipulation scoreManipulation) {
+    private EnemyTankManager(int tankNumber, BulletFactory bulletFactory, ScoreManipulation scoreManipulation,Preferences prefs) {
+        super(prefs);
         this.scoreManipulation = scoreManipulation;
         this.bulletFactory = bulletFactory;
         stepsNum = new HashMap<>();
@@ -31,7 +32,7 @@ public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawab
         for (int i = 0; i < tankNumber; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
             int y = (int) (Math.random() * worldSize * 0.95);
-            entityArr.add(new EnemyTank(bulletFactory, x, y));
+            entityArr.add(new EnemyTank(bulletFactory, x, y,prefs));
         }
     }
 

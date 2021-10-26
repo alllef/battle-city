@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core.game_entity.tank.player;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
@@ -11,13 +12,14 @@ public class PlayerTankManager extends EntityManager<PlayerTank> {
 
     private boolean isRideLooping = false;
 
-    public PlayerTankManager(BulletFactory bulletFactory) {
+    public PlayerTankManager(BulletFactory bulletFactory, Preferences prefs) {
+        super(prefs);
         this.bulletFactory = bulletFactory;
         generateTanks();
     }
 
     private void generateTanks() {
-        playerTank = new PlayerTank(bulletFactory);
+        playerTank = new PlayerTank(bulletFactory, prefs);
         entityArr.add(playerTank);
     }
 
@@ -26,7 +28,7 @@ public class PlayerTankManager extends EntityManager<PlayerTank> {
     }
 
     public void ride(Direction dir) {
-            playerTank.ride(dir);
+        playerTank.ride(dir);
     }
 
 
@@ -48,7 +50,7 @@ public class PlayerTankManager extends EntityManager<PlayerTank> {
         this.isRideLooping = rideLooping;
     }
 
-    public Sprite getSprite(){
+    public Sprite getSprite() {
         return playerTank.getSprite();
     }
 }

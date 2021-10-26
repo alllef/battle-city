@@ -1,15 +1,18 @@
 package com.github.alllef.battle_city.core.game_entity.common;
 
+import com.badlogic.gdx.Preferences;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 import com.github.alllef.battle_city.core.util.enums.Move;
 import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 
 public class MovingEntity extends GameEntity {
     protected Direction dir;
+    protected Preferences prefs;
 
-    public MovingEntity(float posX, float posY, SpriteParam param, Direction dir) {
+    public MovingEntity(float posX, float posY, SpriteParam param, Direction dir, Preferences prefs) {
         super(posX, posY, param);
         this.dir = dir;
+        this.prefs = prefs;
     }
 
     protected void move(Move type, float minDist) {

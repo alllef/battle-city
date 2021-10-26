@@ -11,8 +11,8 @@ import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 
 public class Bullet extends MovingEntity {
 
-    protected Bullet(float posX, float posY, Direction dir) {
-        super(posX, posY, SpriteParam.BULLET,dir);
+    protected Bullet(float posX, float posY, Direction dir, Preferences prefs) {
+        super(posX, posY, SpriteParam.BULLET,dir,prefs);
         sprite.setRotation(dir.getDegree());
     }
 

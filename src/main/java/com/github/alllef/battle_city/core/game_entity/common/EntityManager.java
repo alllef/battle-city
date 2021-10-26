@@ -9,7 +9,11 @@ import com.github.alllef.battle_city.core.util.interfaces.Updatable;
 
 public abstract class EntityManager<T extends GameEntity> implements Drawable, Updatable {
     protected final Array<T> entityArr = new Array<>();
-    protected Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    protected  final Preferences prefs;
+
+    public EntityManager(Preferences prefs) {
+        this.prefs = prefs;
+    }
 
     public Array<T> getEntities() {
         return entityArr;

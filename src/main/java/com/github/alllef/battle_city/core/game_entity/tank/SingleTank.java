@@ -19,10 +19,8 @@ public abstract class SingleTank extends MovingEntity implements Tank {
     private double durationBetweenBullets;
     private final BulletFactory bulletFactory;
 
-    protected final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-
-    protected SingleTank(float posX, float posY, SpriteParam param, BulletFactory bulletFactory) {
-        super(posX, posY, param, Direction.UP);
+    protected SingleTank(float posX, float posY, SpriteParam param, BulletFactory bulletFactory, Preferences prefs) {
+        super(posX, posY, param, Direction.UP,prefs);
         this.bulletFactory = bulletFactory;
     }
 
