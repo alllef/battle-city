@@ -19,10 +19,14 @@ import java.util.*;
 public class RTreeMap {
 
     private final GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
-    private final Overlapper overlapper = Overlapper.INSTANCE;
+    private final Overlapper overlapper;
     private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     private RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
     private RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
+
+    public RTreeMap(Overlapper overlapper) {
+        this.overlapper = overlapper;
+    }
 
     public void createRtree(List<GameEntity> entities) {
         List<Entry<GameEntity, RectangleFloat>> entryList = new ArrayList<>();

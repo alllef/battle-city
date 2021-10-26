@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.AlphaBetaNode;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.enums.Direction;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
 import java.util.List;
 import java.util.Map;
@@ -13,8 +14,10 @@ public class MiniMaxAlgo<T extends MiniMaxNode> {
     protected Rectangle start;
     protected Rectangle end;
     protected Direction dir;
+    protected RTreeMap rTreeMap;
 
-    public MiniMaxAlgo(Rectangle start, Rectangle end, Direction dir) {
+    public MiniMaxAlgo(RTreeMap rTreeMap, Rectangle start, Rectangle end, Direction dir) {
+        this.rTreeMap = rTreeMap;
         this.start = start;
         this.end = end;
         this.dir = dir;

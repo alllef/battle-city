@@ -12,12 +12,19 @@ import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.util.enums.GameResult;
 import com.github.alllef.battle_city.core.world.stats.GameStats;
 
-public enum Overlapper {
-    INSTANCE;
-    private final BulletFactory bulletFactory = BulletFactory.getInstance();
-    private final ObstacleGeneration obstacleGeneration = ObstacleGeneration.getInstance();
-    private final ReflexEnemyTankManager enemyTankManager = ReflexEnemyTankManager.getInstance();
-    private final GameStats stats = GameStats.getInstance();
+public class Overlapper {
+
+    private final BulletFactory bulletFactory;
+    private final ObstacleGeneration obstacleGeneration;
+    private final ReflexEnemyTankManager enemyTankManager;
+    private final GameStats stats;
+
+    public Overlapper(BulletFactory bulletFactory, ObstacleGeneration obstacleGeneration, ReflexEnemyTankManager enemyTankManager, GameStats stats) {
+        this.bulletFactory = bulletFactory;
+        this.obstacleGeneration = obstacleGeneration;
+        this.enemyTankManager = enemyTankManager;
+        this.stats = stats;
+    }
 
     public void overlaps(GameEntity firstEntity, GameEntity secondEntity) {
 

@@ -9,13 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class GameStats {
-    private static GameStats gamestats;
-
-    public static GameStats getInstance() {
-        if (gamestats == null)
-            gamestats = new GameStats();
-        return gamestats;
-    }
 
     ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");

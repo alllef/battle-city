@@ -26,12 +26,11 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TankManipulation implements Drawable {
-    INSTANCE;
+public class TankManipulation implements Drawable {
 
-    PlayerTankManager playerTank = PlayerTankManager.getInstance();
-    EnemyTankManager enemyTankManager = EnemyTankManager.getInstance();
-    RTreeMap rTreeMap = RTreeMap.INSTANCE;
+    PlayerTankManager playerTank;
+    EnemyTankManager enemyTankManager;
+    RTreeMap rTreeMap;
     GdxToRTreeRectangleMapper rectMapper = GdxToRTreeRectangleMapper.ENTITY;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     int manipulation = 0;
@@ -39,6 +38,12 @@ public enum TankManipulation implements Drawable {
     PathAlgo pathAlgo;
     int frames = 0;
     List<List<Coords>> pathsToDraw = new ArrayList<>();
+
+    public TankManipulation(PlayerTankManager playerTank, EnemyTankManager enemyTankManager, RTreeMap rTreeMap) {
+        this.playerTank = playerTank;
+        this.enemyTankManager = enemyTankManager;
+        this.rTreeMap = rTreeMap;
+    }
 
     public void setPathAlgo(PathAlgo pathAlgo) {
         this.pathAlgo = pathAlgo;
@@ -84,9 +89,9 @@ public enum TankManipulation implements Drawable {
         Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
 
         switch (algoType) {
-            case BFS -> pathAlgo = new BFSAlgo(playerRect, endRect);
-            case DFS -> pathAlgo = new DFSAlgo(playerRect, endRect);
-            case UCS -> pathAlgo = new UCSAlgo(playerRect, endRect);
+            case BFS -> pathAlgo = new BFSAlgo(rTreeMap, playerRect, endRect);
+            case DFS -> pathAlgo = new DFSAlgo(rTreeMap, playerRect, endRect);
+            case UCS -> pathAlgo = new UCSAlgo(rTreeMap, playerRect, endRect);
         }
 
         return pathAlgo.startAlgo();

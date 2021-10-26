@@ -19,7 +19,6 @@ public class MainScreen implements Screen {
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     WorldMapManager worldMapManager = WorldMapManager.getInstance();
     Game game;
-    GameStats stats = GameStats.getInstance();
     //TankManipulation tankManipulation = TankManipulation.INSTANCE;
 
     public MainScreen(Game game) {

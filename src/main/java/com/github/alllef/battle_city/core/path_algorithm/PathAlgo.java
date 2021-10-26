@@ -12,15 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class PathAlgo<T extends Collection<Coords>> {
-    protected RTreeMap rTreeMap = RTreeMap.INSTANCE;
+    protected RTreeMap rTreeMap;
     protected final int worldSize;
     protected boolean[][] climbedPeaksMatrix;
     protected Rectangle startRect;
     protected Rectangle endRect;
     protected T collection;
     protected Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
-    public PathAlgo(Rectangle startRect, Rectangle endRect) {
 
+    public PathAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect) {
+        this.rTreeMap = rTreeMap;
         worldSize = prefs.getInteger("world_size");
         this.startRect = startRect;
         this.endRect = endRect;

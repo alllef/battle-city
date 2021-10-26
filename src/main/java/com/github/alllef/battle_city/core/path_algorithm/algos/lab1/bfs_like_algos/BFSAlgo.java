@@ -3,14 +3,15 @@ package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_al
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
 import java.util.*;
 
 public class BFSAlgo extends PathAlgo<Queue<Coords>> {
     protected Coords[][] parentMatrix = new Coords[worldSize][worldSize];
 
-    public BFSAlgo(Rectangle startRect, Rectangle endRect) {
-        super(startRect, endRect);
+    public BFSAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect) {
+        super(rTreeMap, startRect, endRect);
         collection = new LinkedList<>();
     }
 
@@ -56,14 +57,14 @@ public class BFSAlgo extends PathAlgo<Queue<Coords>> {
         return coords;
     }
 
-    protected void handleAddedVertex(Coords parent,Coords child){
+    protected void handleAddedVertex(Coords parent, Coords child) {
         parentMatrix[child.x()][child.y()] = parent;
         collection.add(child);
     }
 
     protected void nextVertex(Coords vertex) {
-       getPossibleAdjacentVertices(vertex)
-               .forEach(adjacentVertex->handleAddedVertex(vertex,adjacentVertex));
+        getPossibleAdjacentVertices(vertex)
+                .forEach(adjacentVertex -> handleAddedVertex(vertex, adjacentVertex));
     }
 
 }

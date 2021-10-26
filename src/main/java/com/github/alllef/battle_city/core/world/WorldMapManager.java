@@ -12,6 +12,7 @@ import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyT
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 import com.github.alllef.battle_city.core.util.interfaces.Drawable;
 import com.github.alllef.battle_city.core.util.interfaces.Updatable;
+import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.alllef.battle_city.core.world.stats.ScoreManipulation;
 import com.google.inject.Inject;
 
@@ -34,6 +35,7 @@ public class WorldMapManager implements Drawable, Updatable {
     private CoinManager coinManager;
     private final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
     private ReflexEnemyTankManager enemyTankManager;
+    private Overlapper overlapper;
 
     protected List<GameEntity> getEntities() {
         List<GameEntity> entitiesArray = new ArrayList<>();
@@ -48,12 +50,13 @@ public class WorldMapManager implements Drawable, Updatable {
     }
 
     public void initialize() {
+
         rTreeMap = new RTreeMap();
         bulletFactory = new BulletFactory();
         obstacleGeneration = new ObstacleGeneration(prefs.getInteger("obstacle_sets"));
         playerTankManager = new PlayerTankManager(bulletFactory);
         coinManager = new CoinManager(prefs.getInteger("coins_number"));
-        enemyTankManager = new ReflexEnemyTankManager(2,2,bulletFactory,playerTankManager,rTreeMap);
+        enemyTankManager = new ReflexEnemyTankManager(2, 2, bulletFactory, playerTankManager, rTreeMap);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
+import com.github.alllef.battle_city.core.world.RTreeMap;
 
 import java.util.*;
 
@@ -11,8 +12,8 @@ public class AStarAlgo extends UCSAlgo {
     AlgoType algoType;
     Map<Coords, Boolean> hasCoinsMap = new HashMap<>();
 
-    public AStarAlgo(Rectangle startRect, Rectangle endRect, AlgoType algoType) {
-        super(startRect, endRect);
+    public AStarAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect, AlgoType algoType) {
+        super(rTreeMap, startRect, endRect);
         this.algoType = algoType;
         collection = new PriorityQueue<>(Comparator.comparing(this::calculateFunction));
     }
@@ -45,9 +46,9 @@ public class AStarAlgo extends UCSAlgo {
 
     private boolean hasCoins(Coords coords) {
         Optional<Boolean> hasCoins = Optional.ofNullable(hasCoinsMap.get(coords));
-        if(hasCoins.isPresent())
+        if (hasCoins.isPresent())
             return hasCoins.get();
-        hasCoinsMap.put(coords,rTreeMap.hasCoins(coords));
+        hasCoinsMap.put(coords, rTreeMap.hasCoins(coords));
 
         return hasCoinsMap.get(coords);
     }

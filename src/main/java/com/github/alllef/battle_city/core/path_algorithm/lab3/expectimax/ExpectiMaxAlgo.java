@@ -18,11 +18,11 @@ import static com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType.MA
 import static com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType.MIN;
 
 public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
-    RTreeMap rTreeMap = RTreeMap.INSTANCE;
+    RTreeMap rTreeMap;
     UtilityNode minimaxTree;
 
-    public ExpectiMaxAlgo(Rectangle start, Rectangle end, Direction dir) {
-        super(start, end, dir);
+    public ExpectiMaxAlgo(RTreeMap rTreeMap, Rectangle start, Rectangle end, Direction dir) {
+        super(rTreeMap, start, end, dir);
     }
 
     public Direction startAlgo(int depth) {
@@ -41,12 +41,12 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
         node.setTraversed(true);
 
         while (!stack.isEmpty()) {
-            Optional<ExpectiMaxNode> unusedChild = getUnusedChild( stack.peek().getChildren());
+            Optional<ExpectiMaxNode> unusedChild = getUnusedChild(stack.peek().getChildren());
 
             while (unusedChild.isPresent()) {
                 ExpectiMaxNode child = unusedChild.get();
                 stack.push(child);
-                unusedChild = getUnusedChild( stack.peek().getChildren());
+                unusedChild = getUnusedChild(stack.peek().getChildren());
             }
             stack.pop();
 
@@ -155,7 +155,7 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
             for (ExpectiMaxNode child : node.getChildren()) {
                 if (Float.compare(child.getCostFunc(), resultFunc) == 0)
                     if (child instanceof UtilityNode utilityNode)
-                       possibleDirections.add(utilityNode.getDir());
+                        possibleDirections.add(utilityNode.getDir());
             }
         }
 
