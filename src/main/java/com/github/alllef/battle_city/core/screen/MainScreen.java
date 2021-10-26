@@ -25,10 +25,10 @@ public class MainScreen implements Screen {
         camera = new OrthographicCamera();
         font = new BitmapFont();
         batch = new SpriteBatch();
+        worldMapManager.initialize();
         this.game = game;
         int worldSize = prefs.getInteger("world_size");
         camera.setToOrtho(false, worldSize, worldSize);
-
         InputMultiplexer multiplexer = new InputMultiplexer();
         // multiplexer.addProcessor(new MainScreenInputAdapter());
         multiplexer.addProcessor(new PlayerTankInputAdapter());
@@ -55,7 +55,7 @@ public class MainScreen implements Screen {
         //tankManipulation.draw(batch);
         batch.end();
 
-        if (stats.isGameOver())
+        if (worldMapManager.isGameOver())
             game.setScreen(new MainScreen(game));
     }
 

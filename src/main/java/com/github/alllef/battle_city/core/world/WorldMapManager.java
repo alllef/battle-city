@@ -5,7 +5,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.coin.CoinManager;
-import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTankManager;
@@ -14,7 +13,6 @@ import com.github.alllef.battle_city.core.util.interfaces.Drawable;
 import com.github.alllef.battle_city.core.util.interfaces.Updatable;
 import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.alllef.battle_city.core.world.stats.ScoreManipulation;
-import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +37,9 @@ public class WorldMapManager implements Drawable, Updatable {
 
     protected List<GameEntity> getEntities() {
         List<GameEntity> entitiesArray = new ArrayList<>();
-        List<EntityManager<? extends GameEntity>> managers = List.of(bulletFactory, enemyTankManager, playerTankManager, obstacleGeneration);
+        var managers = List.of(bulletFactory, enemyTankManager, playerTankManager, obstacleGeneration);
 
-        for (EntityManager<? extends GameEntity> manager : managers) {
+        for (var manager : managers) {
             for (GameEntity entity : manager.getEntities())
                 entitiesArray.add(entity);
         }
@@ -50,13 +48,17 @@ public class WorldMapManager implements Drawable, Updatable {
     }
 
     public void initialize() {
-
         rTreeMap = new RTreeMap();
         bulletFactory = new BulletFactory();
         obstacleGeneration = new ObstacleGeneration(prefs.getInteger("obstacle_sets"));
         playerTankManager = new PlayerTankManager(bulletFactory);
         coinManager = new CoinManager(prefs.getInteger("coins_number"));
         enemyTankManager = new ReflexEnemyTankManager(2, 2, bulletFactory, playerTankManager, rTreeMap);
+        overlapper = new Overlapper(bulletFactory, obstacleGeneration, enemyTankManager, stats);
+    }
+
+    public boolean isGameOver(){
+        return stats.isGameOver();
     }
 
     @Override
@@ -67,16 +69,14 @@ public class WorldMapManager implements Drawable, Updatable {
 
     @Override
     public void update() {
-
         rTreeMap.createRtree(getEntities());
+        overlapper.checkOverlappings(rTreeMap.getOverlappings());
         obstacleGeneration.update();
         bulletFactory.update();
         coinManager.update();
-        System.out.println(rTreeMap.getRtreeSize() + "Size in worldmapmanager");
         enemyTankManager.update();
         playerTankManager.update();
 
-        rTreeMap.checkOverlappings();
     }
 
 }

@@ -13,19 +13,18 @@ import com.github.alllef.battle_city.core.world.overlap.Overlapper;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
+import rx.Observable;
 
 import java.util.*;
 
 public class RTreeMap {
 
     private final GdxToRTreeRectangleMapper rectangleMapper = GdxToRTreeRectangleMapper.ENTITY;
-    private final Overlapper overlapper;
     private final Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     private RTree<GameEntity, RectangleFloat> worldRTree = RTree.create();
     private RTree<GameEntity, RectangleFloat> coinRTree = RTree.create();
 
-    public RTreeMap(Overlapper overlapper) {
-        this.overlapper = overlapper;
+    public RTreeMap() {
     }
 
     public void createRtree(List<GameEntity> entities) {
@@ -74,13 +73,10 @@ public class RTreeMap {
                 .first();
     }
 
-    protected void checkOverlappings() {
-        worldRTree.entries().forEach(this::checkOverlapping);
-    }
-
-    private void checkOverlapping(Entry<GameEntity, RectangleFloat> entry) {
-        var overlappingEntities = worldRTree.search(entry.geometry());
-        overlappingEntities.forEach(tmpEntity -> overlapper.overlaps(tmpEntity.value(), entry.value()));
+    public Map<Entry<GameEntity, RectangleFloat>, Observable<Entry<GameEntity, RectangleFloat>>> getOverlappings() {
+        Map<Entry<GameEntity, RectangleFloat>, Observable<Entry<GameEntity, RectangleFloat>>> resultsMap = new HashMap<>();
+        worldRTree.entries().forEach(tmpEntry -> resultsMap.put(tmpEntry, worldRTree.search(tmpEntry.geometry())));
+        return resultsMap;
     }
 
     public Optional<Iterator<Entry<GameEntity, RectangleFloat>>> getParallelObstacles(Direction dir, Coords coords) {

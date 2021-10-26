@@ -23,10 +23,10 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
 
     private final BulletFactory bulletFactory;
 
-    public ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory,PlayerTankManager player,RTreeMap rTreeMap) {
+    public ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory, PlayerTankManager player, RTreeMap rTreeMap) {
         this.bulletFactory = bulletFactory;
-        this.player=player;
-        this.rTreeMap=rTreeMap;
+        this.player = player;
+        this.rTreeMap = rTreeMap;
         generateTanks(randomTankNum, playerTankNum);
     }
 
@@ -57,7 +57,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
                 else
                     endRect = mapper.convertToGdxRectangle(RectUtils.getSmallestRect(rTreeMap.getRandomNonObstacleCoord(SpriteParam.ENEMY_TANK)));
 
-                ExpectiMaxAlgo algo = new ExpectiMaxAlgo(tank.getRect(), endRect, tank.getDir());
+                ExpectiMaxAlgo algo = new ExpectiMaxAlgo(rTreeMap, tank.getRect(), endRect, tank.getDir());
                 tank.ride(algo.startAlgo(5));
             }
         }
@@ -77,7 +77,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     @Override
     public void update() {
         this.ride();
-        System.out.println(rTreeMap.getRtreeSize()+ " Size in ReflexEnemyTankManager");
+        System.out.println(rTreeMap.getRtreeSize() + " Size in ReflexEnemyTankManager");
         this.shoot();
         super.update();
     }

@@ -31,6 +31,7 @@ public class TankManipulation implements Drawable {
     PlayerTankManager playerTank;
     EnemyTankManager enemyTankManager;
     RTreeMap rTreeMap;
+
     GdxToRTreeRectangleMapper rectMapper = GdxToRTreeRectangleMapper.ENTITY;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
     int manipulation = 0;
@@ -62,7 +63,7 @@ public class TankManipulation implements Drawable {
         long seconds = TimeUtils.millis();
 
         // enemyTankManager.getEntities().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
-        ExpectiMaxAlgo algo = new ExpectiMaxAlgo(enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
+        ExpectiMaxAlgo algo = new ExpectiMaxAlgo(rTreeMap,enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
         algo.startAlgo(1);
         manipulation++;
         System.out.println("manipulation" + manipulation);
@@ -104,7 +105,7 @@ public class TankManipulation implements Drawable {
         if (algoType == AlgoType.ASTAR_N)
             return getAStarSeveralDots(playerRect, endRect, prefs.getInteger("dots_number_astar"));
 
-        return new AStarAlgo(playerRect, endRect, algoType).startAlgo();
+        return new AStarAlgo(rTreeMap, playerRect, endRect, algoType).startAlgo();
     }
 
     private List<Coords> getAStarSeveralDots(Rectangle start, Rectangle end, int dotsNum) {
@@ -112,7 +113,7 @@ public class TankManipulation implements Drawable {
         List<Rectangle> dots = getPathDots(start, end, dotsNum);
 
         for (int i = 0; i < dots.size() - 1; i++) {
-            List<Coords> partialPath = new AStarAlgo(dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).startAlgo();
+            List<Coords> partialPath = new AStarAlgo(rTreeMap, dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).startAlgo();
             if (partialPath.isEmpty()) return partialPath;
             path.addAll(partialPath);
         }

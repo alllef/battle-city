@@ -11,6 +11,11 @@ import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyT
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.util.enums.GameResult;
 import com.github.alllef.battle_city.core.world.stats.GameStats;
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
+import rx.Observable;
+
+import java.util.Map;
 
 public class Overlapper {
 
@@ -26,6 +31,12 @@ public class Overlapper {
         this.stats = stats;
     }
 
+    public void checkOverlappings(Map<Entry<GameEntity, RectangleFloat>, Observable<Entry<GameEntity, RectangleFloat>>> overlappings) {
+        for (var mapEntry : overlappings.entrySet()) {
+            mapEntry.getValue().forEach(simpleEntry -> overlaps(mapEntry.getKey().value(), simpleEntry.value()));
+        }
+    }
+
     public void overlaps(GameEntity firstEntity, GameEntity secondEntity) {
 
         if (firstEntity instanceof Bullet bullet && secondEntity instanceof Obstacle obstacle) {
@@ -36,12 +47,9 @@ public class Overlapper {
             enemyTankManager.bulletShoot(enemyTank);
             if (enemyTankManager.getEntities().isEmpty())
                 stats.setGameOver(GameResult.WIN);
-        }
-        else if (firstEntity instanceof PlayerTank tank && secondEntity instanceof Bullet bullet) {
+        } else if (firstEntity instanceof PlayerTank tank && secondEntity instanceof Bullet bullet) {
             stats.setGameOver(GameResult.LOSE);
-        }
-
-        else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
+        } else if (firstEntity instanceof SingleTank singleTank && secondEntity instanceof Obstacle obstacle) {
             singleTank.overlapsObstacle();
         } else if (firstEntity instanceof SingleTank firstTank && secondEntity instanceof SingleTank secondTank && firstTank != secondTank) {
             firstTank.overlapsTank();
