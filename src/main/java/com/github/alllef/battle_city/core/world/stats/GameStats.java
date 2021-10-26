@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class GameStats {
 
-    ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
+    private final ScoreManipulation scoreManipulation;
     Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
 
     private long startTime = TimeUtils.millis();
@@ -18,6 +18,10 @@ public class GameStats {
     private GameResult result;
     private String algorithm;
     private boolean isGameOver = false;
+
+    public GameStats(ScoreManipulation scoreManipulation) {
+        this.scoreManipulation = scoreManipulation;
+    }
 
     private void onGameOver() {
         if (isGameOver) {

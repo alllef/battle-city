@@ -12,6 +12,7 @@ import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankMana
 import com.github.alllef.battle_city.core.util.interfaces.Drawable;
 import com.github.alllef.battle_city.core.util.interfaces.Updatable;
 import com.github.alllef.battle_city.core.world.overlap.Overlapper;
+import com.github.alllef.battle_city.core.world.stats.GameStats;
 import com.github.alllef.battle_city.core.world.stats.ScoreManipulation;
 
 import java.util.ArrayList;
@@ -31,9 +32,10 @@ public class WorldMapManager implements Drawable, Updatable {
     private ObstacleGeneration obstacleGeneration;
     private PlayerTankManager playerTankManager;
     private CoinManager coinManager;
-    private final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
+    private ScoreManipulation scoreManipulation;
     private ReflexEnemyTankManager enemyTankManager;
     private Overlapper overlapper;
+    private GameStats stats;
 
     protected List<GameEntity> getEntities() {
         List<GameEntity> entitiesArray = new ArrayList<>();
@@ -49,15 +51,19 @@ public class WorldMapManager implements Drawable, Updatable {
 
     public void initialize() {
         rTreeMap = new RTreeMap();
+        scoreManipulation = new ScoreManipulation();
+        stats = new GameStats(scoreManipulation);
+
         bulletFactory = new BulletFactory();
         obstacleGeneration = new ObstacleGeneration(prefs.getInteger("obstacle_sets"));
         playerTankManager = new PlayerTankManager(bulletFactory);
         coinManager = new CoinManager(prefs.getInteger("coins_number"));
-        enemyTankManager = new ReflexEnemyTankManager(2, 2, bulletFactory, playerTankManager, rTreeMap);
+        enemyTankManager = new ReflexEnemyTankManager(2, 2, bulletFactory, playerTankManager, rTreeMap, scoreManipulation);
+
         overlapper = new Overlapper(bulletFactory, obstacleGeneration, enemyTankManager, stats);
     }
 
-    public boolean isGameOver(){
+    public boolean isGameOver() {
         return stats.isGameOver();
     }
 

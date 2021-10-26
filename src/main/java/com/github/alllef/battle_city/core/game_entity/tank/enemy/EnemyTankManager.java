@@ -13,13 +13,14 @@ import java.util.Map;
 import java.util.Random;
 
 public class EnemyTankManager extends EntityManager<EnemyTank> implements Drawable {
-    protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
+    protected final ScoreManipulation scoreManipulation;
 
 
     private Map<EnemyTank, Integer> stepsNum;
     private final BulletFactory bulletFactory;
 
-    private EnemyTankManager(int tankNumber, BulletFactory bulletFactory) {
+    private EnemyTankManager(int tankNumber, BulletFactory bulletFactory, ScoreManipulation scoreManipulation) {
+        this.scoreManipulation = scoreManipulation;
         this.bulletFactory = bulletFactory;
         stepsNum = new HashMap<>();
         generateTanks(tankNumber);

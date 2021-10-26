@@ -18,15 +18,16 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     PlayerTankManager player;
     RTreeMap rTreeMap;
     GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
-    protected final ScoreManipulation scoreManipulation = ScoreManipulation.INSTANCE;
+    protected final ScoreManipulation scoreManipulation
     int counter = 0;
 
     private final BulletFactory bulletFactory;
 
-    public ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory, PlayerTankManager player, RTreeMap rTreeMap) {
+    public ReflexEnemyTankManager(int randomTankNum, int playerTankNum, BulletFactory bulletFactory, PlayerTankManager player, RTreeMap rTreeMap, ScoreManipulation scoreManipulation) {
         this.bulletFactory = bulletFactory;
         this.player = player;
         this.rTreeMap = rTreeMap;
+        this.scoreManipulation = scoreManipulation;
         generateTanks(randomTankNum, playerTankNum);
     }
 
