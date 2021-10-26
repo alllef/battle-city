@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
-    RTreeMap rTreeMap;
     AlphaBetaNode minimaxTree;
 
     public MiniMaxAlphaBetaAlgo(RTreeMap rTreeMap,Rectangle start, Rectangle end, Direction dir) {

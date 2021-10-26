@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.other_algos;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.path_algorithm.PathAlgo;
 import com.github.alllef.battle_city.core.util.Coords;
@@ -8,8 +9,8 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import java.util.*;
 
 public class DFSAlgo extends PathAlgo<Stack<Coords>> {
-    public DFSAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect) {
-        super(rTreeMap,startRect, endRect);
+    public DFSAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect, Preferences prefs) {
+        super(rTreeMap,startRect, endRect,prefs);
         collection = new Stack<>();
     }
 

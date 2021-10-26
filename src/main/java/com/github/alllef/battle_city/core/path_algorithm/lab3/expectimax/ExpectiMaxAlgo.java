@@ -18,7 +18,7 @@ import static com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType.MA
 import static com.github.alllef.battle_city.core.path_algorithm.lab3.NodeType.MIN;
 
 public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
-    RTreeMap rTreeMap;
+
     UtilityNode minimaxTree;
 
     public ExpectiMaxAlgo(RTreeMap rTreeMap, Rectangle start, Rectangle end, Direction dir) {

@@ -63,7 +63,7 @@ public class TankManipulation implements Drawable {
         long seconds = TimeUtils.millis();
 
         // enemyTankManager.getEntities().forEach(enemyTank -> pathsToDraw.add(getPathAlgo(enemyTank)));
-        ExpectiMaxAlgo algo = new ExpectiMaxAlgo(rTreeMap,enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
+        ExpectiMaxAlgo algo = new ExpectiMaxAlgo(rTreeMap, enemyTankManager.getEntities().get(0).getSprite().getBoundingRectangle(), playerTank.getSprite().getBoundingRectangle(), enemyTankManager.getEntities().get(0).getDir());
         algo.startAlgo(1);
         manipulation++;
         System.out.println("manipulation" + manipulation);
@@ -90,9 +90,9 @@ public class TankManipulation implements Drawable {
         Rectangle endRect = endEntity.getSprite().getBoundingRectangle();
 
         switch (algoType) {
-            case BFS -> pathAlgo = new BFSAlgo(rTreeMap, playerRect, endRect);
-            case DFS -> pathAlgo = new DFSAlgo(rTreeMap, playerRect, endRect);
-            case UCS -> pathAlgo = new UCSAlgo(rTreeMap, playerRect, endRect);
+            case BFS -> pathAlgo = new BFSAlgo(rTreeMap, playerRect, endRect, prefs);
+            case DFS -> pathAlgo = new DFSAlgo(rTreeMap, playerRect, endRect, prefs);
+            case UCS -> pathAlgo = new UCSAlgo(rTreeMap, playerRect, endRect, prefs);
         }
 
         return pathAlgo.startAlgo();
@@ -105,7 +105,7 @@ public class TankManipulation implements Drawable {
         if (algoType == AlgoType.ASTAR_N)
             return getAStarSeveralDots(playerRect, endRect, prefs.getInteger("dots_number_astar"));
 
-        return new AStarAlgo(rTreeMap, playerRect, endRect, algoType).startAlgo();
+        return new AStarAlgo(rTreeMap, playerRect, endRect, algoType,prefs).startAlgo();
     }
 
     private List<Coords> getAStarSeveralDots(Rectangle start, Rectangle end, int dotsNum) {
@@ -113,7 +113,7 @@ public class TankManipulation implements Drawable {
         List<Rectangle> dots = getPathDots(start, end, dotsNum);
 
         for (int i = 0; i < dots.size() - 1; i++) {
-            List<Coords> partialPath = new AStarAlgo(rTreeMap, dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS).startAlgo();
+            List<Coords> partialPath = new AStarAlgo(rTreeMap, dots.get(i), dots.get(i + 1), AlgoType.ASTAR_COORDS,prefs).startAlgo();
             if (partialPath.isEmpty()) return partialPath;
             path.addAll(partialPath);
         }

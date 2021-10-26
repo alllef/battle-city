@@ -8,8 +8,13 @@ import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
 import com.github.alllef.battle_city.core.path_algorithm.TankManipulation;
 
 public class MainScreenInputAdapter extends InputAdapter {
-    private final TankManipulation tankManipulation = TankManipulation.INSTANCE;
-    Preferences prefs = Gdx.app.getPreferences("com.github.alllef.battle_city.prefs");
+    private final TankManipulation tankManipulation;
+    private final Preferences  prefs;
+
+    public MainScreenInputAdapter(TankManipulation tankManipulation, Preferences prefs) {
+        this.tankManipulation = tankManipulation;
+        this.prefs = prefs;
+    }
 
     @Override
     public boolean keyDown(int keycode) {

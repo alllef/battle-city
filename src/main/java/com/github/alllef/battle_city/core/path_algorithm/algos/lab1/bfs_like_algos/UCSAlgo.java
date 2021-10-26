@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.world.RTreeMap;
@@ -10,8 +11,8 @@ import java.util.PriorityQueue;
 public class UCSAlgo extends BFSAlgo {
     protected int[][] distanceMatrix = new int[worldSize][worldSize];
 
-    public UCSAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect) {
-        super(rTreeMap, startRect, endRect);
+    public UCSAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect, Preferences prefs) {
+        super(rTreeMap, startRect, endRect, prefs);
         collection = new PriorityQueue<>(Comparator.comparingInt(coords -> distanceMatrix[coords.x()][coords.y()]));
     }
 

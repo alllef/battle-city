@@ -29,10 +29,6 @@ public class MainScreen implements Screen {
         this.game = game;
         int worldSize = prefs.getInteger("world_size");
         camera.setToOrtho(false, worldSize, worldSize);
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        // multiplexer.addProcessor(new MainScreenInputAdapter());
-        multiplexer.addProcessor(new PlayerTankInputAdapter());
-        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override

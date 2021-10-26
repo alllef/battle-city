@@ -1,5 +1,6 @@
 package com.github.alllef.battle_city.core.path_algorithm.algos.lab2;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
 import com.github.alllef.battle_city.core.path_algorithm.algos.lab1.bfs_like_algos.UCSAlgo;
@@ -12,8 +13,8 @@ public class AStarAlgo extends UCSAlgo {
     AlgoType algoType;
     Map<Coords, Boolean> hasCoinsMap = new HashMap<>();
 
-    public AStarAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect, AlgoType algoType) {
-        super(rTreeMap, startRect, endRect);
+    public AStarAlgo(RTreeMap rTreeMap, Rectangle startRect, Rectangle endRect, AlgoType algoType, Preferences prefs) {
+        super(rTreeMap, startRect, endRect,prefs);
         this.algoType = algoType;
         collection = new PriorityQueue<>(Comparator.comparing(this::calculateFunction));
     }

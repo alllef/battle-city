@@ -51,6 +51,7 @@ public class WorldMapManager implements Drawable, Updatable {
         return entitiesArray;
     }
 
+
     public void initialize() {
         rTreeMap = new RTreeMap(prefs);
         scoreManipulation = new ScoreManipulation(prefs);
@@ -63,6 +64,7 @@ public class WorldMapManager implements Drawable, Updatable {
         enemyTankManager = new ReflexEnemyTankManager(2, 2, bulletFactory, playerTankManager, rTreeMap, scoreManipulation, prefs);
 
         overlapper = new Overlapper(bulletFactory, obstacleGeneration, enemyTankManager, stats);
+        configureInputHandling(playerTankManager);
     }
 
     public void configureInputHandling(PlayerTankManager playerTankManager) {
@@ -84,13 +86,15 @@ public class WorldMapManager implements Drawable, Updatable {
 
     @Override
     public void update() {
-        rTreeMap.createRtree(getEntities());
-        overlapper.checkOverlappings(rTreeMap.getOverlappings());
+
         obstacleGeneration.update();
         bulletFactory.update();
         coinManager.update();
         enemyTankManager.update();
         playerTankManager.update();
+
+        rTreeMap.createRtree(getEntities());
+        overlapper.checkOverlappings(rTreeMap.getOverlappings());
 
     }
 

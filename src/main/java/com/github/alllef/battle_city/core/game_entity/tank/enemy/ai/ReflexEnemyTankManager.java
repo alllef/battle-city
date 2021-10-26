@@ -43,7 +43,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
         for (int i = 0; i < playerTankNum; i++) {
             int x = (int) (Math.random() * worldSize * 0.95);
             int y = (int) (Math.random() * worldSize * 0.95);
-            entityArr.add(new PlayerReflexEnemyTank(rTreeMap, bulletFactory, x, y));
+            entityArr.add(new PlayerReflexEnemyTank(rTreeMap, bulletFactory, x, y,prefs));
         }
     }
 
@@ -59,7 +59,7 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
                 else
                     endRect = mapper.convertToGdxRectangle(RectUtils.getSmallestRect(rTreeMap.getRandomNonObstacleCoord(SpriteParam.ENEMY_TANK)));
 
-                ExpectiMaxAlgo algo = new ExpectiMaxAlgo(rTreeMap, tank.getRect(), endRect, tank.getDir());
+                ExpectiMaxAlgo algo = new ExpectiMaxAlgo(this.rTreeMap, tank.getRect(), endRect, tank.getDir());
                 tank.ride(algo.startAlgo(5));
             }
         }
