@@ -63,7 +63,7 @@ public class WorldMapManager implements Drawable, Updatable {
         stats = new GameStats(scoreManipulation, prefs);
 
         bulletFactory = new BulletFactory(prefs);
-        obstacleGeneration = new ObstacleGeneration(prefs.getInteger("obstacle_sets"), prefs);
+        obstacleGeneration = new ObstacleGeneration(prefs);
         playerTankManager = new PlayerTankManager(bulletFactory, prefs);
         coinManager = new CoinManager(prefs.getInteger("coins_number"), prefs);
         enemyTankManager = new ReflexEnemyTankManager(prefs.getInteger("random_reflex_tank_number"), prefs.getInteger("player_reflex_tank_number"), bulletFactory, playerTankManager, rTreeMap, scoreManipulation, prefs);

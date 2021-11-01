@@ -1,8 +1,6 @@
 package com.github.alllef.battle_city.core.game_entity.obstacle;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
@@ -10,24 +8,36 @@ import com.github.alllef.battle_city.core.util.Coords;
 import com.github.alllef.battle_city.core.util.enums.Direction;
 import com.github.alllef.battle_city.core.util.enums.SpriteParam;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class ObstacleGeneration extends EntityManager<Obstacle> {
 
-    public ObstacleGeneration(int obstacleSetsNumber, Preferences prefs) {
+    public ObstacleGeneration(Preferences prefs) {
         super(prefs);
-        generateObstacles(obstacleSetsNumber);
+        generateObstacles();
     }
 
-    private void generateObstacles(int obstacleSetsNumber) {
+    private void generateObstacles() {
+        if (prefs.getBoolean("is_random"))
+            generateRandomObstacles(prefs.getInteger("obstacle_sets"));
+        else
+            generateObstaclesByLevel();
+    }
+
+    private void generateObstaclesByLevel() {
+        List<Coords> obstacleCoords = new LevelParser(prefs.getString("level")).parseFile();
+        for (Coords coord : obstacleCoords) {
+            Obstacle tmp = new Obstacle(coord.x(), coord.y());
+            entityArr.add(tmp);
+        }
+    }
+
+    private void generateRandomObstacles(int obstacleSetsNum) {
         Map<Rectangle, Obstacle> obstacleMap = new HashMap<>();
 
-        for (int i = 0; i < obstacleSetsNumber; i++)
+        for (int i = 0; i < obstacleSetsNum; i++)
             generateObstacleSet(obstacleMap).forEach(result ->
-                    obstacleMap.put(result.getSprite().getBoundingRectangle(), result));
+                    obstacleMap.put(result.getRect(), result));
 
         obstacleMap.values().forEach(entityArr::add);
     }
@@ -46,24 +56,9 @@ public class ObstacleGeneration extends EntityManager<Obstacle> {
 
             for (int i = 0; i < setSize; i++) {
                 Obstacle obstacle = getObstacleByCoords(i, coords, dir);
-                Sprite sprite = obstacle.getSprite();
-                int worldSize = prefs.getInteger("world_size");
-                /*float maxHeight = worldSize - sprite.getHeight();
-                float maxWidth = worldSize - sprite.getWidth();
-                System.out.println("Before exception" + sprite.getX() + " " + sprite.getY());
 
-                if (sprite.getY() < 0 || sprite.getX() < 0 ||
-                        sprite.getY() > maxHeight || sprite.getX() > maxWidth) {
-                    System.out.println("Because out of bounds");
-                    System.out.println("After exception" + sprite.getX() + " " + sprite.getY());
-                    System.out.println();
+                if (obstacleMap.containsKey(obstacle.getRect()))
                     break;
-                }*/
-
-                if (obstacleMap.containsKey(obstacle.getSprite().getBoundingRectangle())) {
-                    System.out.println("Because contains");
-                    break;
-                }
 
                 resultSet.add(obstacle);
             }

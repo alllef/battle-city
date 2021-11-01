@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 public enum SpriteParam {
-    OBSTACLE(1.0f / 50, 1.0f / 100, "sprites/block.png"),
+    OBSTACLE(1.0f / 100, 1.0f / 100, "sprites/block.png"),
     BULLET(1.0f / 50, 1.0f / 50, "sprites/bullet.png"),
     SINGLE_TANK(1.0f / 50, 1.0f / 50, ""),
     PLAYER_TANK(1.0f / 50, 1.0f / 50, "sprites/player.png"),

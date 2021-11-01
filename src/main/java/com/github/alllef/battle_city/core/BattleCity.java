@@ -28,12 +28,14 @@ public class BattleCity extends Game {
         prefs.putInteger("coins_number",0);
         prefs.putInteger("dots_number_astar",3);
         prefs.putInteger("lab_number",2);
-        prefs.putString("stats_file","stats.csv");
+        prefs.putString("stats_file","text_files/stats.csv");
+        prefs.putString("level","text_files/level1");
         prefs.putInteger("minimax_algo_depth",5);
         prefs.putInteger("player_reflex_tank_number",3);
         prefs.putInteger("random_reflex_tank_number",3);
         prefs.putInteger("update_minimax_path_frame",10);
         prefs.putString("minimax_algo_type","expectimax");
+        prefs.putBoolean("is_random",false);
         this.setScreen(new MainScreen(this));
     }
 
