@@ -46,7 +46,6 @@ public class AIPlayerTankWrapper extends PlayerTankManager {
         shapeDrawer.setColor(Color.YELLOW);
         coordsToTarget.forEach(coords ->
                 shapeDrawer.line(coords.x(), coords.y(), coords.x() + 1, coords.y() + 1));
-
     }
 
     @Override
@@ -96,7 +95,7 @@ public class AIPlayerTankWrapper extends PlayerTankManager {
         for (var predicate : predicateMap.keySet()) {
             Direction dir = predicateMap.get(predicate);
             if (predicate.test(first, second) && playerTank.getBlockedDirection() != dir) {
-                playerTank.setDir(dir);
+                playerTank.ride(dir);
                 break;
             }
         }
@@ -141,7 +140,8 @@ public class AIPlayerTankWrapper extends PlayerTankManager {
     }
 
     @Override
-    public Direction getDir() {
-        return playerTank.getDir();
+    public void update() {
+        shoot();
+        ride(playerTank.getDir());
     }
 }

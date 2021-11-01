@@ -20,7 +20,7 @@ public abstract class SingleTank extends MovingEntity implements Tank {
     private final BulletFactory bulletFactory;
 
     protected SingleTank(float posX, float posY, SpriteParam param, BulletFactory bulletFactory, Preferences prefs) {
-        super(posX, posY, param, Direction.UP,prefs);
+        super(posX, posY, param, Direction.UP, prefs);
         this.bulletFactory = bulletFactory;
     }
 
@@ -58,12 +58,12 @@ public abstract class SingleTank extends MovingEntity implements Tank {
     @Override
     public void ride(Direction dir) {
         if (dir == blockedDirection) {
+            blockedDirection = null;
             return;
         }
 
         if (this.dir != dir) {
             this.setDir(dir);
-            blockedDirection = null;
             sprite.setRotation(dir.getDegree());
             return;
         }
@@ -105,7 +105,7 @@ public abstract class SingleTank extends MovingEntity implements Tank {
         this.blockedDirection = blockedDirection;
     }
 
-    public void  setDurationBetweenBullets(double durationBetweenBullets) {
+    public void setDurationBetweenBullets(double durationBetweenBullets) {
         this.durationBetweenBullets = durationBetweenBullets;
     }
 
