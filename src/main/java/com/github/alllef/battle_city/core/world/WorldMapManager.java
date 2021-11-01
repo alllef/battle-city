@@ -9,6 +9,7 @@ import com.github.alllef.battle_city.core.game_entity.coin.CoinManager;
 import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.obstacle.ObstacleGeneration;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.ai.ReflexEnemyTankManager;
+import com.github.alllef.battle_city.core.game_entity.tank.player.AIPlayerTankWrapper;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
 import com.github.alllef.battle_city.core.input_handling.PlayerTankInputAdapter;
 import com.github.alllef.battle_city.core.util.interfaces.Drawable;
@@ -64,7 +65,7 @@ public class WorldMapManager implements Drawable, Updatable {
 
         bulletFactory = new BulletFactory(prefs);
         obstacleGeneration = new ObstacleGeneration(prefs);
-        playerTankManager = new PlayerTankManager(bulletFactory, prefs);
+        playerTankManager = new AIPlayerTankWrapper(rTreeMap,bulletFactory, prefs);
         coinManager = new CoinManager(prefs.getInteger("coins_number"), prefs);
         enemyTankManager = new ReflexEnemyTankManager(prefs.getInteger("random_reflex_tank_number"), prefs.getInteger("player_reflex_tank_number"), bulletFactory, playerTankManager, rTreeMap, scoreManipulation, prefs);
 

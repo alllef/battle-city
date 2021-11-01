@@ -1,20 +1,40 @@
 package com.github.alllef.battle_city.core.game_entity.tank.player;
 
-public class AIPlayerTankWrapper /*extends PlayerTank*/ {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
+import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
+import com.github.alllef.battle_city.core.path_algorithm.AlgoType;
+import com.github.alllef.battle_city.core.path_algorithm.algos.lab2.AStarAlgo;
+import com.github.alllef.battle_city.core.util.Coords;
+import com.github.alllef.battle_city.core.util.RectUtils;
+import com.github.alllef.battle_city.core.util.enums.Direction;
+import com.github.alllef.battle_city.core.util.enums.SpriteParam;
+import com.github.alllef.battle_city.core.util.mapper.GdxToRTreeRectangleMapper;
+import com.github.alllef.battle_city.core.world.RTreeMap;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
-   /* private static final PlayerTank aIPlayerTankWrapper = new AIPlayerTankWrapper(BulletFactory.getInstance());
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Stack;
+import java.util.function.BiPredicate;
 
-    public static PlayerTank getInstance() {
-        return aIPlayerTankWrapper;
-    }
-
-    private final PlayerTank playerTank = PlayerTank.getInstance();
-    RTreeMap rTreeMap = RTreeMap.getInstance();
+public class AIPlayerTankWrapper extends PlayerTankManager {
+    RTreeMap rTreeMap;
     Stack<Coords> coordsToTarget = new Stack<>();
     private Coords turnCoord = null;
+    private GdxToRTreeRectangleMapper mapper = GdxToRTreeRectangleMapper.ENTITY;
 
-    protected AIPlayerTankWrapper(BulletFactory bulletFactory) {
-        super(bulletFactory);
+    public AIPlayerTankWrapper(RTreeMap rTreeMap, BulletFactory bulletFactory, Preferences prefs) {
+        super(bulletFactory, prefs);
+        this.rTreeMap = rTreeMap;
         generatePath();
     }
 
@@ -32,11 +52,11 @@ public class AIPlayerTankWrapper /*extends PlayerTank*/ {
     @Override
     public void shoot() {
         if (areTanksOnParallel())
-        playerTank.shoot();
+            playerTank.shoot();
     }
 
     @Override
-    public void ride() {
+    public void ride(Direction dir) {
         if (turnCoord == null)
             turnCoord = getTurnCoord();
 
@@ -55,7 +75,7 @@ public class AIPlayerTankWrapper /*extends PlayerTank*/ {
 
         if (predicate.test(tankCoord, turnCoord)) {
             setRideLooping(true);
-            playerTank.ride();
+            playerTank.ride(this.getDir());
         } else
             turnCoord = getTurnCoord();
     }
@@ -71,12 +91,12 @@ public class AIPlayerTankWrapper /*extends PlayerTank*/ {
         }
         Coords second = coordsToTarget.peek();
 
-        Map<BiPredicate<Coords, Coords>, Direction> predicateMap = getPredicateMap();
+        var predicateMap = getPredicateMap();
 
-        for (BiPredicate<Coords, Coords> predicate : predicateMap.keySet()) {
+        for (var predicate : predicateMap.keySet()) {
             Direction dir = predicateMap.get(predicate);
-            if (predicate.test(first, second) && getBlockedDirection() != dir) {
-                this.setDir(dir);
+            if (predicate.test(first, second) && playerTank.getBlockedDirection() != dir) {
+                playerTank.setDir(dir);
                 break;
             }
         }
@@ -86,9 +106,9 @@ public class AIPlayerTankWrapper /*extends PlayerTank*/ {
 
     private void generatePath() {
 
-        Coords coords = rTreeMap.getRandomNonObstacleCoord();
-        Rectangle coordsRect = new Rectangle(coords.x(), coords.y(), 1, 1);
-        AStarAlgo algo = new AStarAlgo(this.getSprite().getBoundingRectangle(), coordsRect, AlgoType.ASTAR_COORDS);
+        Coords coords = rTreeMap.getRandomNonObstacleCoord(SpriteParam.PLAYER_TANK);
+        Rectangle coordsRect = mapper.convertToGdxRectangle(RectUtils.getSmallestRect(coords));
+        AStarAlgo algo = new AStarAlgo(rTreeMap, playerTank.getRect(), coordsRect, AlgoType.ASTAR_COORDS, prefs);
         coordsToTarget.addAll(algo.startAlgo());
 
     }
@@ -107,67 +127,21 @@ public class AIPlayerTankWrapper /*extends PlayerTank*/ {
     private boolean areTanksOnParallel() {
         Sprite tankSprite = getSprite();
         Coords coords = new Coords((int) tankSprite.getX(), (int) tankSprite.getY());
-        Iterator<Entry<GameEntity, RectangleFloat>> iterator = rTreeMap.getParallelObstacles(getDir(), coords);
+        var optionalIterator = rTreeMap.getParallelObstacles(getDir(), coords);
 
-        while (iterator.hasNext()) {
-            Entry<GameEntity, RectangleFloat> entry = iterator.next();
-            if (entry.value() instanceof EnemyTank)
-                return true;
+        if (optionalIterator.isPresent()) {
+            var iter = optionalIterator.get();
+            while (iter.hasNext()) {
+                var entry = iter.next();
+                if (entry.value() instanceof EnemyTank)
+                    return true;
+            }
         }
-
         return false;
-    }
-
-    @Override
-    public boolean isRideLooping() {
-        return playerTank.isRideLooping();
-    }
-
-    @Override
-    public void setRideLooping(boolean rideLooping) {
-        playerTank.setRideLooping(rideLooping);
     }
 
     @Override
     public Direction getDir() {
         return playerTank.getDir();
     }
-
-    @Override
-    public void setDir(Direction dir) {
-        playerTank.setDir(dir);
-    }
-
-    @Override
-    public Direction getBlockedDirection() {
-        return playerTank.getBlockedDirection();
-    }
-
-    @Override
-    public void setBlockedDirection(Direction blockedDirection) {
-        playerTank.setBlockedDirection(blockedDirection);
-    }
-
-    @Override
-    public void ride(Direction dir) {
-        playerTank.ride(dir);
-    }
-
-    @Override
-    public void overlapsObstacle(Obstacle obstacle) {
-        playerTank.overlapsObstacle(obstacle);
-    }
-
-
-    @Override
-    public Sprite getSprite() {
-        return playerTank.getSprite();
-    }
-
-    @Override
-    public void setSprite(Sprite sprite) {
-        playerTank.setSprite(sprite);
-    }
-    */
-
 }

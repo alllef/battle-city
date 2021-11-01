@@ -8,7 +8,7 @@ import com.github.alllef.battle_city.core.util.enums.Direction;
 
 public class PlayerTankManager extends EntityManager<PlayerTank> {
     private BulletFactory bulletFactory;
-    private PlayerTank playerTank;
+    protected PlayerTank playerTank;
 
     private boolean isRideLooping = false;
 
