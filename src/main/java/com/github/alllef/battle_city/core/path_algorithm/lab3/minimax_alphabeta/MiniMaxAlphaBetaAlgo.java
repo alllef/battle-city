@@ -16,6 +16,7 @@ public class MiniMaxAlphaBetaAlgo extends MiniMaxAlgo<AlphaBetaNode> {
         super(rTreeMap, start, end, dir);
     }
 
+    @Override
     public Direction startAlgo(int depth) {
         minimaxTree = new AlphaBetaNode(0, null, null, dir, start, NodeType.MIN);
         minimaxTree.setChildren(getChildren(minimaxTree, depth));

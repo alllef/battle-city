@@ -6,25 +6,29 @@ import com.github.alllef.battle_city.core.game_entity.common.GameEntity;
 import com.github.alllef.battle_city.core.game_entity.tank.enemy.EnemyTank;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTank;
 import com.github.alllef.battle_city.core.util.Coords;
+import com.github.alllef.battle_city.core.util.enums.Direction;
 import com.github.alllef.battle_city.core.world.RTreeMap;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ReflexEnemyTank extends EnemyTank {
 
     protected RTreeMap rTreeMap;
 
     public ReflexEnemyTank(RTreeMap rTreeMap, BulletFactory bulletFactory, float x, float y, Preferences prefs) {
-        super(bulletFactory, x, y,prefs);
+        super(bulletFactory, x, y, prefs);
         this.rTreeMap = rTreeMap;
     }
 
     @Override
     public void shoot() {
-        System.out.println(rTreeMap.getRtreeSize()+ " Size in ReflexEnemyTank");
+        System.out.println(rTreeMap.getRtreeSize() + " Size in ReflexEnemyTank");
         if (areTanksOnParallel()) {
             super.shoot();
         }
@@ -44,6 +48,22 @@ public class ReflexEnemyTank extends EnemyTank {
             }
         }
         return false;
+    }
+
+    private Optional<Direction> getTanksOnAnyParallel() {
+        Coords coords = new Coords((int) sprite.getX(), (int) sprite.getY());
+
+        for (Direction dir : Direction.values()) {
+            var optionalObstacles = rTreeMap.getParallelObstacles(dir, coords);
+            if (optionalObstacles.isPresent()) {
+                var iter = optionalObstacles.get();
+                while (iter.hasNext()) {
+                    if (iter.next() instanceof PlayerTank)
+                        return Optional.of(dir);
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

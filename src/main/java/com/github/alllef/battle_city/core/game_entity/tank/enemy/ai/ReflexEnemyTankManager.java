@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.github.alllef.battle_city.core.game_entity.bullet.BulletFactory;
 import com.github.alllef.battle_city.core.game_entity.common.EntityManager;
 import com.github.alllef.battle_city.core.game_entity.tank.player.PlayerTankManager;
+import com.github.alllef.battle_city.core.path_algorithm.lab3.MiniMaxAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.expectimax.ExpectiMaxAlgo;
 import com.github.alllef.battle_city.core.path_algorithm.lab3.minimax_alphabeta.MiniMaxAlphaBetaAlgo;
 import com.github.alllef.battle_city.core.util.RectUtils;
@@ -57,13 +58,15 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
                     endRect = player.getSprite().getBoundingRectangle();
                 else
                     endRect = mapper.convertToGdxRectangle(RectUtils.getSmallestRect(rTreeMap.getRandomNonObstacleCoord(SpriteParam.ENEMY_TANK)));
-                if (prefs.getString("minimax_algo_type").equals("expectimax")) {
-                    ExpectiMaxAlgo algo = new ExpectiMaxAlgo(this.rTreeMap, tank.getRect(), endRect, tank.getDir());
-                    tank.ride(algo.startAlgo(prefs.getInteger("minimax_algo_depth")));
-                } else {
-                    MiniMaxAlphaBetaAlgo algo = new MiniMaxAlphaBetaAlgo(this.rTreeMap, tank.getRect(), endRect, tank.getDir());
-                    tank.ride(algo.startAlgo(prefs.getInteger("minimax_algo_depth")));
+
+                MiniMaxAlgo algo = null;
+
+                switch (prefs.getString("minimax_algo_type")) {
+                    case "expectimax" -> algo = new ExpectiMaxAlgo(this.rTreeMap, tank.getRect(), endRect, tank.getDir());
+                    case "alphabeta" -> algo = new MiniMaxAlphaBetaAlgo(this.rTreeMap, tank.getRect(), endRect, tank.getDir());
                 }
+
+                tank.ride(algo.startAlgo(prefs.getInteger("minimax_algo_depth")));
             }
         }
         getEntities().forEach(enemyTank -> enemyTank.ride(enemyTank.getDir()));
@@ -82,7 +85,6 @@ public class ReflexEnemyTankManager extends EntityManager<ReflexEnemyTank> {
     @Override
     public void update() {
         this.ride();
-        System.out.println(rTreeMap.getRtreeSize() + " Size in ReflexEnemyTankManager");
         this.shoot();
         super.update();
     }

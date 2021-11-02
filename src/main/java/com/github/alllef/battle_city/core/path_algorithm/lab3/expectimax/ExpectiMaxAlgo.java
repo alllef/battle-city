@@ -25,6 +25,7 @@ public class ExpectiMaxAlgo extends MiniMaxAlgo<ExpectiMaxNode> {
         super(rTreeMap, start, end, dir);
     }
 
+    @Override
     public Direction startAlgo(int depth) {
         minimaxTree = new UtilityNode(MIN, 1.0f, new ArrayList<>(), null, dir, start);
         var tmpChanceNode = List.of(getChanceChild(minimaxTree, depth, ChanceType.TO_TANK), getChanceChild(minimaxTree, depth, ChanceType.FROM_TANK));

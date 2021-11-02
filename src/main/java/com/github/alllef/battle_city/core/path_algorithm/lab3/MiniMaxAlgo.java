@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class MiniMaxAlgo<T extends MiniMaxNode> {
+public abstract class MiniMaxAlgo<T extends MiniMaxNode> {
     protected Rectangle start;
     protected Rectangle end;
     protected Direction dir;
@@ -22,6 +22,8 @@ public class MiniMaxAlgo<T extends MiniMaxNode> {
         this.end = end;
         this.dir = dir;
     }
+
+    public abstract Direction startAlgo(int depth);
 
     protected Map.Entry<Direction, Coords> getNearestCoord(Direction dir, Rectangle parRect) {
         Coords coords = null;
