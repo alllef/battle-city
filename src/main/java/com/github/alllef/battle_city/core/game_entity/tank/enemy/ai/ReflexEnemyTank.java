@@ -11,11 +11,9 @@ import com.github.alllef.battle_city.core.world.RTreeMap;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.geometry.internal.RectangleFloat;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ReflexEnemyTank extends EnemyTank {
 
@@ -28,10 +26,8 @@ public class ReflexEnemyTank extends EnemyTank {
 
     @Override
     public void shoot() {
-        System.out.println(rTreeMap.getRtreeSize() + " Size in ReflexEnemyTank");
-        if (areTanksOnParallel()) {
+        if (areTanksOnParallel())
             super.shoot();
-        }
     }
 
     protected boolean areTanksOnParallel() {
@@ -50,7 +46,7 @@ public class ReflexEnemyTank extends EnemyTank {
         return false;
     }
 
-    private Optional<Direction> getTanksOnAnyParallel() {
+    protected Optional<Direction> getTanksOnAnyParallel() {
         Coords coords = new Coords((int) sprite.getX(), (int) sprite.getY());
 
         for (Direction dir : Direction.values()) {

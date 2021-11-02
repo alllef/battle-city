@@ -50,7 +50,7 @@ public class AIPlayerTankWrapper extends PlayerTankManager {
 
     @Override
     public void shoot() {
-        if (areTanksOnParallel())
+        if (areObstaclesOnParallel())
             playerTank.shoot();
     }
 
@@ -123,7 +123,7 @@ public class AIPlayerTankWrapper extends PlayerTankManager {
         return predicateMap;
     }
 
-    private boolean areTanksOnParallel() {
+    private boolean areObstaclesOnParallel() {
         Sprite tankSprite = getSprite();
         Coords coords = new Coords((int) tankSprite.getX(), (int) tankSprite.getY());
         var optionalIterator = rTreeMap.getParallelObstacles(getDir(), coords);
@@ -132,7 +132,7 @@ public class AIPlayerTankWrapper extends PlayerTankManager {
             var iter = optionalIterator.get();
             while (iter.hasNext()) {
                 var entry = iter.next();
-                if (entry.value() instanceof EnemyTank)
+                //if (entry.value() instanceof EnemyTank)
                     return true;
             }
         }

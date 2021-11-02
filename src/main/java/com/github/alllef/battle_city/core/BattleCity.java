@@ -31,8 +31,8 @@ public class BattleCity extends Game {
         prefs.putString("stats_file","text_files/stats.csv");
         prefs.putString("level","text_files/level1");
         prefs.putInteger("minimax_algo_depth",5);
-        prefs.putInteger("player_reflex_tank_number",3);
-        prefs.putInteger("random_reflex_tank_number",3);
+        prefs.putInteger("player_reflex_tank_number",5);
+        prefs.putInteger("random_reflex_tank_number",0);
         prefs.putInteger("update_minimax_path_frame",10);
         prefs.putString("minimax_algo_type","expectimax");
         prefs.putBoolean("is_random",false);
