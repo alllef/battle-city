@@ -1,9 +1,12 @@
 package com.github.alllef.battle_city.core.ml;
 
+import org.apache.commons.math3.stat.StatUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,8 +19,12 @@ public class StatsConversion {
     private final List<String> finalResult = new ArrayList<>();
     private final List<String> algoType = new ArrayList<>();
 
-    public StatsConversion(File file) {
+    private int controlPart;
+    private int rowsNum;
+
+    public StatsConversion(File file, int controlPart) {
         this.file = file;
+        this.controlPart = controlPart;
     }
 
     private void parseData() {
@@ -36,21 +43,40 @@ public class StatsConversion {
             e.printStackTrace();
         }
 
+        rowsNum = time.size();
     }
 
-    private double[][] getNormalizedIndependentVariables() {
+    public double[][] getNormalizedTrainingDependentVars() {
         double[] normalizedTime = transform.normalizeIntData(time);
         double[] normalizedFinalResult = transform.normalizeStringData(finalResult);
         double[] normalizeAlgoType = transform.normalizeStringData(algoType);
 
         double[][] normalizedResults = new double[normalizedTime.length][4];
-        for (int i = 0; i < normalizedTime.length; i++)
+        for (int i = 0; i < rowsNum - controlPart; i++)
             normalizedResults[i] = new double[]{normalizedTime[i], normalizedFinalResult[i], normalizeAlgoType[i]};
 
         return normalizedResults;
     }
 
-    private double[] getNormalizedDependentVariable(){
-        return transform.normalizeIntData(score);
+    double getMean() {
+        return StatUtils.mean(getNormalizedTrainingDependentVar());
+    }
+
+    public double[] getNormalizedTrainingDependentVar() {
+        double[] trainPartResults = new double[rowsNum - controlPart];
+        return Arrays.copyOf(transform.normalizeIntData(score), rowsNum - controlPart);
+    }
+
+
+    public double[] getDependentControlVar (){
+        return Arrays.copyOfRange(score.stream().mapToDouble(i -> i).toArray(),rowsNum-controlPart,rowsNum);
+    }
+
+    public int getControlPart() {
+        return controlPart;
+    }
+
+    public void setControlPart(int controlPart) {
+        this.controlPart = controlPart;
     }
 }

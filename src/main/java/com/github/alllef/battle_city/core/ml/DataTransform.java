@@ -16,7 +16,7 @@ public enum DataTransform {
     }
 
     public double[] normalizeStringData(List<String> data) {
-        String [] dataArr=new String[data.size()];
+        String[] dataArr = new String[data.size()];
         data.toArray(dataArr);
 
         Map<String, Integer> rankedStrings = new HashMap<>();
@@ -31,5 +31,16 @@ public enum DataTransform {
         }
 
         return StatUtils.normalize(rankedArr);
+    }
+
+    public double[] denormalizeData(double[] normalizedData, int min, int max) {
+        double[] originalData = new double[normalizedData.length];
+        int coef = (max - min) / 2;
+
+        for (int i = 0; i < normalizedData.length; i++) {
+            originalData[i] = (normalizedData[i] + 2) * coef;
+        }
+
+        return originalData;
     }
 }
