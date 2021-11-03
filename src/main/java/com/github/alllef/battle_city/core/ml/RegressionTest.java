@@ -18,7 +18,7 @@ public class RegressionTest {
         x[5] = new double[]{0, 0, 0, 0, 6.0};
         regression.newSampleData(y, x);
         System.out.println(Arrays.toString(regression.estimateRegressionParameters()));
-        StatUtils.normalize();
+        StatUtils.normalize(null);
     }
 
     public static void main(String[]args){

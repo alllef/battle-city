@@ -11,16 +11,16 @@ public class StatsConversion {
     private final File file;
     private final DataTransform transform = DataTransform.INSTANCE;
 
+    private final List<Integer> time = new ArrayList<>();
+    private final List<Integer> score = new ArrayList<>();
+    private final List<String> finalResult = new ArrayList<>();
+    private final List<String> algoType = new ArrayList<>();
+
     public StatsConversion(File file) {
         this.file = file;
     }
 
-    private double[][] getNormalizeData() {
-        List<Integer> time = new ArrayList<>();
-        List<Integer> score = new ArrayList<>();
-        List<String> finalResult = new ArrayList<>();
-        List<String> algoType = new ArrayList<>();
-
+    private void parseData() {
         try {
             FileReader reader = new FileReader(file);
             Scanner scanner = new Scanner(reader);
@@ -36,16 +36,21 @@ public class StatsConversion {
             e.printStackTrace();
         }
 
+    }
+
+    private double[][] getNormalizedIndependentVariables() {
         double[] normalizedTime = transform.normalizeIntData(time);
-        double[] normalizeScore = transform.normalizeIntData(score);
         double[] normalizedFinalResult = transform.normalizeStringData(finalResult);
         double[] normalizeAlgoType = transform.normalizeStringData(algoType);
 
         double[][] normalizedResults = new double[normalizedTime.length][4];
         for (int i = 0; i < normalizedTime.length; i++)
-            normalizedResults[i] = new double[]{normalizeScore[i], normalizedTime[i], normalizedFinalResult[i], normalizeAlgoType[i]};
-
+            normalizedResults[i] = new double[]{normalizedTime[i], normalizedFinalResult[i], normalizeAlgoType[i]};
 
         return normalizedResults;
+    }
+
+    private double[] getNormalizedDependentVariable(){
+        return transform.normalizeIntData(score);
     }
 }
