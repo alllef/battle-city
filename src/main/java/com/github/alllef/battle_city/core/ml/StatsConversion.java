@@ -5,10 +5,7 @@ import org.apache.commons.math3.stat.StatUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class StatsConversion {
     private final File file;
@@ -25,12 +22,14 @@ public class StatsConversion {
     public StatsConversion(File file, int controlPart) {
         this.file = file;
         this.controlPart = controlPart;
+        parseData();
     }
 
     private void parseData() {
         try {
             FileReader reader = new FileReader(file);
             Scanner scanner = new Scanner(reader);
+            scanner.nextLine();
             while (scanner.hasNextLine()) {
                 String[] gameResults = scanner.nextLine().split(",");
                 time.add(Integer.parseInt(gameResults[0]));
@@ -51,7 +50,7 @@ public class StatsConversion {
         double[] normalizedFinalResult = transform.normalizeStringData(finalResult);
         double[] normalizeAlgoType = transform.normalizeStringData(algoType);
 
-        double[][] normalizedResults = new double[normalizedTime.length][4];
+        double[][] normalizedResults = new double[rowsNum - controlPart][3];
         for (int i = 0; i < rowsNum - controlPart; i++)
             normalizedResults[i] = new double[]{normalizedTime[i], normalizedFinalResult[i], normalizeAlgoType[i]};
 
@@ -59,7 +58,7 @@ public class StatsConversion {
     }
 
     double getMean() {
-        return StatUtils.mean(getNormalizedTrainingDependentVar());
+        return StatUtils.mean(score.stream().mapToDouble(i -> i).toArray());
     }
 
     public double[] getNormalizedTrainingDependentVar() {
@@ -67,9 +66,18 @@ public class StatsConversion {
         return Arrays.copyOf(transform.normalizeIntData(score), rowsNum - controlPart);
     }
 
+   public double getMinScore() {
+        return score.stream()
+                .min(Double::compare).get();
+    }
 
-    public double[] getDependentControlVar (){
-        return Arrays.copyOfRange(score.stream().mapToDouble(i -> i).toArray(),rowsNum-controlPart,rowsNum);
+    public double getMaxScore(){
+        return score.stream()
+                .max(Double::compare).get();
+    }
+
+    public double[] getDependentControlVar() {
+        return Arrays.copyOfRange(score.stream().mapToDouble(i -> i).toArray(), rowsNum - controlPart, rowsNum);
     }
 
     public int getControlPart() {

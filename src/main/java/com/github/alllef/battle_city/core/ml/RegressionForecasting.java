@@ -7,20 +7,23 @@ import java.io.File;
 public class RegressionForecasting {
     DataTransform transform = DataTransform.INSTANCE;
 
-    public void forecast(File file) {
-        StatsConversion statsConversion = new StatsConversion(file, 10);
+    public void forecast(File readFile, File writeFile) {
+        StatsConversion statsConversion = new StatsConversion(readFile, 10);
         MultipleRegression regression = new MultipleRegression(statsConversion.getNormalizedTrainingDependentVar(), statsConversion.getNormalizedTrainingDependentVars());
         StandardDeviation deviation = new StandardDeviation();
 
-        double[] nextYVars = transform.denormalizeData(regression.calcNextDependent(5));
-        double[] expectedDeviations = regression.getDeviations(nextYVars, statsConversion.getMean());
+        double[] expectedYVars = transform.denormalizeData(regression.calcNextDependent(10), (int) statsConversion.getMinScore(), (int) statsConversion.getMaxScore());
+        double[] actualVars = statsConversion.getDependentControlVar();
 
-        double[] realDeviations = new double[expectedDeviations.length];
-        double[] controlVars = statsConversion.getDependentControlVar();
+        double[] expectedDeviations = regression.getDeviations(expectedYVars, actualVars);
 
-        for (int i = 0; i < realDeviations.length; i++)
-            realDeviations[i] = deviation.evaluate(new double[]{nextYVars[i]}, controlVars[i]);
+        double[] actualDeviations = new double[expectedDeviations.length];
 
+        double mean = statsConversion.getMean();
+        for (int i = 0; i < actualDeviations.length; i++)
+            actualDeviations[i] = Math.sqrt(Math.pow(actualVars[i] - mean, 2));
 
-      }
+        ForecastResultsWriter writer = new ForecastResultsWriter(writeFile);
+        writer.writeData(expectedYVars, actualVars, expectedDeviations, actualDeviations);
+    }
 }

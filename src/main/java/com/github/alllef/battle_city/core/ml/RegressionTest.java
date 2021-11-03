@@ -3,11 +3,13 @@ package com.github.alllef.battle_city.core.ml;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 
+import java.io.File;
 import java.util.Arrays;
 
 public class RegressionTest {
     OLSMultipleLinearRegression regression = new OLSMultipleLinearRegression();
-    public void playWithRegression(){
+
+    public void playWithRegression() {
         double[] y = new double[]{11.0, 12.0, 13.0, 14.0, 15.0, 16.0};
         double[][] x = new double[6][];
         x[0] = new double[]{0, 0, 0, 0, 0};
@@ -22,8 +24,9 @@ public class RegressionTest {
 
     }
 
-    public static void main(String[]args){
-        RegressionTest test = new RegressionTest();
-        test.playWithRegression();
+    public static void main(String[] args) {
+        RegressionForecasting forecasting = new RegressionForecasting();
+        String path = "src/main/resources/assets/text_files/";
+        forecasting.forecast(new File(path + "stats.csv"), new File(path + "forecast.csv"));
     }
 }

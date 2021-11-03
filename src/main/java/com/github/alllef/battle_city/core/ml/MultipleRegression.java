@@ -36,7 +36,7 @@ public class MultipleRegression {
             tmpYList.add(nextParams[i][0]);
 
             double[] tmpYArr;
-            double[][] tmpXArr = new double[3][tmpXList.size()];
+            double[][] tmpXArr = new double[tmpXList.size()][3];
             tmpYArr = tmpYList.stream().mapToDouble(tmp -> tmp).toArray();
             tmpXList.toArray(tmpXArr);
 
@@ -50,12 +50,11 @@ public class MultipleRegression {
         return yVariables;
     }
 
-    double[] getDeviations(double[] results, double mean) {
-        StandardDeviation deviation = new StandardDeviation();
-        double[] deviations = new double[results.length];
+    double[] getDeviations(double[] expected, double[] actual) {
+        double[] deviations = new double[expected.length];
 
-        for (int i = 0; i < results.length; i++)
-            deviations[i] = deviation.evaluate(new double[]{results[i]}, mean);
+        for (int i = 0; i < expected.length; i++)
+            deviations[i] = Math.sqrt(Math.pow(expected[i] - actual[i], 2));
 
         return deviations;
     }
